@@ -4,7 +4,7 @@ import Parser from 'rss-parser'
 // Initialize RSS Parser
 const parser = new Parser()
 
-// Define Feed Sources
+// Define Feed Sources - Verified URLs
 const PK_FEEDS = [
     'https://www.dawn.com/feeds/home',
     'https://www.geo.tv/rss/1',
@@ -21,10 +21,10 @@ const GLOBAL_FEEDS = [
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const region = searchParams.get('region') || 'global' // 'pk' or 'global'
-    
+
     // Select feeds based on region
     const feedsToFetch = region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS
-    
+
     try {
         console.log(`Fetching RSS feeds for region: ${region} from ${feedsToFetch.length} sources...`)
 
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         })
 
         const feedResults = await Promise.all(feedPromises)
-        
+
         // Flatten array of arrays
         let allArticles = feedResults.flat()
 
