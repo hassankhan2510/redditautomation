@@ -6,6 +6,8 @@ import { Twitter, Send, Copy, ExternalLink, Loader2, Sparkles, RefreshCcw } from
 export default function XPage() {
     const [topic, setTopic] = useState("")
     const [tone, setTone] = useState("viral-hook")
+    const [persona, setPersona] = useState("Personal Brand")
+    const [language, setLanguage] = useState<'en' | 'ur'>('en')
     const [generatedContent, setGeneratedContent] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -41,7 +43,7 @@ export default function XPage() {
             const res = await fetch('/api/x', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic, tone })
+                body: JSON.stringify({ topic, tone, persona, language })
             })
 
             if (res.ok) {
@@ -127,12 +129,12 @@ export default function XPage() {
 
                 {/* Generator Input (4 cols) */}
                 <div className="lg:col-span-4 space-y-4">
-                    <form onSubmit={handleGenerate} className="bg-card border rounded-xl p-6 shadow-sm h-full">
-                        <div className="space-y-4">
+                    <form onSubmit={handleGenerate} className="bg-card border rounded-xl p-6 shadow-sm h-full flex flex-col">
+                        <div className="space-y-4 flex-1">
                             <div>
                                 <label className="block text-sm font-medium mb-2">Topic / Context</label>
                                 <textarea
-                                    className="w-full bg-background border rounded-lg p-3 min-h-[250px] focus:ring-2 focus:ring-blue-500 outline-none resize-none text-sm"
+                                    className="w-full bg-background border rounded-lg p-3 min-h-[180px] focus:ring-2 focus:ring-blue-500 outline-none resize-none text-sm"
                                     placeholder="Paste a news link, a random thought, or click 'Draft' from the news feed..."
                                     value={topic}
                                     onChange={e => setTopic(e.target.value)}
@@ -140,8 +142,45 @@ export default function XPage() {
                                 />
                             </div>
 
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Language</label>
+                                    <div className="flex bg-secondary p-1 rounded-lg">
+                                        <button
+                                            type="button"
+                                            onClick={() => setLanguage('en')}
+                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'en' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                        >
+                                            English
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setLanguage('ur')}
+                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'ur' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                        >
+                                            Urdu
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Persona</label>
+                                    <select
+                                        className="w-full bg-background border rounded-lg p-2 text-sm"
+                                        value={persona}
+                                        onChange={e => setPersona(e.target.value)}
+                                    >
+                                        <option value="Personal Brand">Personal Brand</option>
+                                        <option value="Influencer">Influencer</option>
+                                        <option value="Journalist">Journalist</option>
+                                        <option value="Entrepreneur">Entrepreneur</option>
+                                        <option value="Scientist">Scientist</option>
+                                        <option value="Developer">Developer</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div>
-                                <label className="block text-sm font-medium mb-2">Style Strategy</label>
+                                <label className="block text-sm font-medium mb-2">Style Strategy (Format)</label>
                                 <select
                                     className="w-full bg-background border rounded-lg p-2.5"
                                     value={tone}

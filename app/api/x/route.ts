@@ -3,34 +3,40 @@ import { generateCompletion } from '@/lib/llm'
 
 export async function POST(request: Request) {
     try {
-        const { topic, tone } = await request.json()
+        const { topic, tone, persona, language } = await request.json()
 
         if (!topic) return NextResponse.json({ error: 'Topic required' }, { status: 400 })
 
-        const systemPrompt = `You are a viral social media manager for X (Twitter).
-Your goal is to write high-engagement posts that feel raw and authentic.
+        const langInstruction = language === 'ur'
+            ? "OUTPUT LANGUAGE: URDU (Standard Urdu Script). Write naturally for a South Asian audience."
+            : "OUTPUT LANGUAGE: ENGLISH."
 
-CRITICAL FORMATTING RULES:
-- Write exactly like a human user. DO NOT act like a bot.
+        const systemPrompt = `You are a ${persona || 'Social Media Expert'}.
+Your goal is to write high-engagement posts that feel raw, authentic, and human.
+
+${langInstruction}
+
+CRITICAL RULES (ANTI-ROBOT MODE):
 - NO hashtags (0 hashtags).
 - NO bolding (**text**).
 - NO markdown lists (- item). Use natural line breaks.
-- NO emojis unless explicitly asked.
+- NO emojis unless it fits the specific tone perfectly (keep it minimal).
 - NO "Here are 3 variations" intro. Just the posts.
-- Use short, punchy sentences. Lowercase style is preferred for "viral" hooks.
+- NO "Unlock" or "Unleash" or "Elevate" (Banned AI words).
+- Write exactly like a human user posted this from their phone.
+
+CONTEXT:
+Topic: "${topic}"
+Style/Format: ${tone}
 `
 
         const userPrompt = `
-Topic/Context: "${topic}"
-Desired Style: ${tone}
-
-Please generate 3 distinct variations of an X post/thread starter based on this topic.
+Generate 3 distinct variations separated by "---".
 1. A short, punchy single tweet.
-2. A detailed "insight" style post (can be longer).
-3. A "hook" style post that creates curiosity.
+2. A detailed "insight" style post.
+3. A "hook" style post.
 
 Return ONLY the 3 variations separated by "---".
-Do not number them "1.", "2." manually if you can avoid it, just the content.
 `
 
         const completion = await generateCompletion(systemPrompt, userPrompt)
