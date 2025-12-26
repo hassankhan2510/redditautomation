@@ -1,21 +1,24 @@
 import { NextResponse } from 'next/server'
 import Parser from 'rss-parser'
 
-// Initialize RSS Parser
-const parser = new Parser()
+// Initialize RSS Parser with User-Agent to avoid 403s
+const parser = new Parser({
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+})
 
-// Define Feed Sources - Verified URLs
+// Define Feed Sources - ONLY Verified Working Feeds
 const PK_FEEDS = [
-    'https://www.dawn.com/feeds/home',
-    'https://www.geo.tv/rss/1',
-    'https://tribune.com.pk/feed',
-    'https://www.thenews.com.pk/rss/1/1'
+    'https://www.dawn.com/feeds/home',         // Verified ✅
+    'https://www.thenews.com.pk/rss/1/1',      // Verified ✅
+    'https://arynews.tv/feed/'                 // Verified ✅ (Replacing Geo/Tribune)
 ]
 
 const GLOBAL_FEEDS = [
-    'http://feeds.bbci.co.uk/news/rss.xml',
-    'http://rss.cnn.com/rss/edition.rss',
-    'https://www.theverge.com/rss/index.xml', // Tech mix
+    'http://feeds.bbci.co.uk/news/rss.xml',    // Verified ✅
+    'http://rss.cnn.com/rss/edition.rss',      // Verified ✅
+    'https://www.theverge.com/rss/index.xml'   // Verified ✅
 ]
 
 export async function GET(request: Request) {
@@ -26,14 +29,10 @@ export async function GET(request: Request) {
     const feedsToFetch = region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS
 
     try {
-        console.log(`Fetching RSS feeds for region: ${region} from ${feedsToFetch.length} sources...`)
-
-        // Fetch in parallel (fail-safe: if one fails, others still load)
+        // Fetch in parallel
         const feedPromises = feedsToFetch.map(async (url) => {
             try {
                 const feed = await parser.parseURL(url)
-                // Normalize feed items to match our App's structure
-                // We map 'feed.title' to 'source.name'
                 return feed.items.map(item => ({
                     source: { name: feed.title?.trim() || 'News Source' },
                     title: item.title,
@@ -41,37 +40,34 @@ export async function GET(request: Request) {
                     url: item.link,
                     publishedAt: item.isoDate || item.pubDate ? new Date(item.isoDate || item.pubDate!).toISOString() : new Date().toISOString()
                 }))
-            } catch (err) {
-                console.error(`Failed to parse feed ${url}:`, err)
-                return [] // Return empty array on failure
+            } catch (err: any) {
+                console.error(`RSS Error [${url}]:`, err.message)
+                return [] // Fail gracefully
             }
         })
 
         const feedResults = await Promise.all(feedPromises)
+        const allArticles = feedResults.flat()
 
-        // Flatten array of arrays
-        let allArticles = feedResults.flat()
-
-        // Deduplicate (based on URL or Title)
-        const uniqueArticles = Array.from(new Map(allArticles.map(item => [item.title, item])).values())
-
-        // Sort by date (Newest first)
-        uniqueArticles.sort((a, b) => {
-            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        // Deduplicate
+        const seenTitles = new Set()
+        const uniqueArticles = allArticles.filter(item => {
+            if (seenTitles.has(item.title)) return false
+            seenTitles.add(item.title)
+            return true
         })
 
-        // Limit to 20 items to keep payload light
-        const finalArticles = uniqueArticles.slice(0, 20)
+        // Sort Newest First
+        uniqueArticles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
 
-        // Return in same format as NewsAPI for compatibility
         return NextResponse.json({
             status: 'ok',
-            totalResults: finalArticles.length,
-            articles: finalArticles
+            totalResults: uniqueArticles.length,
+            articles: uniqueArticles.slice(0, 25)
         })
 
     } catch (e: any) {
-        console.error("RSS Route Error:", e)
+        console.error("RSS Aggregator Error:", e)
         return NextResponse.json({ error: e.message }, { status: 500 })
     }
 }
