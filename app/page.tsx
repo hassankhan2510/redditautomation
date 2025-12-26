@@ -6,10 +6,10 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-background to-secondary/20">
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600" suppressHydrationWarning>
           Intelligent Content Engine
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-10">
+        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-10" suppressHydrationWarning>
           Scale your personal brand on Reddit and X without the burnout.
           Generate, Plan, and Post from a single command center.
         </p>
@@ -26,7 +26,7 @@ export default function Home() {
 
       {/* Features Grid */}
       <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12">Production-Ready Workflows</h2>
+        <h2 className="text-3xl font-bold text-center mb-12" suppressHydrationWarning>Production-Ready Workflows</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* Reddit Card */}
@@ -35,7 +35,7 @@ export default function Home() {
               <MessageSquare size={28} />
             </div>
             <h3 className="text-2xl font-bold mb-3 group-hover:text-orange-500 transition-colors">Reddit Planner</h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
               Community-aware drafting. Select specific subreddits, customize tones, and manage your posting schedule manually.
             </p>
             <Link href="/ideas" className="text-sm font-bold text-orange-600 hover:underline">
@@ -49,7 +49,7 @@ export default function Home() {
               <Twitter size={28} />
             </div>
             <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-500 transition-colors">X / Twitter Viral</h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
               Turn news, random thoughts, or trends into viral threads. Optimized for engagement and growth.
             </p>
             <Link href="/x" className="text-sm font-bold text-blue-600 hover:underline">
@@ -63,7 +63,7 @@ export default function Home() {
               <BarChart size={28} />
             </div>
             <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-500 transition-colors">History & Drafts</h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
               Track your approved drafts, view history, and keep a clear timeline of your content distribution.
             </p>
             <Link href="/history" className="text-sm font-bold text-purple-600 hover:underline">
@@ -76,7 +76,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 text-center text-muted-foreground text-sm border-t">
-        <p>&copy; {new Date().getFullYear()} Reddit Poster SaaS. Built for scale.</p>
+        <p suppressHydrationWarning>&copy; 2024 Reddit Poster SaaS. Built for scale.</p>
       </footer>
     </div>
   )

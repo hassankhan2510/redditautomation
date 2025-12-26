@@ -132,14 +132,12 @@ export default function XPage() {
                                 {tweet}
                             </p>
 
-                            <a
-                                href={getTweetUrl(tweet)}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <button
+                                onClick={() => window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(tweet)}`, '_blank')}
                                 className="flex items-center justify-center gap-2 w-full py-2 bg-black dark:bg-white dark:text-black text-white rounded-lg font-bold hover:opacity-90 transition-opacity"
                             >
                                 <Twitter size={16} /> Post now
-                            </a>
+                            </button>
                         </div>
                     ))}
                 </div>
