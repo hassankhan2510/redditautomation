@@ -24,6 +24,9 @@ export function Navbar() {
                     <Link href="/timeline" className="transition-colors hover:text-foreground/80">
                         Timeline
                     </Link>
+                    <Link href="/x" className="transition-colors hover:text-blue-500 font-bold">
+                        X Content
+                    </Link>
                 </div>
                 <ModeToggle />
             </div>
