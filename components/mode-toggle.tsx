@@ -10,12 +10,13 @@ export function ModeToggle() {
     return (
         <button
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="p-2 rounded-md hover:bg-accent hover:text-accent-foreground border"
+            className="p-2 rounded-md hover:bg-accent hover:text-accent-foreground border relative w-9 h-9 flex items-center justify-center"
             aria-label="Toggle theme"
         >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            <Sun className="h-[1.2rem] w-[1.2rem] transition-all scale-100 rotate-0 dark:scale-0 dark:-rotate-90 absolute" />
+            <Moon className="h-[1.2rem] w-[1.2rem] transition-all scale-0 rotate-90 dark:scale-100 dark:rotate-0 absolute" />
             <span className="sr-only">Toggle theme</span>
         </button>
     )
 }
+

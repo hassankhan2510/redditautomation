@@ -1,0 +1,42 @@
+[
+    {
+        "name": "webdev",
+        "audience": "Developers",
+        "theme": "Technical Discussion",
+        "links_allowed": true,
+        "self_promo_level": "low",
+        "post_style": "Professional",
+        "banned_phrases": [
+            "cheap services"
+        ]
+    },
+    {
+        "name": "entrepreneur",
+        "audience": "Business Owners",
+        "theme": "Business Strategy",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Storytelling",
+        "banned_phrases": [
+            "dm me"
+        ]
+    },
+    {
+        "name": "SaaS",
+        "audience": "Founders",
+        "theme": "SaaS Growth",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Data-driven",
+        "banned_phrases": []
+    },
+    {
+        "name": "sideproject",
+        "audience": "Makers",
+        "theme": "Showcase",
+        "links_allowed": true,
+        "self_promo_level": "high",
+        "post_style": "Demo",
+        "banned_phrases": []
+    }
+]

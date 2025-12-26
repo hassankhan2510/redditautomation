@@ -7,10 +7,17 @@ import { PostIdea } from "@/types"
 export default function IdeasPage() {
     const [ideas, setIdeas] = useState<PostIdea[]>([])
     const [loading, setLoading] = useState(true)
+
     // Generation state
     const [generatingId, setGeneratingId] = useState<string | null>(null)
     const [genProgress, setGenProgress] = useState<string>("")
     const [genStats, setGenStats] = useState<{ current: number, total: number } | null>(null)
+
+    // Selection Modal state
+    const [showSelectModal, setShowSelectModal] = useState(false)
+    const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null)
+    const [availableSubreddits, setAvailableSubreddits] = useState<any[]>([])
+    const [selectedSubIds, setSelectedSubIds] = useState<Set<string>>(new Set())
 
     const fetchIdeas = async () => {
         setLoading(true)
@@ -46,78 +53,86 @@ export default function IdeasPage() {
         }
     }
 
-    const handleSmartGenerate = async (ideaId: string) => {
-        setGeneratingId(ideaId)
-        setGenProgress("Initializing smart generation...")
+    // 1. Open Selection Modal
+    const initiateGeneration = async (ideaId: string) => {
+        setSelectedIdeaId(ideaId)
+
+        // Fetch subreddits to choose from
+        const subRes = await fetch('/api/subreddits')
+        if (subRes.ok) {
+            const subs = await subRes.json()
+            setAvailableSubreddits(subs)
+            // Default select all
+            setSelectedSubIds(new Set(subs.map((s: any) => s.id)))
+            setShowSelectModal(true)
+        } else {
+            alert("Failed to fetch subreddits")
+        }
+    }
+
+    const toggleSubreddit = (id: string) => {
+        const next = new Set(selectedSubIds)
+        if (next.has(id)) next.delete(id)
+        else next.add(id)
+        setSelectedSubIds(next)
+    }
+
+    // 2. Start Generation Loop
+    const startGeneration = async () => {
+        if (!selectedIdeaId) return
+        setShowSelectModal(false)
+        setGeneratingId(selectedIdeaId)
+        setGenProgress("Initializing...")
+
+        const targetSubreddits = availableSubreddits.filter(s => selectedSubIds.has(s.id))
+
+        if (targetSubreddits.length === 0) {
+            alert("No subreddits selected")
+            setGeneratingId(null)
+            return
+        }
+
+        setGenStats({ current: 0, total: targetSubreddits.length })
+        let successCount = 0
 
         try {
-            // 1. Get all subreddits first
-            const subRes = await fetch('/api/subreddits')
-            if (!subRes.ok) throw new Error("Failed to fetch subreddits")
-            const subreddits = await subRes.json()
-
-            if (subreddits.length === 0) {
-                alert("No subreddits configured!")
-                setGeneratingId(null)
-                return
-            }
-
-            setGenStats({ current: 0, total: subreddits.length })
-
-            // 2. Loop and generate sequentially with delay
-            let successCount = 0
-
-            for (let i = 0; i < subreddits.length; i++) {
-                const sub = subreddits[i]
-                setGenStats({ current: i + 1, total: subreddits.length })
-                setGenProgress(`Generating draft for r/${sub.name}...`)
+            for (let i = 0; i < targetSubreddits.length; i++) {
+                const sub = targetSubreddits[i]
+                setGenStats({ current: i + 1, total: targetSubreddits.length })
+                setGenProgress(`Generating for r/${sub.name}...`)
 
                 try {
                     const genRes = await fetch('/api/generate', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            ideaId,
+                            ideaId: selectedIdeaId,
                             subredditId: sub.id
                         })
                     })
 
-                    if (genRes.ok) {
-                        successCount++
-                    } else {
-                        // If rate limited (429), wait longer?
-                        if (genRes.status === 429) {
-                            setGenProgress(`Rate limit hit on r/${sub.name}. Pausing for 10s...`)
-                            await new Promise(r => setTimeout(r, 10000))
-                            // Retry once? simple logic for now: skip and log
-                            console.warn(`Rate limited for r/${sub.name}`)
-                        }
+                    if (genRes.ok) successCount++
+                    else if (genRes.status === 429) {
+                        setGenProgress(`Rate limit. Pausing 10s...`)
+                        await new Promise(r => setTimeout(r, 10000))
                     }
-                } catch (e) {
-                    console.error(`Error generating for ${sub.name}`, e)
-                }
+                } catch (e) { console.error(e) }
 
-                // 3. Intelligent Delay (Interval)
-                // Wait 5 seconds between calls to be safe with free tier LLMs
-                if (i < subreddits.length - 1) {
-                    setGenProgress(`Waiting 5s before next subreddit...`)
-                    await new Promise(r => setTimeout(r, 5000))
+                if (i < targetSubreddits.length - 1) {
+                    await new Promise(r => setTimeout(r, 2000))
                 }
             }
-
-            alert(`Generation complete! Drafts created for ${successCount}/${subreddits.length} subreddits.`)
-
-        } catch (e: any) {
-            alert("Generation failed: " + e.message)
+            alert(`Done! Generated ${successCount}/${targetSubreddits.length}.`)
+        } catch (e) {
+            alert("Error during generation")
         } finally {
             setGeneratingId(null)
-            setGenProgress("")
             setGenStats(null)
         }
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 relative">
             <h1 className="text-3xl font-bold tracking-tight">Post Ideas</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -159,11 +174,11 @@ export default function IdeasPage() {
                                     </div>
                                 ) : (
                                     <button
-                                        onClick={() => handleSmartGenerate(idea.id)}
+                                        onClick={() => initiateGeneration(idea.id)}
                                         disabled={generatingId !== null}
                                         className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
                                     >
-                                        Smart Generate Drafts
+                                        Generate Drafts...
                                     </button>
                                 )}
                             </div>
@@ -171,6 +186,38 @@ export default function IdeasPage() {
                     )}
                 </div>
             </div>
+
+            {/* Selection Modal */}
+            {showSelectModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-background border p-6 rounded-lg max-w-md w-full shadow-lg">
+                        <h3 className="text-xl font-bold mb-4">Select Subreddits</h3>
+                        <div className="max-h-60 overflow-y-auto space-y-2 mb-6 border p-2 rounded">
+                            {availableSubreddits.map(sub => (
+                                <label key={sub.id} className="flex items-center space-x-2 p-2 hover:bg-accent rounded cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedSubIds.has(sub.id)}
+                                        onChange={() => toggleSubreddit(sub.id)}
+                                        className="h-4 w-4"
+                                    />
+                                    <span>r/{sub.name}</span>
+                                </label>
+                            ))}
+                        </div>
+                        <div className="flex justify-end gap-2">
+                            <button onClick={() => setShowSelectModal(false)} className="px-4 py-2 text-sm">Cancel</button>
+                            <button
+                                onClick={startGeneration}
+                                disabled={selectedSubIds.size === 0}
+                                className="px-4 py-2 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
+                            >
+                                Start Generating ({selectedSubIds.size})
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
