@@ -18,10 +18,13 @@ You must adhere to these community norms:
 
 BANNED PHRASES (Do not use): ${sub.banned_phrases?.join(', ') || 'None'}
 
-Formatting:
-- Use Markdown.
-- No hashtags.
-- No emojis unless the tone is very casual.
+ Formatting:
+- Write like a normal human user.
+- NO **bolding** of words.
+- NO markdown lists (- item). Write in paragraphs or natural spacing.
+- NO "In conclusion" or "Hope this helps".
+- NO hashtags.
+- NO emojis unless the tone is very casual.
 `
 }
 
