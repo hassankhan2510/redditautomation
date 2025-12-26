@@ -1,42 +1,368 @@
 [
     {
-        "name": "webdev",
-        "audience": "Developers",
-        "theme": "Technical Discussion",
-        "links_allowed": true,
+        "name": "MachineLearning",
+        "audience": "Researchers, ML engineers",
+        "theme": "Technical discussion, research insights, career advice",
+        "links_allowed": false,
         "self_promo_level": "low",
-        "post_style": "Professional",
+        "post_style": "Discussion, research sharing",
         "banned_phrases": [
-            "cheap services"
+            "buy now",
+            "free tool download",
+            "promotional"
         ]
     },
     {
-        "name": "entrepreneur",
-        "audience": "Business Owners",
-        "theme": "Business Strategy",
-        "links_allowed": true,
-        "self_promo_level": "medium",
-        "post_style": "Storytelling",
+        "name": "learnmachinelearning",
+        "audience": "Beginners and students",
+        "theme": "Project feedback, learning tips",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Educational, question-oriented",
         "banned_phrases": [
-            "dm me"
+            "spam",
+            "advertisement"
         ]
     },
     {
-        "name": "SaaS",
-        "audience": "Founders",
-        "theme": "SaaS Growth",
-        "links_allowed": true,
+        "name": "artificial",
+        "audience": "AI enthusiasts, developers",
+        "theme": "AI discussions, tools, theory",
+        "links_allowed": false,
         "self_promo_level": "medium",
-        "post_style": "Data-driven",
-        "banned_phrases": []
+        "post_style": "Discussion, tool sharing",
+        "banned_phrases": [
+            "buy",
+            "download here",
+            "clickbait"
+        ]
     },
     {
-        "name": "sideproject",
-        "audience": "Makers",
-        "theme": "Showcase",
+        "name": "ChatGPT",
+        "audience": "AI app builders, prompt engineers",
+        "theme": "App showcases, prompts, AI experiments",
+        "links_allowed": false,
+        "self_promo_level": "medium",
+        "post_style": "Project demo, tips, questions",
+        "banned_phrases": [
+            "subscribe",
+            "promotion"
+        ]
+    },
+    {
+        "name": "MachineLearningJobs",
+        "audience": "Recruiters, AI remote roles seekers",
+        "theme": "Job postings, career advice",
         "links_allowed": true,
         "self_promo_level": "high",
-        "post_style": "Demo",
-        "banned_phrases": []
+        "post_style": "Job related, career showcase",
+        "banned_phrases": [
+            "spam",
+            "unverified links"
+        ]
+    },
+    {
+        "name": "learnprogramming",
+        "audience": "Beginners, self-taught devs",
+        "theme": "Project help, career strategies",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Educational, tutorial, Q&A",
+        "banned_phrases": [
+            "advertisement",
+            "promotional"
+        ]
+    },
+    {
+        "name": "programming",
+        "audience": "Software developers, tech enthusiasts",
+        "theme": "Trends, articles, coding discussions",
+        "links_allowed": true,
+        "self_promo_level": "low",
+        "post_style": "Discussion, code sharing, informative",
+        "banned_phrases": [
+            "buy now",
+            "promotion",
+            "spam"
+        ]
+    },
+    {
+        "name": "webdev",
+        "audience": "Frontend, fullstack devs",
+        "theme": "Portfolio showcases, web app tips",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Showcase, demo, code snippets",
+        "banned_phrases": [
+            "ad",
+            "spam"
+        ]
+    },
+    {
+        "name": "cscareerquestions",
+        "audience": "Students, job seekers",
+        "theme": "Resume tips, interviews, remote roles",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Question, advice-seeking",
+        "banned_phrases": [
+            "promotion",
+            "click here"
+        ]
+    },
+    {
+        "name": "learnpython",
+        "audience": "Python developers, learners",
+        "theme": "Code snippets, project guidance",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Tutorial, example, Q&A",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "SideProject",
+        "audience": "Side hustlers, indie builders",
+        "theme": "Project showcases, feedback",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Demo, showcase, request feedback",
+        "banned_phrases": [
+            "buy",
+            "subscribe",
+            "ad"
+        ]
+    },
+    {
+        "name": "coding",
+        "audience": "Developers, hobbyists",
+        "theme": "Code sharing, portfolio advice",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Project demo, snippets, tips",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "algorithms",
+        "audience": "CS students, developers",
+        "theme": "Algorithm questions, coding problems",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Discussion, educational, problem solving",
+        "banned_phrases": [
+            "ad",
+            "spam",
+            "buy now"
+        ]
+    },
+    {
+        "name": "compsci",
+        "audience": "Computer science enthusiasts",
+        "theme": "CS concepts, projects, theory",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Discussion, question, demo",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "developers",
+        "audience": "General developers",
+        "theme": "Knowledge sharing, Q&A",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Discussion, demo, tips",
+        "banned_phrases": [
+            "spam",
+            "clickbait"
+        ]
+    },
+    {
+        "name": "RemoteJobs",
+        "audience": "Remote job seekers, recruiters",
+        "theme": "Job postings, profile shares",
+        "links_allowed": true,
+        "self_promo_level": "high",
+        "post_style": "Career showcase, job posting",
+        "banned_phrases": [
+            "spam",
+            "unverified link"
+        ]
+    },
+    {
+        "name": "forhire",
+        "audience": "Freelancers, clients",
+        "theme": "Gigs, freelance projects",
+        "links_allowed": true,
+        "self_promo_level": "high",
+        "post_style": "Project showcase, portfolio",
+        "banned_phrases": [
+            "spam",
+            "click here"
+        ]
+    },
+    {
+        "name": "developersPak",
+        "audience": "Pakistani developers",
+        "theme": "Portfolio, project feedback, remote work",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Project demo, tips",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "WorkOnline",
+        "audience": "Remote workers, tech freelancers",
+        "theme": "Remote jobs, gigs, tasks",
+        "links_allowed": true,
+        "self_promo_level": "high",
+        "post_style": "Project showcase, job posting",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
+    },
+    {
+        "name": "hiring",
+        "audience": "Companies, recruiters",
+        "theme": "Job opportunities, remote hiring",
+        "links_allowed": true,
+        "self_promo_level": "high",
+        "post_style": "Job posting, project demo",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "devops",
+        "audience": "Cloud engineers, DevOps",
+        "theme": "Deployment projects, ops discussions",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Discussion, demo, workflow",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
+    },
+    {
+        "name": "datascience",
+        "audience": "Data scientists, analysts",
+        "theme": "Analytics, AI projects, career advice",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Discussion, tutorial, Q&A",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "reactjs",
+        "audience": "Frontend developers",
+        "theme": "React projects, UI/UX, portfolio",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Demo, tips, showcase",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
+    },
+    {
+        "name": "node",
+        "audience": "Backend developers",
+        "theme": "Node projects, backend tips, remote jobs",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Demo, discussion, portfolio",
+        "banned_phrases": [
+            "spam",
+            "clickbait"
+        ]
+    },
+    {
+        "name": "startups",
+        "audience": "Founders, early-stage startups",
+        "theme": "AI project pitches, collaborations, remote hires",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Project showcase, pitch, discussion",
+        "banned_phrases": [
+            "spam",
+            "ad",
+            "buy"
+        ]
+    },
+    {
+        "name": "Entrepreneur",
+        "audience": "Startup founders, small business",
+        "theme": "Business ideas, early-stage product feedback",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Pitch, demo, feedback",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
+    },
+    {
+        "name": "ProductManagement",
+        "audience": "PMs, product builders",
+        "theme": "Product design, usability, growth",
+        "links_allowed": false,
+        "self_promo_level": "low",
+        "post_style": "Discussion, questions, case studies",
+        "banned_phrases": [
+            "promotion",
+            "spam"
+        ]
+    },
+    {
+        "name": "NoCode",
+        "audience": "No-code builders, indie hackers",
+        "theme": "Project demos, tool discussion",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Showcase, tutorial, demo",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
+    },
+    {
+        "name": "SideHustle",
+        "audience": "Side project builders",
+        "theme": "Feedback, project ideas, growth",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Showcase, discussion, demo",
+        "banned_phrases": [
+            "spam",
+            "promotion"
+        ]
+    },
+    {
+        "name": "IndieDev",
+        "audience": "Independent developers, game/app makers",
+        "theme": "Project showcases, dev logs, tips",
+        "links_allowed": true,
+        "self_promo_level": "medium",
+        "post_style": "Demo, showcase, discussion",
+        "banned_phrases": [
+            "spam",
+            "ad"
+        ]
     }
 ]
