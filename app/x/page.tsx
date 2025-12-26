@@ -39,7 +39,7 @@ export default function XPage() {
     }
 
     return (
-        <div className="container mx-auto py-10 px-4 max-w-4xl">
+        <div className="container mx-auto py-10 px-4 max-w-4xl" suppressHydrationWarning>
             <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500">
                     <Twitter size={32} />

@@ -3,7 +3,7 @@ import { ArrowRight, MessageSquare, Twitter, Layers, BarChart } from "lucide-rea
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col" suppressHydrationWarning>
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-background to-secondary/20">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600" suppressHydrationWarning>
