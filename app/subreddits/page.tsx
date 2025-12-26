@@ -32,7 +32,12 @@ export default function SubredditsPage() {
             const res = await fetch('/api/import')
             if (res.ok) {
                 const data = await res.json()
-                alert(`Imported ${data.total} subreddits successfully!`)
+                if (data.failed > 0) {
+                    console.error('Import failures:', data.results.filter((r: any) => r.status === 'error'))
+                    alert(`Imported ${data.imported} successfully. Failed: ${data.failed}. Check console for details.\n\nLikely cause: Missing UNIQUE constraint on 'name'. Run this SQL:\nALTER TABLE subreddits ADD CONSTRAINT subreddits_name_key UNIQUE (name);`)
+                } else {
+                    alert(`Success! Imported ${data.imported} subreddits.`)
+                }
                 fetchSubreddits()
             } else {
                 alert("Import failed")

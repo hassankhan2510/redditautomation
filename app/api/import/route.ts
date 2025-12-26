@@ -40,9 +40,14 @@ export async function GET(request: Request) {
             }
         }
 
+        const successCount = results.filter(r => r.status === 'success').length
+        const failCount = results.filter(r => r.status === 'error').length
+
         return NextResponse.json({
             success: true,
             total: subreddits.length,
+            imported: successCount,
+            failed: failCount,
             results
         })
 
