@@ -38,3 +38,21 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
 }
+
+export async function DELETE(request: Request) {
+    try {
+        const { id } = await request.json()
+        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
+
+        const { error } = await supabase
+            .from('post_ideas')
+            .delete()
+            .eq('id', id)
+
+        if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+        return NextResponse.json({ success: true })
+    } catch (e) {
+        return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    }
+}
