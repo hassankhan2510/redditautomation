@@ -30,29 +30,36 @@ export async function GET(request: Request) {
     }
 
     try {
-        // NewsAPI param logic
-        // "global" isn't a country code, so we use 'us' or just category if 'global'
-        // 'pk' is valid.
-
-        let url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&pageSize=6`
+        let url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&pageSize=10`
 
         if (region === 'pk') {
-            url += `&country=pk`
+            url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&country=pk&pageSize=10`
         } else {
-            // Global/Western focus for X virality often implies US/Tech
-            url += `&language=en`
+            url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&language=en&pageSize=10`
             if (category === 'technology') url += '&category=technology'
         }
 
-        const res = await fetch(url, { next: { revalidate: 3600 } }) // Cache for 1 hour
-        const data = await res.json()
+        console.log(`Fetching News: ${url}`)
+        let res = await fetch(url, { next: { revalidate: 3600 } })
+        let data = await res.json()
+
+        // Fallback for PK if top-headlines is empty (common in Free tier or quiet days)
+        if (region === 'pk' && (!data.articles || data.articles.length === 0)) {
+            console.log("PK Top Headlines empty, switching to search query 'Pakistan'...")
+            const fallbackUrl = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q=pakistan&sortBy=publishedAt&language=en&pageSize=10`
+            res = await fetch(fallbackUrl, { next: { revalidate: 3600 } })
+            data = await res.json()
+        }
 
         if (data.status !== 'ok') {
+            // Log the actual error from NewsAPI for debugging
+            console.error("NewsAPI Error:", data)
             throw new Error(data.message || 'NewsAPI Error')
         }
 
         return NextResponse.json(data)
     } catch (e: any) {
+        console.error("API Route Error:", e)
         return NextResponse.json({ error: e.message }, { status: 500 })
     }
 }
