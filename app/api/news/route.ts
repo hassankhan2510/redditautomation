@@ -1,65 +1,77 @@
 import { NextResponse } from 'next/server'
+import Parser from 'rss-parser'
+
+// Initialize RSS Parser
+const parser = new Parser()
+
+// Define Feed Sources
+const PK_FEEDS = [
+    'https://www.dawn.com/feeds/home',
+    'https://www.geo.tv/rss/1',
+    'https://tribune.com.pk/feed',
+    'https://www.thenews.com.pk/rss/1/1'
+]
+
+const GLOBAL_FEEDS = [
+    'http://feeds.bbci.co.uk/news/rss.xml',
+    'http://rss.cnn.com/rss/edition.rss',
+    'https://www.theverge.com/rss/index.xml', // Tech mix
+]
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const region = searchParams.get('region') || 'global' // 'pk' or 'global'
-    const category = 'general'
-    const apiKey = process.env.NEWS_API_KEY
+    
+    // Select feeds based on region
+    const feedsToFetch = region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS
+    
+    try {
+        console.log(`Fetching RSS feeds for region: ${region} from ${feedsToFetch.length} sources...`)
 
-    if (!apiKey) {
+        // Fetch in parallel (fail-safe: if one fails, others still load)
+        const feedPromises = feedsToFetch.map(async (url) => {
+            try {
+                const feed = await parser.parseURL(url)
+                // Normalize feed items to match our App's structure
+                // We map 'feed.title' to 'source.name'
+                return feed.items.map(item => ({
+                    source: { name: feed.title?.trim() || 'News Source' },
+                    title: item.title,
+                    description: item.contentSnippet || item.content || '',
+                    url: item.link,
+                    publishedAt: item.isoDate || item.pubDate ? new Date(item.isoDate || item.pubDate!).toISOString() : new Date().toISOString()
+                }))
+            } catch (err) {
+                console.error(`Failed to parse feed ${url}:`, err)
+                return [] // Return empty array on failure
+            }
+        })
+
+        const feedResults = await Promise.all(feedPromises)
+        
+        // Flatten array of arrays
+        let allArticles = feedResults.flat()
+
+        // Deduplicate (based on URL or Title)
+        const uniqueArticles = Array.from(new Map(allArticles.map(item => [item.title, item])).values())
+
+        // Sort by date (Newest first)
+        uniqueArticles.sort((a, b) => {
+            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        })
+
+        // Limit to 20 items to keep payload light
+        const finalArticles = uniqueArticles.slice(0, 20)
+
+        // Return in same format as NewsAPI for compatibility
         return NextResponse.json({
             status: 'ok',
-            articles: [
-                {
-                    source: { name: 'Dawn' },
-                    title: 'Stock market crosses 70,000 points milestone (Mock)',
-                    description: 'KSE-100 index shows historic performance.',
-                    url: 'https://dawn.com'
-                }
-            ]
+            totalResults: finalArticles.length,
+            articles: finalArticles
         })
-    }
-
-    try {
-        let url = ''
-
-        if (region === 'pk') {
-            // STRATEGY: 
-            // 1. Try Top Headlines from PK (often empty on free tier)
-            // 2. If empty, use "Everything" but RESTRICTED to top Pakistani Domains
-            // This prevents "BBC reporting on Pakistan" and gives "Dawn/Geo reporting on Pakistan"
-
-            const pkDomains = 'dawn.com,tribune.com.pk,geo.tv,thenews.com.pk,brecorder.com,nation.com.pk,arynews.tv'
-
-            // First try strict top-headlines (rarely works well for limited countries on free)
-            url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&country=pk&pageSize=12`
-
-            console.log(`Fetching PK Headlines: ${url}`)
-            let res = await fetch(url, { next: { revalidate: 3600 } })
-            let data = await res.json()
-
-            if (!data.articles || data.articles.length === 0) {
-                // Fallback: Use Domain Filter to force local sources
-                console.log("PK Headlines empty. Switch to Domain Filter...")
-                // We search for "Pakistan" OR widely relevant generic news within these domains
-                // Actually, just listing domains and sorting by publishedAt is often best "feed"
-                const fallbackUrl = `https://newsapi.org/v2/everything?apiKey=${apiKey}&domains=${pkDomains}&sortBy=publishedAt&pageSize=12`
-                res = await fetch(fallbackUrl, { next: { revalidate: 3600 } })
-                data = await res.json()
-            }
-
-            return NextResponse.json(data)
-
-        } else {
-            // Global Logic (Simple)
-            url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&language=en&category=${category}&pageSize=12`
-            const res = await fetch(url, { next: { revalidate: 3600 } })
-            const data = await res.json()
-            return NextResponse.json(data)
-        }
 
     } catch (e: any) {
-        console.error("API Route Error:", e)
+        console.error("RSS Route Error:", e)
         return NextResponse.json({ error: e.message }, { status: 500 })
     }
 }
