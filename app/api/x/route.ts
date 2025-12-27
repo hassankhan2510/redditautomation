@@ -24,6 +24,7 @@ CRITICAL RULES (ANTI-ROBOT MODE):
 - NO "Here are 3 variations" intro. Just the posts.
 - NO "Unlock" or "Unleash" or "Elevate" (Banned AI words).
 - Write exactly like a human user posted this from their phone.
+- STRICT LENGTH LIMIT: Every single tweet variation MUST be under 280 characters. This is non-negotiable.
 
 CONTEXT:
 Topic: "${topic}"
