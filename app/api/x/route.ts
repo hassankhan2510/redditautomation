@@ -34,15 +34,24 @@ Style/Format: ${tone}
         const userPrompt = `
 Generate 3 distinct variations separated by "---".
 All 3 must be high-impact X posts matching the "${tone}" style.
-STRICT: All 3 variations must be under 280 characters.
+VERY IMPORTANT: Keep them SHORT. Maximum 2-3 sentences per post.
 
 Return ONLY the 3 variations separated by "---".
 `
 
         const completion = await generateCompletion(systemPrompt, userPrompt)
 
-        // Split by "---"
-        const tweets = completion.split('---').map(t => t.trim()).filter(t => t.length > 0)
+        // Split by "---" and Enforce 280 Character Limit
+        const tweets = completion.split('---')
+            .map(t => t.trim())
+            .filter(t => t.length > 0)
+            .map(t => {
+                // Hard Cutoff Safety Net
+                if (t.length > 280) {
+                    return t.substring(0, 275) + "..."
+                }
+                return t
+            })
 
         return NextResponse.json({ tweets })
 
