@@ -5,9 +5,22 @@ import { Twitter, Send, Copy, ExternalLink, Loader2, Sparkles, RefreshCcw } from
 
 export default function XPage() {
     const [topic, setTopic] = useState("")
-    const [tone, setTone] = useState("viral-hook")
-    const [persona, setPersona] = useState("Personal Brand")
+    // Unified Voice State
+    const [voicePreset, setVoicePreset] = useState("influencer")
     const [language, setLanguage] = useState<'en' | 'ur'>('en')
+
+    // Internal mappings for the API
+    const PRESETS: Record<string, { persona: string, tone: string, label: string }> = {
+        "influencer": { persona: "Viral Influencer", tone: "viral-hook", label: "🔥 Viral Influencer (Hook)" },
+        "journalist": { persona: "Professional Journalist", tone: "news", label: "📰 Journalist (News)" },
+        "entrepreneur": { persona: "Tech Entrepreneur", tone: "thread", label: "💡 Entrepreneur (Insight)" },
+        "contrarian": { persona: "Thought Leader", tone: "contrarian", label: "🤔 Contrarian (Opinion)" },
+        "shi*poster": { persona: "Casual User", tone: "memetic", label: "🤪 Shitposter (Meme)" },
+        "personal": { persona: "Personal Brand", tone: "viral-hook", label: "👤 Personal Brand (General)" },
+        "scientist": { persona: "Scientist/Researcher", tone: "thread", label: "🧪 Scientist (Educational)" },
+        "developer": { persona: "Software Developer", tone: "thread", label: "💻 Developer (Technical)" }
+    }
+
     const [generatedContent, setGeneratedContent] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -39,6 +52,8 @@ export default function XPage() {
         setLoading(true)
         setGeneratedContent([])
 
+        const { persona, tone } = PRESETS[voicePreset]
+
         try {
             const res = await fetch('/api/x', {
                 method: 'POST',
@@ -60,7 +75,7 @@ export default function XPage() {
 
     const useNewsItem = (article: any) => {
         setTopic(`News: ${article.title}\n\nSummary: ${article.description || ''}\nLink: ${article.url}`)
-        setTone("news")
+        setVoicePreset("journalist") // Auto-switch to journalist for news
         // Optional: auto-scroll to input
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -142,62 +157,41 @@ export default function XPage() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Language</label>
-                                    <div className="flex bg-secondary p-1 rounded-lg">
-                                        <button
-                                            type="button"
-                                            onClick={() => setLanguage('en')}
-                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'en' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                                        >
-                                            English
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setLanguage('ur')}
-                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'ur' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                                        >
-                                            Urdu
-                                        </button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Persona</label>
-                                    <select
-                                        className="w-full bg-background border rounded-lg p-2 text-sm"
-                                        value={persona}
-                                        onChange={e => setPersona(e.target.value)}
-                                    >
-                                        <option value="Personal Brand">Personal Brand</option>
-                                        <option value="Influencer">Influencer</option>
-                                        <option value="Journalist">Journalist</option>
-                                        <option value="Entrepreneur">Entrepreneur</option>
-                                        <option value="Scientist">Scientist</option>
-                                        <option value="Developer">Developer</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div>
-                                <label className="block text-sm font-medium mb-2">Style Strategy (Format)</label>
+                                <label className="block text-sm font-medium mb-1">Language</label>
+                                <div className="flex bg-secondary p-1 rounded-lg mb-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setLanguage('en')}
+                                        className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'en' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                    >
+                                        English
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setLanguage('ur')}
+                                        className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${language === 'ur' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                    >
+                                        Urdu
+                                    </button>
+                                </div>
+
+                                <label className="block text-sm font-medium mb-2">Voice & Style</label>
                                 <select
                                     className="w-full bg-background border rounded-lg p-2.5"
-                                    value={tone}
-                                    onChange={e => setTone(e.target.value)}
+                                    value={voicePreset}
+                                    onChange={e => setVoicePreset(e.target.value)}
                                 >
-                                    <option value="viral-hook">🔥 Viral Hook (Clickbait-ish)</option>
-                                    <option value="thread">🧵 Detailed Thread (Value)</option>
-                                    <option value="contrarian">🤔 Contrarian Take</option>
-                                    <option value="news">📰 News Update</option>
-                                    <option value="memetic">🤪 Shitpost / Meme</option>
+                                    {Object.entries(PRESETS).map(([key, config]) => (
+                                        <option key={key} value={key}>{config.label}</option>
+                                    ))}
                                 </select>
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-4"
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 mt-auto"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : <Send size={18} />}
                                 {loading ? "Crafting Tweets..." : "Generate Variants"}
