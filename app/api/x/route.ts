@@ -33,9 +33,8 @@ Style/Format: ${tone}
 
         const userPrompt = `
 Generate 3 distinct variations separated by "---".
-1. A short, punchy single tweet.
-2. A detailed "insight" style post.
-3. A "hook" style post.
+All 3 must be high-impact X posts matching the "${tone}" style.
+STRICT: All 3 variations must be under 280 characters.
 
 Return ONLY the 3 variations separated by "---".
 `
