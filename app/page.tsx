@@ -1,83 +1,126 @@
+"use client"
+
 import Link from "next/link"
-import { ArrowRight, MessageSquare, Twitter, Layers, BarChart } from "lucide-react"
+import { ArrowRight, Rocket, Repeat, BarChart3, Search, Zap, LayoutTemplate, Sparkles, MessageSquare } from "lucide-react"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col" suppressHydrationWarning>
-      {/* Hero Section */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-background to-secondary/20">
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600" suppressHydrationWarning>
-          Intelligent Content Engine
-        </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-10" suppressHydrationWarning>
-          Scale your personal brand on Reddit and X without the burnout.
-          Generate, Plan, and Post from a single command center.
-        </p>
+    <main className="flex flex-col min-h-screen">
 
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Link href="/ideas" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/25 flex items-center gap-2">
-            Start Creating <ArrowRight size={20} />
-          </Link>
-          <Link href="/x" className="px-8 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full font-bold text-lg transition-all flex items-center gap-2 border border-zinc-700">
-            X / Twitter Tools
-          </Link>
+      {/* HERO SECTION */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background z-0" />
+        <div className="container px-4 md:px-6 relative z-10 text-center">
+          <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm text-muted-foreground mb-6 bg-background/50 backdrop-blur">
+            <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2" />
+            v2.0 is Live: Social Listening & Remix Engine
+          </div>
+          <h1 className="text-4xl md:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 mb-6">
+            Scale Your Brand. <br className="hidden md:block" />
+            <span className="text-primary">Solo.</span>
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-[600px] mx-auto mb-10">
+            The all-in-one Growth OS for solopreneurs. Repurpose content, find high-intent leads, and create viral visuals in seconds.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/ideas" className="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+              Start Creating <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+            <Link href="/scout" className="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+              Find Leads
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12" suppressHydrationWarning>Production-Ready Workflows</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-          {/* Reddit Card */}
-          <div className="p-8 rounded-2xl bg-card border hover:border-orange-500/50 transition-all hover:shadow-lg group">
-            <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mb-6 text-orange-600">
-              <MessageSquare size={28} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3 group-hover:text-orange-500 transition-colors">Reddit Planner</h3>
-            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
-              Community-aware drafting. Select specific subreddits, customize tones, and manage your posting schedule manually.
-            </p>
-            <Link href="/ideas" className="text-sm font-bold text-orange-600 hover:underline">
-              Go to Planner &rarr;
-            </Link>
+      {/* FEATURE GRID */}
+      <section className="py-20 bg-secondary/20">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Your Growth Arsenal</h2>
+            <p className="text-muted-foreground max-w-[500px] mx-auto">Do the work of a 5-person marketing team, by yourself.</p>
           </div>
 
-          {/* X Card */}
-          <div className="p-8 rounded-2xl bg-card border hover:border-blue-500/50 transition-all hover:shadow-lg group">
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-6 text-blue-600">
-              <Twitter size={28} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-500 transition-colors">X / Twitter Viral</h3>
-            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
-              Turn news, random thoughts, or trends into viral threads. Optimized for engagement and growth.
-            </p>
-            <Link href="/x" className="text-sm font-bold text-blue-600 hover:underline">
-              Open Generator &rarr;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {/* CARD 1: REPURPOSE */}
+            <Link href="/repurpose" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Repeat size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-violet-100 dark:bg-violet-900/20 w-fit rounded-lg text-violet-600 dark:text-violet-400">
+                <Repeat size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Content Repurposer</h3>
+              <p className="text-muted-foreground text-sm">Turn one idea into a LinkedIn post, Tweet, and Reddit thread instantly.</p>
+            </Link>
+
+            {/* CARD 2: SCOUT */}
+            <Link href="/scout" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Search size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-teal-100 dark:bg-teal-900/20 w-fit rounded-lg text-teal-600 dark:text-teal-400">
+                <Search size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Lead Scout</h3>
+              <p className="text-muted-foreground text-sm">Find customers asking for help in your niche on Reddit in real-time.</p>
+            </Link>
+
+            {/* CARD 3: REMIX */}
+            <Link href="/remix" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Zap size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-pink-100 dark:bg-pink-900/20 w-fit rounded-lg text-pink-600 dark:text-pink-400">
+                <Sparkles size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Remix Vault</h3>
+              <p className="text-muted-foreground text-sm">Steal the structure of viral hits and rewrite them for your industry.</p>
+            </Link>
+
+            {/* CARD 4: CHARTS */}
+            <Link href="/chart" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <BarChart3 size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-indigo-100 dark:bg-indigo-900/20 w-fit rounded-lg text-indigo-600 dark:text-indigo-400">
+                <BarChart3 size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Chart Studio</h3>
+              <p className="text-muted-foreground text-sm">Turn boring text statistics into viral-ready visuals.</p>
+            </Link>
+
+            {/* CARD 5: CAROUSEL */}
+            <Link href="/carousel" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <LayoutTemplate size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-orange-100 dark:bg-orange-900/20 w-fit rounded-lg text-orange-600 dark:text-orange-400">
+                <LayoutTemplate size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Carousel Maker</h3>
+              <p className="text-muted-foreground text-sm">Generate PDF carousels for LinkedIn interaction.</p>
+            </Link>
+
+            {/* CARD 6: REPLY */}
+            <Link href="/reply" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <MessageSquare size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/20 w-fit rounded-lg text-green-600 dark:text-green-400">
+                <MessageSquare size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Reply Engine</h3>
+              <p className="text-muted-foreground text-sm">Hijack viral conversations on X with high-status replies.</p>
             </Link>
           </div>
-
-          {/* Analytics Card */}
-          <div className="p-8 rounded-2xl bg-card border hover:border-purple-500/50 transition-all hover:shadow-lg group">
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-6 text-purple-600">
-              <BarChart size={28} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-500 transition-colors">History & Drafts</h3>
-            <p className="text-muted-foreground mb-6" suppressHydrationWarning>
-              Track your approved drafts, view history, and keep a clear timeline of your content distribution.
-            </p>
-            <Link href="/history" className="text-sm font-bold text-purple-600 hover:underline">
-              View History &rarr;
-            </Link>
-          </div>
-
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-muted-foreground text-sm border-t">
-        <p suppressHydrationWarning>&copy; 2024 Reddit Poster SaaS. Built for scale.</p>
+      <footer className="py-8 text-center text-sm text-muted-foreground border-t">
+        <p>© 2025 SoloScale. Built for Growth.</p>
       </footer>
-    </div>
+    </main>
   )
 }

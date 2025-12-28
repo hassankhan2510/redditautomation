@@ -1,12 +1,17 @@
 import Link from 'next/link'
 import { ModeToggle } from "@/components/mode-toggle"
 
+import { Rocket } from "lucide-react"
+
 export function Navbar() {
     return (
-        <nav className="border-b bg-background">
+        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
             <div className="flex h-16 items-center px-4 container mx-auto">
-                <Link href="/" className="font-bold text-lg mr-8">
-                    Reddit Poster
+                <Link href="/" className="font-bold text-xl mr-8 flex items-center gap-2">
+                    <div className="bg-primary/10 p-2 rounded-lg text-primary">
+                        <Rocket size={20} />
+                    </div>
+                    <span>SoloScale</span>
                 </Link>
                 <div className="flex items-center space-x-6 text-sm font-medium flex-1">
                     <Link href="/ideas" className="transition-colors hover:text-foreground/80">
