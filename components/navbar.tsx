@@ -24,6 +24,12 @@ export function Navbar() {
                     <Link href="/timeline" className="transition-colors hover:text-foreground/80">
                         Timeline
                     </Link>
+                    <Link href="/repurpose" className="transition-colors hover:text-violet-500 font-bold">
+                        Repurpose
+                    </Link>
+                    <Link href="/reply" className="transition-colors hover:text-green-500 font-bold">
+                        Reply Engine
+                    </Link>
                     <Link href="/x" className="transition-colors hover:text-blue-500 font-bold">
                         X Content
                     </Link>
