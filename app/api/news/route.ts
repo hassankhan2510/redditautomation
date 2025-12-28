@@ -8,26 +8,61 @@ const parser = new Parser({
     }
 })
 
-// Define Feed Sources - ONLY Verified Working Feeds
-const PK_FEEDS = [
-    'https://www.dawn.com/feeds/home',         // Verified ✅
-    'https://www.thenews.com.pk/rss/1/1',      // Verified ✅
-    'https://arynews.tv/feed/'                 // Verified ✅ (Replacing Geo/Tribune)
-]
+// === VERIFIED FEED SOURCES ===
 
-const GLOBAL_FEEDS = [
-    'http://feeds.bbci.co.uk/news/rss.xml',    // Verified ✅
-    'http://rss.cnn.com/rss/edition.rss',      // Verified ✅
-    'https://www.theverge.com/rss/index.xml'   // Verified ✅
-]
+// 1. REGIONAL (Pakistan vs Global)
+const REGIONS = {
+    'pk': [
+        'https://www.dawn.com/feeds/home',
+        'https://www.thenews.com.pk/rss/1/1',
+        'https://arynews.tv/feed/',
+        'https://profit.pakistantoday.com.pk/feed/' // Added Profit PK
+    ],
+    'global': [
+        'http://feeds.bbci.co.uk/news/rss.xml',
+        'http://rss.cnn.com/rss/edition.rss',
+        'https://www.theverge.com/rss/index.xml'
+    ]
+}
+
+// 2. CATEGORIES (New Request)
+const CATEGORIES: Record<string, string[]> = {
+    'business': [
+        'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147', // CNBC
+        'https://finance.yahoo.com/news/rssindex', // Yahoo Finance
+        'https://www.entrepreneur.com/latest.rss'
+    ],
+    'tech': [
+        'https://techcrunch.com/feed/',
+        'https://www.wired.com/feed/rss',
+        'https://arstechnica.com/feed/'
+    ],
+    'politics': [
+        'http://rss.cnn.com/rss/cnn_allpolitics.rss', // CNN Politics
+        'https://feeds.bbci.co.uk/news/politics/rss.xml' // BBC Politics
+    ],
+    'stock': [
+        'https://www.investing.com/rss/news.rss', // Investing.com
+        'https://www.marketwatch.com/rss/topstories' // MarketWatch
+    ]
+}
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const customUrl = searchParams.get('customUrl')
-    const region = searchParams.get('region') || 'global' // 'pk' or 'global'
+    const category = searchParams.get('category') // 'business', 'tech', etc.
+    const region = searchParams.get('region') || 'global'
 
-    // Select feeds based on region or custom URL
-    const feedsToFetch = customUrl ? [customUrl] : (region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS)
+    let feedsToFetch: string[] = []
+
+    // Priority: Custom > Category > Region
+    if (customUrl) {
+        feedsToFetch = [customUrl]
+    } else if (category && CATEGORIES[category]) {
+        feedsToFetch = CATEGORIES[category]
+    } else {
+        feedsToFetch = REGIONS[region as keyof typeof REGIONS] || REGIONS['global']
+    }
 
     try {
         // Fetch in parallel
@@ -64,7 +99,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             status: 'ok',
             totalResults: uniqueArticles.length,
-            articles: uniqueArticles.slice(0, 25)
+            articles: uniqueArticles.slice(0, 30) // Increased limit slightly
         })
 
     } catch (e: any) {
