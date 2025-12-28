@@ -23,10 +23,11 @@ const GLOBAL_FEEDS = [
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
+    const customUrl = searchParams.get('customUrl')
     const region = searchParams.get('region') || 'global' // 'pk' or 'global'
 
-    // Select feeds based on region
-    const feedsToFetch = region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS
+    // Select feeds based on region or custom URL
+    const feedsToFetch = customUrl ? [customUrl] : (region === 'pk' ? PK_FEEDS : GLOBAL_FEEDS)
 
     try {
         // Fetch in parallel

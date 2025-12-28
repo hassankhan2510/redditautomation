@@ -30,6 +30,9 @@ export function Navbar() {
                     <Link href="/reply" className="transition-colors hover:text-green-500 font-bold">
                         Reply Engine
                     </Link>
+                    <Link href="/carousel" className="transition-colors hover:text-orange-500 font-bold">
+                        Carousel
+                    </Link>
                     <Link href="/x" className="transition-colors hover:text-blue-500 font-bold">
                         X Content
                     </Link>
