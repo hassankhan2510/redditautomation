@@ -99,7 +99,7 @@ export default function ChartPage() {
                     <BarChart3 className="text-blue-500" />
                     AI Chart Studio
                 </h1>
-                <p className="text-muted-foreground">Describe data -> Get a professional chart.</p>
+                <p className="text-muted-foreground">Describe data &rarr; Get a professional chart.</p>
             </div>
 
             <div className="bg-card border rounded-xl p-6 shadow-sm mb-6">
