@@ -16,14 +16,36 @@ export default function ReplyPage() {
     const [trends, setTrends] = useState<any[]>([])
     const [trendsLoading, setTrendsLoading] = useState(false)
 
+    // Feed Controls
+    const [feedMode, setFeedMode] = useState<'region' | 'category'>('region')
+    const [activeRegion, setActiveRegion] = useState('global')
+    const [activeCategory, setActiveCategory] = useState('tech')
 
+    // Custom Feed State
+    const [customUrl, setCustomUrl] = useState("")
+    const [showCustomInput, setShowCustomInput] = useState(false)
 
-    const fetchTrends = async () => {
+    useEffect(() => {
+        fetchTrends()
+    }, [feedMode, activeCategory, activeRegion])
+
+    const fetchTrends = async (urlOverride?: string) => {
         setTrendsLoading(true)
+        let url = '/api/trends'
+
+        if (urlOverride) {
+            url = `/api/news?customUrl=${encodeURIComponent(urlOverride)}`
+        } else if (feedMode === 'category') {
+            url = `/api/news?category=${activeCategory}`
+        } else {
+            url = `/api/news?region=${activeRegion}`
+        }
+
         try {
-            const res = await fetch('/api/trends')
+            const res = await fetch(url)
             const data = await res.json()
-            if (data.trends) setTrends(data.trends)
+            if (data.articles) setTrends(data.articles.map((a: any) => ({ ...a, source: a.source.name })))
+            else if (data.trends) setTrends(data.trends)
         } catch (e) {
             console.error(e)
         } finally {
@@ -34,6 +56,12 @@ export default function ReplyPage() {
     const useTrend = (trend: any) => {
         setTargetTweet(`Topic: ${trend.title}\nSource: ${trend.source}`)
         setGoal("Share a unique expert insight")
+    }
+
+    const handleAddSource = () => {
+        if (!customUrl) return
+        fetchTrends(customUrl)
+        setShowCustomInput(false)
     }
 
     // Reusing presets
