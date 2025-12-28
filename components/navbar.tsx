@@ -21,6 +21,12 @@ export function Navbar() {
                     <Link href="/history" className="transition-colors hover:text-foreground/80">
                         History
                     </Link>
+                    <Link href="/convert" className="transition-colors hover:text-purple-500 font-bold">
+                        Convert
+                    </Link>
+                    <Link href="/remix" className="transition-colors hover:text-pink-500 font-bold">
+                        Remix
+                    </Link>
                     <Link href="/timeline" className="transition-colors hover:text-foreground/80">
                         Timeline
                     </Link>
@@ -32,6 +38,9 @@ export function Navbar() {
                     </Link>
                     <Link href="/carousel" className="transition-colors hover:text-orange-500 font-bold">
                         Carousel
+                    </Link>
+                    <Link href="/chart" className="transition-colors hover:text-indigo-500 font-bold">
+                        Chart
                     </Link>
                     <Link href="/x" className="transition-colors hover:text-blue-500 font-bold">
                         X Content
