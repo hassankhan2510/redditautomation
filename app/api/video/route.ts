@@ -7,21 +7,26 @@ export async function POST(request: Request) {
 
         if (!script) return NextResponse.json({ error: 'Script required' }, { status: 400 })
 
-        const systemPrompt = `You are an expert Video Director.
-Your goal is to parse raw text into a STRUCTURED JSON format for a kinetic typography video.
+        const systemPrompt = `You are a World-Class Motion Designer.
+Your goal is to turn text into a SCENE-BASED video script.
 Output valid JSON only.
 
 Structure:
 {
-  "title": "Short Punchy Header (Max 4 words)",
-  "subtitle": "One sentence context explanation",
-  "points": ["Point 1", "Point 2", "Point 3", "Point 4"]
+  "scenes": [
+    { "type": "title", "text": "MAIN HEADLINE", "subtext": "Subtitle here", "color": "blue" },
+    { "type": "problem", "text": "The Pain Point", "icon": "alert", "color": "red" },
+    { "type": "solution", "text": "The Fix", "list": ["Step 1", "Step 2"], "color": "green" },
+    { "type": "quote", "text": "Inspirational Quote", "author": "Author Name", "color": "purple" },
+    { "type": "outro", "text": "Call To Action", "subtext": "Follow for more", "color": "black" }
+  ]
 }
 
 Rules:
-- Title must be high-impact.
-- Points must be concise (Max 6 words each).
-- Max 5 points.
+- Create 5-7 scenes for a complete story.
+- "text" must be punchy (max 5 words).
+- Colors: Choose from [blue, red, green, purple, black, orange].
+- Be kinetic and exciting.
 `
 
         const userPrompt = `Convert this text into a video script:\n"${script}"`

@@ -1,18 +1,22 @@
 "use client"
 
 import { Player } from '@remotion/player';
-import { KineticText } from './KineticText';
+import { KineticText, getDuration } from './KineticText';
 
 export const VideoPlayer = ({ data }: { data: any }) => {
-    // Default duration: 3 sec intro + 2 sec per point
-    const durationInFrames = (30 * 30) + (data.points.length * 60) + 60;
+    // Calculate total duration based on scenes
+    const scenes = data.scenes || [];
+    const durationInFrames = scenes.reduce((acc: number, scene: any) => acc + getDuration(scene), 0);
+
+    // Fallback if no scenes (shouldn't happen)
+    const finalDuration = durationInFrames > 0 ? durationInFrames : 150;
 
     return (
         <div className="rounded-xl overflow-hidden shadow-2xl border aspect-video bg-black">
             <Player
                 component={KineticText}
-                inputProps={data}
-                durationInFrames={durationInFrames}
+                inputProps={{ scenes }}
+                durationInFrames={finalDuration}
                 compositionWidth={1920}
                 compositionHeight={1080}
                 fps={30}

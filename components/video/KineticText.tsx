@@ -1,89 +1,107 @@
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+import { AbsoluteFill, Series, useCurrentFrame, interpolate, spring, useVideoConfig } from 'remotion';
 
-export const KineticText = ({ title, subtitle, points, theme = 'dark' }: { title: string, subtitle: string, points: string[], theme?: 'dark' | 'light' }) => {
+// --- SUB-COMPONENTS ---
+
+const TitleScene = ({ text, subtext, color }: any) => {
     const frame = useCurrentFrame();
-    const { fps, width, height } = useVideoConfig();
-
-    // 1. Background Animation (Dynamic Gradient)
-    const bgOpacity = interpolate(frame, [0, 30], [0, 1]);
-    const gradientPos = interpolate(frame, [0, 300], [0, 100]);
-
-    // Theme Colors
-    const isDark = theme === 'dark';
-    const bgGradient = isDark
-        ? `linear-gradient(${45 + gradientPos}deg, #1e1b4b, #312e81, #4c1d95)`
-        : `linear-gradient(${45 + gradientPos}deg, #eff6ff, #dbeafe, #e0e7ff)`;
-    const textColor = isDark ? '#fff' : '#1e3a8a';
-    const accentColor = '#3b82f6';
-
-    // 2. Title Animation (Spring Slide-Up)
-    const titleY = spring({
-        frame,
-        fps,
-        config: { damping: 12 },
-        from: 100,
-        to: 0,
-    });
-    const titleOpacity = interpolate(frame, [0, 20], [0, 1]);
-
-    // 3. Subtitle Animation (Fade In)
-    const subtitleOpacity = interpolate(frame, [20, 40], [0, 1]);
-
-    // 4. Points Stagger Animation
-    const renderPoints = points.map((point, i) => {
-        const delay = 40 + (i * 20); // 40, 60, 80...
-        const pointScale = spring({
-            frame: frame - delay,
-            fps,
-            config: { damping: 12 },
-        });
-
-        // Only render if animation started
-        if (frame < delay) return null;
-
-        return (
-            <div key={i} style={{
-                transform: `scale(${pointScale})`,
-                opacity: pointScale,
-                marginBottom: 30,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 20
-            }}>
-                <div style={{
-                    width: 12, height: 12, borderRadius: '50%', backgroundColor: accentColor, flexShrink: 0
-                }} />
-                <span style={{ fontSize: 40, fontWeight: 500 }}>{point}</span>
-            </div>
-        );
-    });
+    const { fps } = useVideoConfig();
+    const scale = spring({ frame, fps, from: 0.5, to: 1, config: { damping: 12 } });
+    const opacity = interpolate(frame, [0, 20], [0, 1]);
 
     return (
-        <AbsoluteFill style={{ background: bgGradient, opacity: bgOpacity, color: textColor, justifyContent: 'center', alignItems: 'center', fontFamily: 'sans-serif' }}>
-            <div style={{ width: '80%', textAlign: 'left' }}>
-                <h1 style={{
-                    fontSize: 90,
-                    fontWeight: 800,
-                    lineHeight: 1,
-                    marginBottom: 20,
-                    transform: `translateY(${titleY}px)`,
-                    opacity: titleOpacity
-                }}>
-                    {title}
-                </h1>
-                <h2 style={{
-                    fontSize: 40,
-                    fontWeight: 300,
-                    opacity: subtitleOpacity,
-                    marginBottom: 80,
-                    color: isDark ? '#94a3b8' : '#64748b'
-                }}>
-                    {subtitle}
-                </h2>
-                <div>
-                    {renderPoints}
-                </div>
-            </div>
+        <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: getColor(color), color: 'white' }}>
+            <h1 style={{ fontSize: 120, fontWeight: 900, transform: `scale(${scale})`, opacity, textAlign: 'center' }}>
+                {text.toUpperCase()}
+            </h1>
+            <h2 style={{ fontSize: 40, marginTop: 20, opacity: interpolate(frame, [20, 40], [0, 1]) }}>{subtext}</h2>
+        </AbsoluteFill>
+    )
+}
+
+const ProblemScene = ({ text, color }: any) => {
+    const frame = useCurrentFrame();
+    // Shake effect
+    const shake = Math.sin(frame * 0.5) * 10;
+
+    return (
+        <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ef4444', color: 'white' }}>
+            <h1 style={{ fontSize: 100, fontWeight: 800, transform: `translateX(${shake}px)` }}>
+                ⚠️ {text}
+            </h1>
+        </AbsoluteFill>
+    )
+}
+
+const SolutionScene = ({ text, list, color }: any) => {
+    const frame = useCurrentFrame();
+    const { fps } = useVideoConfig();
+
+    return (
+        <AbsoluteFill style={{ padding: 60, background: '#22c55e', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <h1 style={{ fontSize: 80, fontWeight: 800, marginBottom: 40 }}>{text}</h1>
+            {list && list.map((item: string, i: number) => {
+                const delay = i * 20;
+                const slide = spring({ frame: frame - delay, fps, from: 100, to: 0 });
+                const op = interpolate(frame - delay, [0, 10], [0, 1]);
+                if (frame < delay) return null;
+                return (
+                    <div key={i} style={{ fontSize: 40, marginBottom: 20, transform: `translateX(${slide}px)`, opacity: op, display: 'flex', alignItems: 'center', gap: 10 }}>
+                        ✅ {item}
+                    </div>
+                )
+            })}
+        </AbsoluteFill>
+    )
+}
+
+const DefaultScene = ({ text, subtext, color }: any) => {
+    return (
+        <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: getColor(color), color: 'white' }}>
+            <h1 style={{ fontSize: 90, fontWeight: 700, textAlign: 'center', maxWidth: '80%' }}>
+                {text}
+            </h1>
+            {subtext && <p style={{ marginTop: 30, fontSize: 30, opacity: 0.8 }}>{subtext}</p>}
+        </AbsoluteFill>
+    )
+}
+
+
+// --- MAIN ENGINE ---
+
+export const KineticText = ({ scenes }: { scenes: any[] }) => {
+    return (
+        <AbsoluteFill style={{ backgroundColor: 'black' }}>
+            <Series>
+                {scenes.map((scene, i) => {
+                    const duration = getDuration(scene);
+                    return (
+                        <Series.Sequence key={i} durationInFrames={duration}>
+                            {scene.type === 'title' && <TitleScene {...scene} />}
+                            {scene.type === 'problem' && <ProblemScene {...scene} />}
+                            {scene.type === 'solution' && <SolutionScene {...scene} />}
+                            {/* Fallback */}
+                            {!['title', 'problem', 'solution'].includes(scene.type) && <DefaultScene {...scene} />}
+                        </Series.Sequence>
+                    )
+                })}
+            </Series>
         </AbsoluteFill>
     );
 };
+
+// --- HELPERS ---
+
+function getColor(name: string) {
+    if (name === 'blue') return '#2563eb';
+    if (name === 'purple') return '#7c3aed';
+    if (name === 'orange') return '#f97316';
+    if (name === 'black') return '#0f172a';
+    return '#2563eb';
+}
+
+export function getDuration(scene: any) {
+    // 30 frames = 1 second
+    if (scene.type === 'title') return 90; // 3s
+    if (scene.type === 'solution') return 150; // 5s
+    return 90; // Default 3s
+}

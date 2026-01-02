@@ -86,6 +86,44 @@ export default function CarouselPage() {
 
                 {/* EDITOR SIDEBAR (4 Cols) */}
                 <div className="lg:col-span-4 space-y-6">
+
+                    {/* AI GENERATOR */}
+                    <div className="bg-gradient-to-r from-blue-600 to-violet-600 rounded-xl p-5 shadow-lg text-white">
+                        <h2 className="font-bold mb-3 flex items-center gap-2">
+                            <Sparkles size={18} /> AI Auto-Fill
+                        </h2>
+                        <div className="flex gap-2">
+                            <input
+                                className="flex-1 bg-white/20 border border-white/30 rounded px-3 py-2 text-sm placeholder:text-white/70 text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                placeholder="Topic (e.g. SEO Tips)"
+                                id="ai-topic"
+                            />
+                            <button
+                                onClick={async () => {
+                                    const input = document.getElementById('ai-topic') as HTMLInputElement
+                                    if (!input.value) return
+                                    const btn = document.getElementById('ai-btn') as HTMLButtonElement
+                                    btn.innerText = "..."
+                                    btn.disabled = true
+                                    try {
+                                        const res = await fetch('/api/carousel/generate', {
+                                            method: 'POST',
+                                            body: JSON.stringify({ topic: input.value })
+                                        })
+                                        const data = await res.json()
+                                        if (data.slides) setSlides(data.slides)
+                                    } catch (e) { alert("Error") }
+                                    btn.innerText = "Go"
+                                    btn.disabled = false
+                                }}
+                                id="ai-btn"
+                                className="bg-white text-blue-600 font-bold px-4 rounded hover:bg-white/90 transition"
+                            >
+                                Go
+                            </button>
+                        </div>
+                    </div>
+
                     {/* Settings */}
                     <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4">
                         <h2 className="font-semibold flex items-center gap-2">
