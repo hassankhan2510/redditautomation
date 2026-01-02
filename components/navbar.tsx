@@ -41,6 +41,7 @@ export function Navbar() {
                             <BarChart size={16} /> Growth <ChevronDown size={14} />
                         </button>
                         <div className="absolute top-full left-0 w-48 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
+                            <DropdownLink href="/hunter" label="Freelance Hunter" />
                             <DropdownLink href="/scout" label="Lead Scout" />
                             <DropdownLink href="/history" label="Post History" />
                             <DropdownLink href="/timeline" label="Timeline" />
