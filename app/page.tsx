@@ -114,13 +114,21 @@ export default function Home() {
               <h3 className="text-xl font-bold mb-2">Reply Engine</h3>
               <p className="text-muted-foreground text-sm">Hijack viral conversations on X with high-status replies.</p>
             </Link>
+            {/* CARD 7: VIDEO GHOST */}
+            <Link href="/video" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <LayoutTemplate size={100} />
+              </div>
+              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 w-fit rounded-lg text-red-600 dark:text-red-400">
+                <LayoutTemplate size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Video Ghost</h3>
+              <p className="text-muted-foreground text-sm">Turn text into professional kinetic motion graphics instantly.</p>
+            </Link>
+
           </div>
         </div>
       </section>
-
-      <footer className="py-8 text-center text-sm text-muted-foreground border-t">
-        <p>© 2025 SoloScale. Built for Growth.</p>
-      </footer>
     </main>
   )
 }

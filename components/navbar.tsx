@@ -29,6 +29,7 @@ export function Navbar() {
                             <DropdownLink href="/reply" label="Reply Engine" />
                             <DropdownLink href="/carousel" label="Carousel Maker" />
                             <DropdownLink href="/chart" label="Chart Studio" />
+                            <DropdownLink href="/video" label="Video Ghost" />
                             <DropdownLink href="/remix" label="Remix Vault" />
                             <DropdownLink href="/repurpose" label="Repurposer" />
                             <DropdownLink href="/convert" label="Blog Converter" />
