@@ -3,7 +3,7 @@ import { generateCompletion } from '@/lib/llm'
 
 export async function POST(request: Request) {
     try {
-        const { script } = await request.json()
+        const { script, mode } = await request.json()
 
         if (!script) return NextResponse.json({ error: 'Script required' }, { status: 400 })
 
