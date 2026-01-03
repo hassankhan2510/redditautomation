@@ -199,13 +199,21 @@ export default function CarouselPage() {
                         </div>
                     </div>
 
-                    {/* HIDDEN CAPTURE CONTAINER (Absolute Off-screen, Full Scale) */}
+                    {/* HIDDEN CAPTURE CONTAINER (Behind everything, but "visible" to DOM) */}
                     <div
                         ref={slidesRef}
-                        style={{ position: 'absolute', top: 0, left: -9999, width: '1080px' }} // Off-screen but rendered
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            zIndex: -50,
+                            width: '1080px', // Force width
+                            height: '1350px', // Force height
+                            pointerEvents: 'none' // No interaction
+                        }}
                     >
                         {slides.map((text, idx) => (
-                            <div key={idx} className="mb-20"> {/* Spacing for capture logic if needed, or just container */}
+                            <div key={idx}> {/* No margin needed if we capture children individually */}
                                 <SlideCard text={text} idx={idx} total={slides.length} theme={activeTheme} author={authorName} />
                             </div>
                         ))}
