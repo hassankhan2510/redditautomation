@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { LayoutTemplate, Video, MessageSquare, Twitter, Sparkles, Loader2, ArrowRight } from "lucide-react"
+import { LayoutTemplate, Video, MessageSquare, Twitter, Sparkles, Loader2, ArrowRight, BarChart } from "lucide-react"
 
 export default function StudioPage() {
     return (
