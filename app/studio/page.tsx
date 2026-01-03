@@ -17,6 +17,7 @@ function StudioContent() {
 
     // Core State
     const [seed, setSeed] = useState("")
+    const [activeStyle, setStyle] = useState("Viral Hook")
     const [loading, setLoading] = useState<string | null>(null) // 'video', 'carousel', etc.
 
     // Outputs
@@ -38,7 +39,7 @@ function StudioContent() {
         setLoading('video')
         try {
             const res = await fetch('/api/video', {
-                method: 'POST', body: JSON.stringify({ script: seed })
+                method: 'POST', body: JSON.stringify({ script: seed, mode: activeStyle }) // Pass style
             })
             const data = await res.json()
             if (data.videoData) setVideoData(data.videoData)
@@ -65,7 +66,7 @@ function StudioContent() {
         try {
             const res = await fetch('/api/repurpose', {
                 method: 'POST',
-                body: JSON.stringify({ originalContent: seed, targetPlatform: 'x' })
+                body: JSON.stringify({ originalContent: seed, targetPlatform: 'x', tone: activeStyle })
             })
             const data = await res.json()
             if (data.drafts) setThreadData(data.drafts.join('\n\n---\n\n')) // Handle multiple drafts
@@ -79,7 +80,7 @@ function StudioContent() {
         try {
             const res = await fetch('/api/repurpose', {
                 method: 'POST',
-                body: JSON.stringify({ originalContent: seed, targetPlatform: 'linkedin' })
+                body: JSON.stringify({ originalContent: seed, targetPlatform: 'linkedin', tone: activeStyle })
             })
             const data = await res.json()
             if (data.drafts) setLinkedinData(data.drafts[0]) // Just take first draft
@@ -96,12 +97,21 @@ function StudioContent() {
             {/* INPUT SECTION */}
             <div className="bg-card border rounded-xl p-6 shadow-sm mb-12">
                 <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block tracking-wider">Seed Content / Keyword / URL</label>
-                <textarea
-                    value={seed}
-                    onChange={e => setSeed(e.target.value)}
-                    placeholder="Paste a URL, an idea, or a rough draft here..."
-                    className="w-full bg-background border rounded-lg p-4 text-sm min-h-[100px] mb-4 focus:ring-2 focus:ring-primary outline-none"
+                className="w-full bg-background border rounded-lg p-4 text-sm min-h-[100px] mb-4 focus:ring-2 focus:ring-primary outline-none"
                 />
+
+                {/* STYLE SELECTOR (Restored) */}
+                <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+                    {['Viral Hook', 'Storytelling', 'Contrarian', 'Analytical', 'Shitpost'].map(style => (
+                        <button
+                            key={style}
+                            onClick={() => setStyle(style)} // Needs state
+                            className={`px-4 py-2 rounded-full text-xs font-bold border transition ${activeStyle === style ? 'bg-white text-black border-white' : 'bg-transparent text-muted-foreground border-border hover:border-white'}`}
+                        >
+                            {style}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* ASSET GRID */}
