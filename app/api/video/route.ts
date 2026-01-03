@@ -43,6 +43,9 @@ Rules:
             return NextResponse.json({ error: "Failed to generate video structure", raw: completion }, { status: 500 })
         }
 
+        // Inject Mode if provided
+        if (mode) videoData.mode = mode
+
         return NextResponse.json({ videoData })
 
     } catch (e: any) {

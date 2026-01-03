@@ -1,30 +1,16 @@
-import { AbsoluteFill, Series, useCurrentFrame, interpolate, spring, useVideoConfig, Audio } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame, interpolate, useVideoConfig, Audio, Video, Series } from 'remotion';
+import { AnimatedGrid } from './AnimatedGrid'; // Assuming AnimatedGrid is moved to its own file
 
 // --- VISUAL ASSETS ---
 
-const AnimatedGrid = ({ color }: { color: string }) => {
-    const frame = useCurrentFrame();
-    const offset = (frame * 2) % 50; // Move grid
-
-    return (
-        <AbsoluteFill style={{ overflow: 'hidden', zIndex: -1 }}>
-            <div style={{
-                position: 'absolute',
-                top: -50,
-                left: -50,
-                right: -50,
-                bottom: -50,
-                background: `linear-gradient(${color} 1px, transparent 1px), linear-gradient(90deg, ${color} 1px, transparent 1px)`,
-                backgroundSize: '50px 50px',
-                transform: `translateY(${offset}px) perspective(500px) rotateX(20deg)`,
-                opacity: 0.2
+opacity: 0.2
             }} />
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'radial-gradient(circle, transparent 0%, #000 90%)' // Vignette
-            }} />
-        </AbsoluteFill>
+    < div style = {{
+    position: 'absolute',
+        inset: 0,
+            background: 'radial-gradient(circle, transparent 0%, #000 90%)' // Vignette
+}} />
+        </AbsoluteFill >
     )
 }
 
