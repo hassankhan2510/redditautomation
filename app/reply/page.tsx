@@ -1,303 +1,155 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Send, Copy, Loader2, Sparkles, RefreshCcw, ExternalLink, Zap } from "lucide-react"
+import { useState } from "react"
+import { MessageCircle, Zap, RefreshCw, Copy, ExternalLink, Loader2 } from "lucide-react"
 
-export default function ReplyPage() {
-    const [targetTweet, setTargetTweet] = useState("")
-    const [goal, setGoal] = useState("Gain followers")
-    const [voicePreset, setVoicePreset] = useState("influencer")
-    const [language, setLanguage] = useState<'en' | 'ur'>('en')
-
-    const [replies, setReplies] = useState<string[]>([])
+export default function ReplyGuyPage() {
+    const [topic, setTopic] = useState("SaaS")
+    const [threads, setThreads] = useState<any[]>([])
     const [loading, setLoading] = useState(false)
+    const [generating, setGenerating] = useState<string | null>(null)
+    const [replies, setReplies] = useState<Record<string, string>>({})
 
-    // Trends State
-    const [trends, setTrends] = useState<any[]>([])
-    const [trendsLoading, setTrendsLoading] = useState(false)
-
-    // Feed Controls
-    const [feedMode, setFeedMode] = useState<'region' | 'category'>('region')
-    const [activeRegion, setActiveRegion] = useState('global')
-    const [activeCategory, setActiveCategory] = useState('tech')
-
-    // Custom Feed State
-    const [customUrl, setCustomUrl] = useState("")
-    const [showCustomInput, setShowCustomInput] = useState(false)
-
-    useEffect(() => {
-        fetchTrends()
-    }, [feedMode, activeCategory, activeRegion])
-
-    const fetchTrends = async (urlOverride?: string) => {
-        setTrendsLoading(true)
-        let url = '/api/trends'
-
-        if (urlOverride) {
-            url = `/api/news?customUrl=${encodeURIComponent(urlOverride)}`
-        } else if (feedMode === 'category') {
-            url = `/api/news?category=${activeCategory}`
-        } else {
-            url = `/api/news?region=${activeRegion}`
-        }
-
-        try {
-            const res = await fetch(url)
-            const data = await res.json()
-            if (data.articles) setTrends(data.articles.map((a: any) => ({ ...a, source: a.source.name })))
-            else if (data.trends) setTrends(data.trends)
-        } catch (e) {
-            console.error(e)
-        } finally {
-            setTrendsLoading(false)
-        }
-    }
-
-    const useTrend = (trend: any) => {
-        setTargetTweet(`Topic: ${trend.title}\nSource: ${trend.source}`)
-        setGoal("Share a unique expert insight")
-    }
-
-    const handleAddSource = () => {
-        if (!customUrl) return
-        fetchTrends(customUrl)
-        setShowCustomInput(false)
-    }
-
-    // Reusing presets
-    const PRESETS: Record<string, { persona: string, tone: string, label: string }> = {
-        "influencer": { persona: "Viral Influencer", tone: "viral-hook", label: "🔥 Viral Influencer" },
-        "journalist": { persona: "Professional Journalist", tone: "news", label: "📰 Journalist" },
-        "entrepreneur": { persona: "Tech Entrepreneur", tone: "thread", label: "💡 Entrepreneur" },
-        "shitposter": { persona: "Casual User", tone: "memetic", label: "🤪 Shitposter (Meme)" },
-        "developer": { persona: "Senior Dev", tone: "technical", label: "💻 Developer" },
-    }
-
-    const handleGenerate = async () => {
-        if (!targetTweet) return
+    const scan = async () => {
         setLoading(true)
-        setReplies([])
-
-        const { persona, tone } = PRESETS[voicePreset]
-
+        setThreads([])
         try {
-            const res = await fetch('/api/reply', {
+            const res = await fetch('/api/scout', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ keyword: topic })
+            })
+            const data = await res.json()
+            if (data.leads) setThreads(data.leads.slice(0, 5)) // Top 5 only
+        } catch (e) {
+            alert("Scan failed")
+        }
+        setLoading(false)
+    }
+
+    const generateReply = async (threadId: string, context: string, mode: string) => {
+        setGenerating(threadId)
+        try {
+            const res = await fetch('/api/repurpose', {
+                method: 'POST',
                 body: JSON.stringify({
-                    targetTweet,
-                    goal,
-                    persona,
-                    tone,
-                    language
+                    originalContent: context,
+                    targetPlatform: 'reddit', // Reusing the "Authentic" engine
+                    tone: mode === 'value' ? 'Helpful Expert' : (mode === 'question' ? 'Curious Learner' : 'Witty Commenter')
                 })
             })
-
-            if (res.ok) {
-                const data = await res.json()
-                setReplies(data.replies)
+            const data = await res.json()
+            if (data.drafts) {
+                setReplies(prev => ({ ...prev, [threadId]: data.drafts[0] }))
             }
         } catch (e) {
-            console.error(e)
             alert("Generation failed")
-        } finally {
-            setLoading(false)
         }
+        setGenerating(null)
     }
 
     return (
-        <div className="container mx-auto py-6 px-4 max-w-7xl" suppressHydrationWarning>
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-8">
-                <div className="p-3 bg-green-500/10 rounded-xl text-green-500">
-                    <Zap size={32} />
-                </div>
-                <div>
-                    <h1 className="text-3xl font-bold">Reply Guy Engine</h1>
-                    <p className="text-muted-foreground">Hijack viral conversations with high-status replies.</p>
-                </div>
+        <div className="container mx-auto py-10 px-4 max-w-4xl min-h-screen">
+
+            {/* HER */}
+            <div className="text-center mb-12">
+                <h1 className="text-5xl font-black mb-4 flex items-center justify-center gap-3">
+                    <span className="bg-blue-600 text-white p-3 rounded-2xl transform -rotate-6"><MessageCircle size={40} /></span>
+                    The Reply Guy
+                </h1>
+                <p className="text-xl text-muted-foreground">Grow 5x faster by engaging in top conversations.</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* SCANNER */}
+            <div className="glass-panel p-2 rounded-full flex gap-2 max-w-lg mx-auto mb-12 shadow-2xl border border-white/10">
+                <input
+                    value={topic}
+                    onChange={e => setTopic(e.target.value)}
+                    placeholder="Topic (e.g. AI News)"
+                    className="flex-1 bg-transparent px-6 py-3 outline-none text-white placeholder:text-white/30"
+                />
+                <button
+                    onClick={scan}
+                    disabled={loading}
+                    className="bg-blue-600 hover:bg-blue-500 text-white rounded-full px-8 font-bold flex items-center gap-2 transition disabled:opacity-50"
+                >
+                    {loading ? <Loader2 className="animate-spin" /> : <RefreshCw size={20} />}
+                    Scan
+                </button>
+            </div>
 
-                {/* 1. TRENDS SIDEBAR (4 Cols) */}
-                <div className="lg:col-span-4 space-y-4">
-                    <div className="bg-card border rounded-xl p-4 shadow-sm h-[calc(100vh-200px)] flex flex-col">
-                        <div className="flex flex-col gap-3 mb-4">
-                            <div className="flex items-center justify-between">
-                                <h2 className="font-semibold flex items-center gap-2">
-                                    <Sparkles size={16} className="text-yellow-500" />
-                                    Viral Topics
-                                </h2>
-                                <button
-                                    onClick={() => setShowCustomInput(!showCustomInput)}
-                                    className="text-[10px] bg-secondary px-2 py-1 rounded border hover:bg-accent"
-                                >
-                                    + Custom
-                                </button>
-                            </div>
+            {/* RESULTS */}
+            <div className="space-y-6">
+                {threads.map((thread, i) => (
+                    <div key={i} className="glass-panel p-6 rounded-2xl border border-white/5 animate-in slide-in-from-bottom-4" style={{ animationDelay: `${i * 100}ms` }}>
 
-                            {/* CATEGORY TABS */}
-                            <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none">
-                                {['tech', 'business', 'stock', 'politics'].map(cat => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => { setFeedMode('category'); setActiveCategory(cat) }}
-                                        className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${feedMode === 'category' && activeCategory === cat
-                                            ? 'bg-green-600 text-white'
-                                            : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
-                                            }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                                {/* Region Toggles as mini pills */}
-                                <button
-                                    onClick={() => { setFeedMode('region'); setActiveRegion('global') }}
-                                    className={`px-2 py-1 rounded-full text-[10px] border font-bold ${feedMode === 'region' && activeRegion === 'global' ? 'bg-foreground text-background' : 'text-muted-foreground'}`}
-                                >Global</button>
-                                <button
-                                    onClick={() => { setFeedMode('region'); setActiveRegion('pk') }}
-                                    className={`px-2 py-1 rounded-full text-[10px] border font-bold ${feedMode === 'region' && activeRegion === 'pk' ? 'bg-green-600 text-white border-green-600' : 'text-muted-foreground'}`}
-                                >PK</button>
+                        {/* THREAD INFO */}
+                        <div className="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 className="font-bold text-lg mb-1 line-clamp-1">{thread.title}</h3>
+                                <p className="text-sm text-zinc-400 line-clamp-2">{thread.snippet}</p>
                             </div>
+                            <a href={thread.link} target="_blank" className="text-blue-400 hover:text-blue-300">
+                                <ExternalLink size={20} />
+                            </a>
                         </div>
 
-                        {showCustomInput && (
-                            <div className="mb-4 p-2 bg-secondary/50 rounded-lg space-y-2">
-                                <input
-                                    className="w-full text-xs p-2 rounded border"
-                                    placeholder="Paste RSS Link..."
-                                    value={customUrl}
-                                    onChange={e => setCustomUrl(e.target.value)}
-                                />
-                                <button
-                                    onClick={handleAddSource}
-                                    className="w-full text-xs bg-green-600 text-white font-bold py-1 rounded"
-                                >
-                                    Load Feed
-                                </button>
-                            </div>
-                        )}
-
-                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
-                            {trendsLoading ? (
-                                <div className="flex justify-center p-4"><Loader2 className="animate-spin text-muted-foreground" /></div>
-                            ) : trends.map((trend: any, i) => (
-                                <div key={i} className="group border rounded-lg p-3 hover:bg-accent/50 transition cursor-pointer" onClick={() => useTrend(trend)}>
-                                    <div className="flex justify-between items-start mb-1">
-                                        <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">{trend.source}</span>
-                                        <ExternalLink size={10} className="text-muted-foreground" />
-                                    </div>
-                                    <h3 className="text-sm font-medium leading-normal mb-2">{trend.title}</h3>
-                                    <button
-                                        className="w-full py-1.5 bg-green-500/10 text-green-600 text-xs font-bold rounded hover:bg-green-500/20 transition"
-                                    >
-                                        Hijack this Topic
-                                    </button>
+                        {/* ACTION AREA */}
+                        <div className="bg-black/30 rounded-xl p-4">
+                            {!replies[thread.link] ? (
+                                <div className="flex gap-2">
+                                    <ReplyButton
+                                        icon={<Zap size={16} />}
+                                        label="Value Add"
+                                        onClick={() => generateReply(thread.link, thread.title + " " + thread.snippet, 'value')}
+                                        loading={generating === thread.link}
+                                    />
+                                    <ReplyButton
+                                        icon={<MessageCircle size={16} />}
+                                        label="Ask Question"
+                                        onClick={() => generateReply(thread.link, thread.title + " " + thread.snippet, 'question')}
+                                        loading={generating === thread.link}
+                                    />
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* 2. GENERATOR (8 Cols) */}
-                <div className="lg:col-span-8 flex flex-col gap-6">
-
-                    {/* INPUT SECTION */}
-                    <div className="bg-card border rounded-xl p-6 shadow-sm">
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium mb-2">Target Tweet / Topic</label>
-                            <textarea
-                                className="w-full bg-background border rounded-lg p-3 min-h-[100px] focus:ring-2 focus:ring-green-500 outline-none resize-none text-sm"
-                                placeholder="Paste a tweet you want to reply to, or select a topic from the left..."
-                                value={targetTweet}
-                                onChange={e => setTargetTweet(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label className="block text-xs font-bold mb-1 text-muted-foreground uppercase">Your Goal</label>
-                                <input
-                                    className="w-full bg-background border rounded p-2 text-sm"
-                                    value={goal}
-                                    onChange={e => setGoal(e.target.value)}
-                                    placeholder="e.g. Gain followers"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-bold mb-1 text-muted-foreground uppercase">Voice</label>
-                                <select
-                                    className="w-full bg-background border rounded p-2 text-sm"
-                                    value={voicePreset}
-                                    onChange={(e) => setVoicePreset(e.target.value)}
-                                >
-                                    {Object.entries(PRESETS).map(([key, config]) => (
-                                        <option key={key} value={key}>{config.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-bold mb-1 text-muted-foreground uppercase">Language</label>
-                                <div className="flex bg-secondary p-1 rounded-md">
-                                    <button
-                                        onClick={() => setLanguage('en')}
-                                        className={`flex-1 py-1.5 text-xs font-bold rounded transition ${language === 'en' ? 'bg-background shadow' : 'text-muted-foreground'}`}
-                                    >English</button>
-                                    <button
-                                        onClick={() => setLanguage('ur')}
-                                        className={`flex-1 py-1.5 text-xs font-bold rounded transition ${language === 'ur' ? 'bg-background shadow' : 'text-muted-foreground'}`}
-                                    >Urdu</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={handleGenerate}
-                            disabled={loading || !targetTweet}
-                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                        >
-                            {loading ? <Loader2 className="animate-spin" /> : <Send size={18} />}
-                            {loading ? "Drafting High-Status Replies..." : "Generate Replies"}
-                        </button>
-                    </div>
-
-                    {/* OUTPUT SECTION */}
-                    <div className="bg-secondary/20 border rounded-xl p-6 flex-1 min-h-[300px]">
-                        <h3 className="font-semibold text-muted-foreground mb-4 uppercase text-xs tracking-wider">Generated Drafts</h3>
-
-                        {!loading && replies.length === 0 && (
-                            <div className="flex flex-col items-center justify-center h-48 text-muted-foreground opacity-50">
-                                <Sparkles size={32} className="mb-2" />
-                                <p>Ready to generate</p>
-                            </div>
-                        )}
-
-                        <div className="space-y-4">
-                            {replies.map((reply, idx) => (
-                                <div key={idx} className="bg-card border rounded-xl p-4 hover:border-green-500/50 transition shadow-sm">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-xs font-bold px-2 py-1 bg-secondary rounded text-muted-foreground">
-                                            {idx === 0 ? "💡 The Insight" : idx === 1 ? "🥊 The Counter" : "⚡ The Wit"}
-                                        </span>
+                            ) : (
+                                <div>
+                                    <textarea
+                                        className="w-full bg-transparent text-white resize-none outline-none min-h-[80px]"
+                                        defaultValue={replies[thread.link]}
+                                    />
+                                    <div className="flex justify-end gap-2 mt-2 pt-2 border-t border-white/10">
                                         <button
-                                            onClick={() => navigator.clipboard.writeText(reply)}
-                                            className="p-1 hover:bg-secondary rounded text-muted-foreground hover:text-foreground"
-                                            title="Copy"
+                                            onClick={() => navigator.clipboard.writeText(replies[thread.link])}
+                                            className="text-xs font-bold text-zinc-400 hover:text-white flex items-center gap-1"
                                         >
-                                            <Copy size={14} />
+                                            <Copy size={12} /> Copy
+                                        </button>
+                                        <button
+                                            onClick={() => setReplies(prev => { const n = { ...prev }; delete n[thread.link]; return n; })}
+                                            className="text-xs font-bold text-zinc-400 hover:text-white"
+                                        >
+                                            Regenerate
                                         </button>
                                     </div>
-                                    <p className="text-sm leading-relaxed">{reply}</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
-
-                </div>
+                ))}
             </div>
+
         </div>
+    )
+}
+
+function ReplyButton({ icon, label, onClick, loading }: any) {
+    return (
+        <button
+            onClick={onClick}
+            disabled={loading}
+            className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg py-3 flex items-center justify-center gap-2 font-medium text-sm transition disabled:opacity-50"
+        >
+            {loading ? <Loader2 className="animate-spin" size={16} /> : icon}
+            {label}
+        </button>
     )
 }
