@@ -38,6 +38,12 @@ const CATEGORIES = {
     'launch': [
         { name: 'Product Hunt', url: 'https://www.producthunt.com/feed', category: 'Launch' },
         { name: 'Indie Hackers', url: 'https://feed.indiehackers.com', category: 'Launch' }
+    ],
+    'video': [
+        { name: 'Y Combinator', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCcefcZRL2oaA_uBNeo5UOWg', category: 'Video' },
+        { name: 'Slidebean', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC4QZ_LsYcvcqPBeAf3Uw91Q', category: 'Video' },
+        { name: 'Fireship', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA', category: 'Video' },
+        { name: 'Matthew Berman', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC-bFzsWciODiXeNwlMhhPTA', category: 'Video' }
     ]
 }
 
@@ -54,6 +60,7 @@ export async function GET(request: Request) {
     else if (category === 'business') sourcesToFetch = CATEGORIES['business']
     else if (category === 'tech') sourcesToFetch = CATEGORIES['tech']
     else if (category === 'launch') sourcesToFetch = CATEGORIES['launch']
+    else if (category === 'video') sourcesToFetch = CATEGORIES['video']
 
     // Source Specific Filter
     if (sourceFilter && sourceFilter !== 'all') {

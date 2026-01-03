@@ -19,6 +19,7 @@ export default function FeedPage() {
         'business': ['CNBC', 'Yahoo Finance', 'Entrepreneur'],
         'tech': ['TechCrunch', 'Wired', 'Ars Technica'],
         'launch': ['Product Hunt', 'Indie Hackers'],
+        'video': ['Y Combinator', 'Slidebean', 'Fireship', 'Matthew Berman'],
         'science': [ // ArXiv Categories
             { label: 'Artificial Intelligence (cs.AI)', value: 'cs.AI' },
             { label: 'Cryptography (cs.CR)', value: 'cs.CR' },
@@ -102,6 +103,7 @@ export default function FeedPage() {
                         <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan</button>
                         <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Business</button>
                         <button onClick={() => setFilter('launch')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted'}`}>Launches 🚀</button>
+                        <button onClick={() => setFilter('video')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'video' ? 'bg-red-600 text-white border-red-600' : 'bg-background hover:bg-muted'}`}>Video 📺</button>
                         <button onClick={() => setFilter('science')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'}`}>Papers 🔬</button>
                     </div>
 
