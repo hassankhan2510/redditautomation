@@ -159,36 +159,38 @@ export const KineticText = ({ scenes, mode = 'default', backgroundUrl }: { scene
                 {/* TOP: TEXT (The Hook) */}
                 <AbsoluteFill style={{ height: '50%', background: '#18181b', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }}>
                     <Series>
-                        const duration = scene.duration || getDuration(scene)
+                        {scenes.map((scene: any, i: number) => {
+                            const duration = scene.duration || getDuration(scene)
 
-                        // KARAOKE LOGIC
-                        const words = scene.text.split(" ")
-                        const framesPerWord = duration / words.length
+                            // KARAOKE LOGIC
+                            const words = scene.text.split(" ")
+                            const framesPerWord = duration / words.length
 
-                        return (
-                        <Series.Sequence key={i} durationInFrames={duration}>
-                            {scene.audioUrl && (
-                                <Audio src={scene.audioUrl} />
-                            )}
-                            <div className="flex flex-col items-center justify-center h-full w-full px-12">
-                                <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 max-w-4xl">
-                                    {words.map((word: string, wIndex: number) => {
-                                        // Calculate if this word is active based on current frame relative to this sequence
-                                        // Series.Sequence gives us isolated frame scope? No, useCurrentFrame is global in absolute? 
-                                        // Actually Series nests it, so val 0 is start of sequence.
-                                        // We need a component to isolate the frame context.
-                                        return (
-                                            <KaraokeWord key={wIndex} word={word} index={wIndex} framesPerWord={framesPerWord} />
-                                        )
-                                    })}
-                                </div>
+                            return (
+                                <Series.Sequence key={i} durationInFrames={duration}>
+                                    {scene.audioUrl && (
+                                        <Audio src={scene.audioUrl} />
+                                    )}
+                                    <div className="flex flex-col items-center justify-center h-full w-full px-12">
+                                        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 max-w-4xl">
+                                            {words.map((word: string, wIndex: number) => {
+                                                // Calculate if this word is active based on current frame relative to this sequence
+                                                // Series.Sequence gives us isolated frame scope? No, useCurrentFrame is global in absolute? 
+                                                // Actually Series nests it, so val 0 is start of sequence.
+                                                // We need a component to isolate the frame context.
+                                                return (
+                                                    <KaraokeWord key={wIndex} word={word} index={wIndex} framesPerWord={framesPerWord} />
+                                                )
+                                            })}
+                                        </div>
 
-                                {scene.subtext && (
-                                    <h2 className="text-yellow-400 mt-8 text-4xl uppercase tracking-widest font-black drop-shadow-lg animate-pulse">{scene.subtext}</h2>
-                                )}
-                            </div>
-                        </Series.Sequence>
-                        )
+                                        {scene.subtext && (
+                                            <h2 className="text-yellow-400 mt-8 text-4xl uppercase tracking-widest font-black drop-shadow-lg animate-pulse">{scene.subtext}</h2>
+                                        )}
+                                    </div>
+                                </Series.Sequence>
+                            )
+                        })}
                         })}
                     </Series>
                 </AbsoluteFill>
