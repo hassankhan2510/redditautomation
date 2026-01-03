@@ -21,6 +21,7 @@ export default function FeedPage() {
             let url = '/api/feed'
             if (filter === 'pk') url += '?region=pk'
             if (filter === 'business') url += '?category=business'
+            if (filter === 'science') url = '/api/research/arxiv?category=cs.AI' // Default to AI for now
 
             const res = await fetch(url)
             const data = await res.json()
@@ -61,10 +62,11 @@ export default function FeedPage() {
                 </h2>
 
                 {/* FILTERS */}
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1 mb-4 flex-wrap">
                     <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
                     <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan</button>
                     <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Business</button>
+                    <button onClick={() => setFilter('science')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'}`}>Papers 🔬</button>
                 </div>
 
                 {loadingFeed ? (
@@ -77,7 +79,12 @@ export default function FeedPage() {
                                 onClick={() => { setSelectedItem(item); setExplanation(""); }}
                                 className={`p-4 rounded-xl cursor-pointer border transition-all ${selectedItem?.link === item.link ? 'bg-background border-primary shadow-sm' : 'bg-background hover:bg-muted border-transparent'}`}
                             >
-                                <div className="text-[10px] font-bold text-primary mb-1 uppercase bg-primary/10 w-fit px-2 py-0.5 rounded-full">{item.source}</div>
+                                <div className="flex justify-between items-center mb-1">
+                                    <div className={`text-[10px] font-bold uppercase w-fit px-2 py-0.5 rounded-full ${item.source === 'ArXiv' ? 'bg-purple-500/10 text-purple-500' : 'bg-primary/10 text-primary'}`}>
+                                        {item.source}
+                                    </div>
+                                    {item.author && <span className="text-[10px] text-muted-foreground">{item.author}</span>}
+                                </div>
                                 <h3 className="font-semibold text-sm leading-snug mb-2 line-clamp-2">{item.title}</h3>
                                 <p className="text-xs text-muted-foreground line-clamp-2">{item.snippet}</p>
                             </div>
