@@ -1,18 +1,7 @@
-import { AbsoluteFill, Sequence, useCurrentFrame, interpolate, useVideoConfig, Audio, Video, Series } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame, interpolate, useVideoConfig, Audio, Series, spring } from 'remotion';
 import { AnimatedGrid } from './AnimatedGrid'; // Assuming AnimatedGrid is moved to its own file
 
 // --- VISUAL ASSETS ---
-
-opacity: 0.2
-            }} />
-    < div style = {{
-    position: 'absolute',
-        inset: 0,
-            background: 'radial-gradient(circle, transparent 0%, #000 90%)' // Vignette
-}} />
-        </AbsoluteFill >
-    )
-}
 
 // --- SUB-COMPONENTS ---
 

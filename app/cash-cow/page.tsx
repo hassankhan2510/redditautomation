@@ -1,4 +1,3 @@
-```
 "use client"
 
 import { useState, useEffect } from "react"
@@ -12,7 +11,7 @@ export default function CashCowPage() {
     const [seoData, setSeoData] = useState<string>("")
     const [loading, setLoading] = useState(false)
     const [analyzing, setAnalyzing] = useState(false)
-    
+
     // VIDEO STATE
     const [generatingVideo, setGeneratingVideo] = useState(false)
     const [videoData, setVideoData] = useState<any>(null)
@@ -61,7 +60,7 @@ export default function CashCowPage() {
                             <div
                                 key={i}
                                 onClick={() => { setSelectedStory(story); setSeoData(""); }}
-                                className={`p - 4 rounded - lg cursor - pointer border transition - all ${ selectedStory === story ? 'bg-green-500/10 border-green-500' : 'bg-transparent border-transparent hover:bg-white/5' } `}
+                                className={`p-4 rounded-lg cursor-pointer border transition-all ${selectedStory === story ? 'bg-green-500/10 border-green-500' : 'bg-transparent border-transparent hover:bg-white/5'}`}
                             >
                                 <span className="text-[10px] font-bold text-zinc-500 uppercase">{story.subreddit}</span>
                                 <h3 className="font-bold text-sm text-white line-clamp-2 leading-snug mb-2">{story.title}</h3>
@@ -100,7 +99,7 @@ export default function CashCowPage() {
                                 {analyzing ? <Loader2 className="animate-spin" /> : <Search size={24} />}
                                 Generate SEO Package
                             </button>
-                            <button 
+                            <button
                                 onClick={generateVideo}
                                 disabled={generatingVideo}
                                 className="bg-zinc-800 hover:bg-zinc-700 text-white p-4 rounded-xl font-bold flex flex-col items-center gap-2 transition disabled:opacity-50"
