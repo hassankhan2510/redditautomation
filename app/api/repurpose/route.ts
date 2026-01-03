@@ -45,6 +45,18 @@ FORMAT: Authentic Community Discussion.
 - Make it sound like a real person asking a question or sharing a discovery, not a brand.
 `
                 break;
+            case 'hooks':
+                platformInstruction = `
+PLATFORM: Viral Hooks (Hook Lab)
+FORMAT: 5 Distinct Variations of the first sentence/headline.
+1. The Negative Hook ("Stop doing X...")
+2. The Statistic Hook ("80% of people fail at...")
+3. The Story Hook ("I lost everything in 2022...")
+4. The How-To Hook ("How to X without Y...")
+5. The Contrarian Hook ("X is dead. Here is why...")
+OUTPUT: Just the 5 hooks, numbered.
+`
+                break;
             default:
                 platformInstruction = "PLATFORM: General Social Media"
         }

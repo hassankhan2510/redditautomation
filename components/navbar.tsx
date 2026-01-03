@@ -6,8 +6,8 @@ import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign, Ligh
 
 export function Navbar() {
     return (
-        <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-            <nav className="glass-panel rounded-full px-6 py-3 flex items-center justify-between gap-8 max-w-4xl w-full shadow-2xl bg-black/40 backdrop-blur-md border md:border-white/10">
+        <div className="fixed top-6 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
+            <nav className="pointer-events-auto glass-panel rounded-full px-6 py-3 flex items-center justify-between gap-8 max-w-4xl w-full shadow-2xl bg-black/80 backdrop-blur-xl border border-white/20">
 
                 {/* BRAND */}
                 <Link href="/" className="font-black text-xl flex items-center gap-2 tracking-tight text-white">

@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import { Video, Sparkles, Loader2, Download } from "lucide-react"
+import { useSearchParams } from "next/navigation"
 import { VideoPlayer } from "@/components/video/VideoPlayer"
 
 export default function VideoPage() {
-    const [script, setScript] = useState("")
+    const searchParams = useSearchParams()
+    const [script, setScript] = useState(searchParams.get('script') || "")
     const [videoData, setVideoData] = useState<any>(null)
     const [loading, setLoading] = useState(false)
 

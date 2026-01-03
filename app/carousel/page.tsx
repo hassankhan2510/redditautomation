@@ -182,55 +182,33 @@ export default function CarouselPage() {
                         Preview (1080x1350px)
                     </div>
 
-                    {/* HIDDEN CONTAINER FOR PDF GENERATION (Rendered Off-Screen usually, but here specific for capture) */}
-                    {/* We actually render it visible for preview, but at a scale. 
-                        Wait, HTML2Canvas works best if elements are actual size in DOM.
-                        We can use CSS transform scale to fit it in UI, but keep actual size.
-                    */}
+                    {/* PREVIEW CONTAINER (Scaled for UI) */}
                     <div className="overflow-x-auto w-full flex justify-center">
                         <div
-                            ref={slidesRef}
                             style={{
                                 width: '1080px',
                                 transform: 'scale(0.4)',
                                 transformOrigin: 'top center',
-                                marginBottom: '-400px' // Offset the scale gap
+                                marginBottom: '-550px'
                             }}
-                            className="space-y-8" // Add space between slides used ONLY during capture logic if we were capturing page by page, but logic loops children.
+                            className="space-y-8"
                         >
                             {slides.map((text, idx) => (
-                                /* SINGLE SLIDE (1080x1350) */
-                                <div
-                                    key={idx}
-                                    className={`w-[1080px] h-[1350px] relative flex flex-col p-16 ${activeTheme.bg} ${activeTheme.text} shadow-2xl overflow-hidden`}
-                                >
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center mb-16">
-                                        <div className="opacity-80 text-3xl font-bold">{authorName}</div>
-                                        <div className="opacity-50 text-3xl font-mono">{idx + 1}/{slides.length}</div>
-                                    </div>
-
-                                    {/* Content (Auto-centered) */}
-                                    <div className="flex-1 flex items-center justify-center">
-                                        <p className={`text-[80px] leading-tight text-center whitespace-pre-wrap ${activeTheme.font}`}>
-                                            {text}
-                                        </p>
-                                    </div>
-
-                                    {/* Footer */}
-                                    <div className="mt-16 flex justify-center opacity-40">
-                                        <div className="h-2 w-32 bg-current rounded-full" />
-                                    </div>
-
-                                    {/* Swipe Arrow for first few slides */}
-                                    {idx < slides.length - 1 && (
-                                        <div className="absolute bottom-12 right-12 text-4xl animate-pulse">
-                                            →
-                                        </div>
-                                    )}
-                                </div>
+                                <SlideCard key={idx} text={text} idx={idx} total={slides.length} theme={activeTheme} author={authorName} />
                             ))}
                         </div>
+                    </div>
+
+                    {/* HIDDEN CAPTURE CONTAINER (Absolute Off-screen, Full Scale) */}
+                    <div
+                        ref={slidesRef}
+                        style={{ position: 'absolute', top: 0, left: -9999, width: '1080px' }} // Off-screen but rendered
+                    >
+                        {slides.map((text, idx) => (
+                            <div key={idx} className="mb-20"> {/* Spacing for capture logic if needed, or just container */}
+                                <SlideCard text={text} idx={idx} total={slides.length} theme={activeTheme} author={authorName} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

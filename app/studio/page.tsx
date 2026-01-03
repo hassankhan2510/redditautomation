@@ -63,13 +63,12 @@ function StudioContent() {
         if (!seed) return
         setLoading('thread')
         try {
-            // Using existing repurpose API logic adapted
             const res = await fetch('/api/repurpose', {
                 method: 'POST',
-                body: JSON.stringify({ content: seed, platform: 'twitter' })
+                body: JSON.stringify({ originalContent: seed, targetPlatform: 'x' })
             })
             const data = await res.json()
-            if (data.output) setThreadData(data.output)
+            if (data.drafts) setThreadData(data.drafts.join('\n\n---\n\n')) // Handle multiple drafts
         } catch (e) { alert("Thread Gen Failed") }
         setLoading(null)
     }
@@ -80,10 +79,10 @@ function StudioContent() {
         try {
             const res = await fetch('/api/repurpose', {
                 method: 'POST',
-                body: JSON.stringify({ content: seed, platform: 'linkedin' })
+                body: JSON.stringify({ originalContent: seed, targetPlatform: 'linkedin' })
             })
             const data = await res.json()
-            if (data.output) setLinkedinData(data.output)
+            if (data.drafts) setLinkedinData(data.drafts[0]) // Just take first draft
         } catch (e) { alert("LinkedIn Gen Failed") }
         setLoading(null)
     }
@@ -126,7 +125,7 @@ function StudioContent() {
                             <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white text-xs">
                                 Video Generated ({videoData.scenes?.length} Scenes)
                             </div>
-                            <a href="/video" className="block w-full text-center bg-red-500 text-white py-2 rounded font-bold hover:bg-red-600">
+                            <a href={`/video?script=${encodeURIComponent(seed)}`} className="block w-full text-center bg-red-500 text-white py-2 rounded font-bold hover:bg-red-600">
                                 Open in Editor
                             </a>
                         </div>
@@ -197,13 +196,29 @@ function StudioContent() {
                     {linkedinData ? (
                         <div className="space-y-4">
                             <textarea readOnly value={linkedinData} className="w-full bg-background border p-2 rounded text-xs h-[100px] resize-none" />
-                            <button onClick={() => navigator.clipboard.writeText(linkedinData)} className="block w-full text-center border bg-background hover:bg-muted py-2 rounded font-bold">
-                                Copy Post
-                            </button>
+                            <div className="flex gap-2">
+                                <button onClick={() => navigator.clipboard.writeText(linkedinData)} className="flex-1 border bg-background hover:bg-muted py-2 rounded font-bold text-xs">
+                                    Copy Post
+                                </button>
+                                <a href={`/carousel?topic=${encodeURIComponent(seed)}`} className="flex-1 bg-blue-600 text-white py-2 rounded font-bold text-center text-xs hover:bg-blue-700">
+                                    Make Carousel
+                                </a>
+                            </div>
                         </div>
                     ) : <p className="text-sm text-muted-foreground">Create a professional, formatted LinkedIn update.</p>}
                 </div>
 
+                {/* 5. REDDIT POST (New) */}
+                <div className="p-6 rounded-xl border bg-card transition-all">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><span className="bg-orange-500 text-white rounded-full p-1"><MessageSquare size={12} /></span> Reddit Post</h3>
+                        <span className="text-[10px] font-bold bg-orange-500/10 text-orange-500 px-2 py-1 rounded">community</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">Generate authentic, discussion-starting posts for specific subreddits.</p>
+                    <a href="/ideas" className="block w-full text-center bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600">
+                        Open Reddit Studio
+                    </a>
+                </div>
             </div>
         </div>
     )
