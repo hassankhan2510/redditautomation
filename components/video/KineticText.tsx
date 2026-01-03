@@ -191,7 +191,6 @@ export const KineticText = ({ scenes, mode = 'default', backgroundUrl }: { scene
                                 </Series.Sequence>
                             )
                         })}
-                        })}
                     </Series>
                 </AbsoluteFill>
 
