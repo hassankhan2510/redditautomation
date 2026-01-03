@@ -1,31 +1,77 @@
-import { AbsoluteFill, Series, useCurrentFrame, interpolate, spring, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Series, useCurrentFrame, interpolate, spring, useVideoConfig, Audio } from 'remotion';
+
+// --- VISUAL ASSETS ---
+
+const AnimatedGrid = ({ color }: { color: string }) => {
+    const frame = useCurrentFrame();
+    const offset = (frame * 2) % 50; // Move grid
+
+    return (
+        <AbsoluteFill style={{ overflow: 'hidden', zIndex: -1 }}>
+            <div style={{
+                position: 'absolute',
+                top: -50,
+                left: -50,
+                right: -50,
+                bottom: -50,
+                background: `linear-gradient(${color} 1px, transparent 1px), linear-gradient(90deg, ${color} 1px, transparent 1px)`,
+                backgroundSize: '50px 50px',
+                transform: `translateY(${offset}px) perspective(500px) rotateX(20deg)`,
+                opacity: 0.2
+            }} />
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(circle, transparent 0%, #000 90%)' // Vignette
+            }} />
+        </AbsoluteFill>
+    )
+}
 
 // --- SUB-COMPONENTS ---
 
 const TitleScene = ({ text, subtext, color }: any) => {
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
-    const scale = spring({ frame, fps, from: 0.5, to: 1, config: { damping: 12 } });
-    const opacity = interpolate(frame, [0, 20], [0, 1]);
+    const scale = spring({ frame, fps, from: 0.8, to: 1, config: { damping: 100, stiffness: 200 } });
+    const opacity = interpolate(frame, [0, 15], [0, 1]);
+    const glow = interpolate(frame, [0, 30], [0, 20]);
 
     return (
         <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: getColor(color), color: 'white' }}>
-            <h1 style={{ fontSize: 120, fontWeight: 900, transform: `scale(${scale})`, opacity, textAlign: 'center' }}>
+            <AnimatedGrid color="rgba(255,255,255,0.5)" />
+            <h1 style={{
+                fontSize: 140,
+                fontWeight: 900,
+                transform: `scale(${scale})`,
+                opacity,
+                textAlign: 'center',
+                textShadow: `0 0 ${glow}px rgba(255,255,255,0.5)`,
+                lineHeight: 0.9
+            }}>
                 {text.toUpperCase()}
             </h1>
-            <h2 style={{ fontSize: 40, marginTop: 20, opacity: interpolate(frame, [20, 40], [0, 1]) }}>{subtext}</h2>
+            <h2 style={{ fontSize: 40, marginTop: 30, opacity: interpolate(frame, [15, 30], [0, 1]), fontWeight: 300, letterSpacing: 4 }}>
+                {subtext}
+            </h2>
         </AbsoluteFill>
     )
 }
 
 const ProblemScene = ({ text, color }: any) => {
     const frame = useCurrentFrame();
-    // Shake effect
-    const shake = Math.sin(frame * 0.5) * 10;
+    const shake = Math.sin(frame * 0.8) * 5;
+    const bgShake = Math.sin(frame * 0.2) * 20; // Subtle bg movement
 
     return (
-        <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ef4444', color: 'white' }}>
-            <h1 style={{ fontSize: 100, fontWeight: 800, transform: `translateX(${shake}px)` }}>
+        <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#dc2626', color: 'white' }}>
+            <AnimatedGrid color="rgba(0,0,0,0.3)" />
+            <h1 style={{
+                fontSize: 110,
+                fontWeight: 800,
+                transform: `translateX(${shake}px)`,
+                textShadow: '10px 10px 0px rgba(0,0,0,0.2)'
+            }}>
                 ⚠️ {text}
             </h1>
         </AbsoluteFill>
@@ -37,16 +83,27 @@ const SolutionScene = ({ text, list, color }: any) => {
     const { fps } = useVideoConfig();
 
     return (
-        <AbsoluteFill style={{ padding: 60, background: '#22c55e', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h1 style={{ fontSize: 80, fontWeight: 800, marginBottom: 40 }}>{text}</h1>
+        <AbsoluteFill style={{ padding: 80, background: '#16a34a', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <AnimatedGrid color="rgba(255,255,255,0.2)" />
+            <h1 style={{ fontSize: 90, fontWeight: 800, marginBottom: 50 }}>{text}</h1>
             {list && list.map((item: string, i: number) => {
-                const delay = i * 20;
-                const slide = spring({ frame: frame - delay, fps, from: 100, to: 0 });
+                const delay = i * 15;
+                const slide = spring({ frame: frame - delay, fps, from: 50, to: 0 });
                 const op = interpolate(frame - delay, [0, 10], [0, 1]);
                 if (frame < delay) return null;
                 return (
-                    <div key={i} style={{ fontSize: 40, marginBottom: 20, transform: `translateX(${slide}px)`, opacity: op, display: 'flex', alignItems: 'center', gap: 10 }}>
-                        ✅ {item}
+                    <div key={i} style={{
+                        fontSize: 45,
+                        marginBottom: 25,
+                        transform: `translateY(${slide}px)`,
+                        opacity: op,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 20,
+                        fontWeight: 600
+                    }}>
+                        <div style={{ width: 40, height: 40, background: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', fontSize: 24 }}>✓</div>
+                        {item}
                     </div>
                 )
             })}
@@ -57,7 +114,8 @@ const SolutionScene = ({ text, list, color }: any) => {
 const DefaultScene = ({ text, subtext, color }: any) => {
     return (
         <AbsoluteFill style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: getColor(color), color: 'white' }}>
-            <h1 style={{ fontSize: 90, fontWeight: 700, textAlign: 'center', maxWidth: '80%' }}>
+            <AnimatedGrid color="rgba(255,255,255,0.3)" />
+            <h1 style={{ fontSize: 100, fontWeight: 800, textAlign: 'center', maxWidth: '80%' }}>
                 {text}
             </h1>
             {subtext && <p style={{ marginTop: 30, fontSize: 30, opacity: 0.8 }}>{subtext}</p>}
@@ -71,6 +129,9 @@ const DefaultScene = ({ text, subtext, color }: any) => {
 export const KineticText = ({ scenes }: { scenes: any[] }) => {
     return (
         <AbsoluteFill style={{ backgroundColor: 'black' }}>
+            {/* BACKGROUND AUDIO (Royalty Free Placeholders) */}
+            <Audio src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" volume={0.1} loop />
+
             <Series>
                 {scenes.map((scene, i) => {
                     const duration = getDuration(scene);
