@@ -43,6 +43,24 @@ export default function CashCowPage() {
         setAnalyzing(false)
     }
 
+    const generateVideo = async () => {
+        if (!selectedStory) return
+        setGeneratingVideo(true)
+        try {
+            // Call API with STORY MODE
+            const res = await fetch('/api/video', {
+                method: 'POST',
+                body: JSON.stringify({
+                    script: selectedStory.content,
+                    mode: 'story' // Triggers Split Screen
+                })
+            })
+            const data = await res.json()
+            if (data.videoData) setVideoData({ ...data.videoData, mode: 'story' })
+        } catch (e) { alert("Video Failed") }
+        setGeneratingVideo(false)
+    }
+
     return (
         <div className="flex h-[calc(100vh-80px)] overflow-hidden">
 
@@ -86,7 +104,7 @@ export default function CashCowPage() {
                         {/* VIDEO PLAYER PREVIEW */}
                         {videoData && (
                             <div className="mb-8 border-4 border-green-500/20 rounded-xl overflow-hidden shadow-2xl">
-                                <VideoPlayer inputProps={videoData} />
+                                <VideoPlayer data={videoData} />
                             </div>
                         )}
 
