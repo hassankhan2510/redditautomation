@@ -97,8 +97,8 @@ export default function FeedPage() {
                                     {loadingExp ? "Analyzing..." : "Deep Explain (Feynman)"}
                                 </button>
 
-                                <a href={`/repurpose?url=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition">
-                                    <Share2 size={18} /> Repurpose
+                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition">
+                                    <Share2 size={18} /> Send to Studio
                                 </a>
                             </div>
                         </div>

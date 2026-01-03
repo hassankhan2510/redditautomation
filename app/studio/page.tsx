@@ -1,0 +1,202 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { LayoutTemplate, Video, MessageSquare, Twitter, Sparkles, Loader2, ArrowRight } from "lucide-react"
+
+export default function StudioPage() {
+    const searchParams = useSearchParams()
+
+    // Core State
+    const [seed, setSeed] = useState("")
+    const [loading, setLoading] = useState<string | null>(null) // 'video', 'carousel', etc.
+
+    // Outputs
+    const [videoData, setVideoData] = useState<any>(null)
+    const [carouselData, setCarouselData] = useState<any>(null)
+    const [threadData, setThreadData] = useState<string>("")
+    const [linkedinData, setLinkedinData] = useState<string>("")
+
+    // Initialize from URL (The Brain integration)
+    useEffect(() => {
+        const source = searchParams.get('source')
+        if (source) setSeed(`Repurpose this: ${source}`)
+    }, [searchParams])
+
+    // --- GENERATORS ---
+
+    const generateVideo = async () => {
+        if (!seed) return
+        setLoading('video')
+        try {
+            const res = await fetch('/api/video', {
+                method: 'POST', body: JSON.stringify({ script: seed })
+            })
+            const data = await res.json()
+            if (data.videoData) setVideoData(data.videoData)
+        } catch (e) { alert("Video Gen Failed") }
+        setLoading(null)
+    }
+
+    const generateCarousel = async () => {
+        if (!seed) return
+        setLoading('carousel')
+        try {
+            const res = await fetch('/api/carousel/generate', {
+                method: 'POST', body: JSON.stringify({ topic: seed })
+            })
+            const data = await res.json()
+            if (data.slides) setCarouselData(data.slides)
+        } catch (e) { alert("Carousel Gen Failed") }
+        setLoading(null)
+    }
+
+    const generateThread = async () => {
+        if (!seed) return
+        setLoading('thread')
+        try {
+            // Using existing repurpose API logic adapted
+            const res = await fetch('/api/repurpose', {
+                method: 'POST',
+                body: JSON.stringify({ content: seed, platform: 'twitter' })
+            })
+            const data = await res.json()
+            if (data.output) setThreadData(data.output)
+        } catch (e) { alert("Thread Gen Failed") }
+        setLoading(null)
+    }
+
+    const generateLinkedIn = async () => {
+        if (!seed) return
+        setLoading('linkedin')
+        try {
+            const res = await fetch('/api/repurpose', {
+                method: 'POST',
+                body: JSON.stringify({ content: seed, platform: 'linkedin' })
+            })
+            const data = await res.json()
+            if (data.output) setLinkedinData(data.output)
+        } catch (e) { alert("LinkedIn Gen Failed") }
+        setLoading(null)
+    }
+
+
+    return (
+        <div className="container mx-auto py-10 px-4 max-w-6xl">
+            <h1 className="text-4xl font-black mb-2">Universal Studio</h1>
+            <p className="text-muted-foreground mb-8">One Idea. Infinite Assets.</p>
+
+            {/* INPUT SECTION */}
+            <div className="bg-card border rounded-xl p-6 shadow-sm mb-12">
+                <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block tracking-wider">Seed Content / Keyword / URL</label>
+                <textarea
+                    value={seed}
+                    onChange={e => setSeed(e.target.value)}
+                    placeholder="Paste a URL, an idea, or a rough draft here..."
+                    className="w-full bg-background border rounded-lg p-4 text-sm min-h-[100px] mb-4 focus:ring-2 focus:ring-primary outline-none"
+                />
+            </div>
+
+            {/* ASSET GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+
+                {/* 1. VIDEO GHOST */}
+                <div className={`p-6 rounded-xl border transition-all ${videoData ? 'bg-red-500/5 border-red-500/20' : 'bg-card'}`}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><Video className="text-red-500" /> Video Ghost</h3>
+                        {!videoData && (
+                            <button
+                                onClick={generateVideo} disabled={!seed || !!loading}
+                                className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-600 transition disabled:opacity-50"
+                            >
+                                {loading === 'video' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                            </button>
+                        )}
+                    </div>
+                    {videoData ? (
+                        <div className="space-y-4">
+                            <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white text-xs">
+                                Video Generated ({videoData.scenes?.length} Scenes)
+                            </div>
+                            <a href="/video" className="block w-full text-center bg-red-500 text-white py-2 rounded font-bold hover:bg-red-600">
+                                Open in Editor
+                            </a>
+                        </div>
+                    ) : <p className="text-sm text-muted-foreground">Turn your text into kinetic typography motion graphics.</p>}
+                </div>
+
+                {/* 2. CAROUSEL MAKER */}
+                <div className={`p-6 rounded-xl border transition-all ${carouselData ? 'bg-blue-500/5 border-blue-500/20' : 'bg-card'}`}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><LayoutTemplate className="text-blue-500" /> Carousel Maker</h3>
+                        {!carouselData && (
+                            <button
+                                onClick={generateCarousel} disabled={!seed || !!loading}
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition disabled:opacity-50"
+                            >
+                                {loading === 'carousel' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                            </button>
+                        )}
+                    </div>
+                    {carouselData ? (
+                        <div className="space-y-4">
+                            <div className="space-y-2 max-h-[150px] overflow-y-auto bg-background p-2 rounded text-xs border">
+                                {carouselData.map((s: string, i: number) => <div key={i}>{i + 1}. {s}</div>)}
+                            </div>
+                            <a href="/carousel" className="block w-full text-center bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">
+                                Edit Slides
+                            </a>
+                        </div>
+                    ) : <p className="text-sm text-muted-foreground">Generate viral PDF slides for LinkedIn.</p>}
+                </div>
+
+                {/* 3. X THREAD */}
+                <div className={`p-6 rounded-xl border transition-all ${threadData ? 'bg-black/5 border-black/20' : 'bg-card'}`}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><Twitter className="text-black dark:text-white" /> X Thread</h3>
+                        {!threadData && (
+                            <button
+                                onClick={generateThread} disabled={!seed || !!loading}
+                                className="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-zinc-800 transition disabled:opacity-50"
+                            >
+                                {loading === 'thread' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                            </button>
+                        )}
+                    </div>
+                    {threadData ? (
+                        <div className="space-y-4">
+                            <textarea readOnly value={threadData} className="w-full bg-background border p-2 rounded text-xs h-[100px] resize-none" />
+                            <button onClick={() => navigator.clipboard.writeText(threadData)} className="block w-full text-center border bg-background hover:bg-muted py-2 rounded font-bold">
+                                Copy Thread
+                            </button>
+                        </div>
+                    ) : <p className="text-sm text-muted-foreground">Convert text into a high-engagement Twitter thread.</p>}
+                </div>
+
+                {/* 4. LINKEDIN POST */}
+                <div className={`p-6 rounded-xl border transition-all ${linkedinData ? 'bg-blue-700/5 border-blue-700/20' : 'bg-card'}`}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><MessageSquare className="text-blue-700" /> LinkedIn Post</h3>
+                        {!linkedinData && (
+                            <button
+                                onClick={generateLinkedIn} disabled={!seed || !!loading}
+                                className="bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition disabled:opacity-50"
+                            >
+                                {loading === 'linkedin' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                            </button>
+                        )}
+                    </div>
+                    {linkedinData ? (
+                        <div className="space-y-4">
+                            <textarea readOnly value={linkedinData} className="w-full bg-background border p-2 rounded text-xs h-[100px] resize-none" />
+                            <button onClick={() => navigator.clipboard.writeText(linkedinData)} className="block w-full text-center border bg-background hover:bg-muted py-2 rounded font-bold">
+                                Copy Post
+                            </button>
+                        </div>
+                    ) : <p className="text-sm text-muted-foreground">Create a professional, formatted LinkedIn update.</p>}
+                </div>
+
+            </div>
+        </div>
+    )
+}

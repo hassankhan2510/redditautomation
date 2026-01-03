@@ -24,6 +24,7 @@ export function Navbar() {
                             <PenTool size={16} /> Creation Suite <ChevronDown size={14} />
                         </button>
                         <div className="absolute top-full left-0 w-56 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
+                            <DropdownLink href="/studio" label="Universal Studio" />
                             <DropdownLink href="/ideas" label="Post Ideas" />
                             <DropdownLink href="/x" label="X Content" />
                             <DropdownLink href="/reply" label="Reply Engine" />
@@ -42,6 +43,7 @@ export function Navbar() {
                             <BarChart size={16} /> Growth <ChevronDown size={14} />
                         </button>
                         <div className="absolute top-full left-0 w-48 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
+                            <DropdownLink href="/radar" label="Opportunity Radar" />
                             <DropdownLink href="/feed" label="Deep Feed (Research)" />
                             <DropdownLink href="/hunter" label="Freelance Hunter" />
                             <DropdownLink href="/scout" label="Lead Scout" />
