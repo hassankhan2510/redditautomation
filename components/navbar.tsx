@@ -1,81 +1,46 @@
+"use client"
+
 import Link from 'next/link'
 import { ModeToggle } from "@/components/mode-toggle"
-import { Rocket, ChevronDown, PenTool, BarChart, Settings, Users } from "lucide-react"
+import { Rocket, PenTool, BarChart, Search, Sparkles } from "lucide-react"
 
 export function Navbar() {
     return (
-        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-            <div className="flex h-16 items-center px-4 container mx-auto justify-between">
+        <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+            <nav className="glass-panel rounded-full px-6 py-3 flex items-center justify-between gap-8 max-w-4xl w-full shadow-2xl bg-black/40 backdrop-blur-md border md:border-white/10">
 
                 {/* BRAND */}
-                <Link href="/" className="font-bold text-xl flex items-center gap-2 mr-8">
-                    <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                        <Rocket size={20} />
+                <Link href="/" className="font-black text-xl flex items-center gap-2 tracking-tight text-white">
+                    <div className="bg-primary/20 p-1.5 rounded-lg text-primary shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+                        <Rocket size={18} />
                     </div>
-                    <span>SoloScale</span>
+                    SoloScale
                 </Link>
 
-                {/* DESKTOP NAV */}
-                <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
-
-                    {/* TOOLS DROPDOWN */}
-                    <div className="relative group z-50">
-                        <button className="flex items-center gap-1 hover:text-primary transition-colors py-4">
-                            <PenTool size={16} /> Creation Suite <ChevronDown size={14} />
-                        </button>
-                        <div className="absolute top-full left-0 w-56 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
-                            <DropdownLink href="/studio" label="Universal Studio" />
-                            <div className="h-px bg-border my-1" />
-                            <span className="text-[10px] text-muted-foreground px-3 uppercase tracking-wider font-bold">Tools</span>
-                            <DropdownLink href="/ideas" label="Post Ideas" />
-                            <DropdownLink href="/remix" label="Remix Vault" />
-                        </div>
-                    </div>
-
-                    {/* GROWTH DROPDOWN */}
-                    <div className="relative group z-50">
-                        <button className="flex items-center gap-1 hover:text-primary transition-colors py-4">
-                            <BarChart size={16} /> Growth <ChevronDown size={14} />
-                        </button>
-                        <div className="absolute top-full left-0 w-48 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
-                            <DropdownLink href="/radar" label="Opportunity Radar" />
-                            <DropdownLink href="/feed" label="Deep Feed (Intel)" />
-                            <div className="h-px bg-border my-1" />
-                            <DropdownLink href="/history" label="Post History" />
-                            <DropdownLink href="/timeline" label="Timeline" />
-                        </div>
-                    </div>
-
-                    {/* MANAGE DROPDOWN */}
-                    <div className="relative group z-50">
-                        <button className="flex items-center gap-1 hover:text-primary transition-colors py-4">
-                            <Settings size={16} /> Manage <ChevronDown size={14} />
-                        </button>
-                        <div className="absolute top-full left-0 w-48 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
-                            <DropdownLink href="/subreddits" label="Subreddits" />
-                            <DropdownLink href="/drafts" label="Drafts" />
-                        </div>
-                    </div>
-
-                    <Link href="/about" className="hover:text-primary transition-colors flex items-center gap-1">
-                        <Users size={16} /> About
-                    </Link>
-                    <Link href="/contact" className="hover:text-primary transition-colors">
-                        Contact
-                    </Link>
+                {/* CENTRAL NAV - THE BIG 3 */}
+                <div className="hidden md:flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
+                    <NavLink href="/studio" icon={<PenTool size={14} />} label="Studio" />
+                    <NavLink href="/radar" icon={<BarChart size={14} />} label="Radar" />
+                    <NavLink href="/feed" icon={<Search size={14} />} label="Research" />
+                    <NavLink href="/remix" icon={<Sparkles size={14} />} label="Remix" />
                 </div>
 
+                {/* RIGHT ACTIONS */}
                 <div className="flex items-center gap-4">
+                    <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hidden sm:block">
+                        About
+                    </Link>
                     <ModeToggle />
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     )
 }
 
-function DropdownLink({ href, label }: { href: string, label: string }) {
+function NavLink({ href, icon, label }: { href: string, icon: any, label: string }) {
     return (
-        <Link href={href} className="block px-3 py-2 rounded-lg hover:bg-muted text-sm transition-colors">
+        <Link href={href} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-white hover:bg-white/10 transition-all">
+            {icon}
             {label}
         </Link>
     )
