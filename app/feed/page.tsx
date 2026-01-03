@@ -9,19 +9,52 @@ export default function FeedPage() {
     const [explanation, setExplanation] = useState("")
     const [loadingExp, setLoadingExp] = useState(false)
     const [loadingFeed, setLoadingFeed] = useState(true)
-    const [filter, setFilter] = useState('global') // global, pk, business
+    const [filter, setFilter] = useState('global') // global, pk, business, launch, science
+    const [subFilter, setSubFilter] = useState('all') // Specific Source ID
+
+    // Configuration for Dropdowns
+    const FILTERS: any = {
+        'global': ['Hacker News', 'OpenAI Blog', 'MIT Tech Review', 'The Verge'],
+        'pk': ['Dawn News', 'The News PK', 'ARY News', 'Profit PK'],
+        'business': ['CNBC', 'Yahoo Finance', 'Entrepreneur'],
+        'tech': ['TechCrunch', 'Wired', 'Ars Technica'],
+        'launch': ['Product Hunt', 'Indie Hackers'],
+        'science': [ // ArXiv Categories
+            { label: 'Artificial Intelligence (cs.AI)', value: 'cs.AI' },
+            { label: 'Cryptography (cs.CR)', value: 'cs.CR' },
+            { label: 'Computers and Society (cs.CY)', value: 'cs.CY' },
+            { label: 'Software Engineering (cs.SE)', value: 'cs.SE' },
+            { label: 'Quant Finance (q-fin.GN)', value: 'q-fin.GN' },
+        ]
+    }
+
+    useEffect(() => {
+        setSubFilter('all') // Reset sub-filter when main category changes
+    }, [filter])
 
     useEffect(() => {
         fetchFeed()
-    }, [filter])
+    }, [filter, subFilter])
 
     const fetchFeed = async () => {
         setLoadingFeed(true)
         try {
             let url = '/api/feed'
-            if (filter === 'pk') url += '?region=pk'
-            if (filter === 'business') url += '?category=business'
-            if (filter === 'science') url = '/api/research/arxiv?category=cs.AI' // Default to AI for now
+
+            // Build URL based on Filters
+            if (filter === 'science') {
+                const cat = subFilter === 'all' ? 'cs.AI' : subFilter
+                url = `/api/research/arxiv?category=${cat}`
+            } else {
+                if (filter === 'pk') url += '?region=pk'
+                if (filter === 'business') url += '?category=business'
+                if (filter === 'launch') url += '?category=launch'
+
+                // Specific Source Filter
+                if (subFilter !== 'all') {
+                    url += `&source=${encodeURIComponent(subFilter)}`
+                }
+            }
 
             const res = await fetch(url)
             const data = await res.json()
@@ -62,11 +95,31 @@ export default function FeedPage() {
                 </h2>
 
                 {/* FILTERS */}
-                <div className="flex gap-1 mb-4 flex-wrap">
-                    <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
-                    <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan</button>
-                    <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Business</button>
-                    <button onClick={() => setFilter('science')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'}`}>Papers 🔬</button>
+                <div className="space-y-4 mb-6">
+                    {/* Main Tabs */}
+                    <div className="flex gap-1 flex-wrap">
+                        <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
+                        <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan</button>
+                        <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Business</button>
+                        <button onClick={() => setFilter('launch')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted'}`}>Launches 🚀</button>
+                        <button onClick={() => setFilter('science')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'}`}>Papers 🔬</button>
+                    </div>
+
+                    {/* Sub Filter Dropdown */}
+                    {FILTERS[filter] && (
+                        <select
+                            value={subFilter}
+                            onChange={(e) => setSubFilter(e.target.value)}
+                            className="w-full bg-background border border-border rounded px-2 py-1.5 text-xs focus:ring-1 ring-primary outline-none"
+                        >
+                            <option value="all">-- All Sources --</option>
+                            {FILTERS[filter].map((opt: any, i: number) => {
+                                const val = typeof opt === 'string' ? opt : opt.value
+                                const label = typeof opt === 'string' ? opt : opt.label
+                                return <option key={i} value={val}>{label}</option>
+                            })}
+                        </select>
+                    )}
                 </div>
 
                 {loadingFeed ? (

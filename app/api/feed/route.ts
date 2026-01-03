@@ -34,6 +34,10 @@ const CATEGORIES = {
         { name: 'TechCrunch', url: 'https://techcrunch.com/feed/', category: 'Tech' },
         { name: 'Wired', url: 'https://www.wired.com/feed/rss', category: 'Tech' },
         { name: 'Ars Technica', url: 'https://arstechnica.com/feed/', category: 'Tech' }
+    ],
+    'launch': [
+        { name: 'Product Hunt', url: 'https://www.producthunt.com/feed', category: 'Launch' },
+        { name: 'Indie Hackers', url: 'https://feed.indiehackers.com', category: 'Launch' }
     ]
 }
 
@@ -41,6 +45,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const region = searchParams.get('region')
+    const sourceFilter = searchParams.get('source')
 
     let sourcesToFetch = REGIONS['global']
 
@@ -48,6 +53,12 @@ export async function GET(request: Request) {
     if (region === 'pk') sourcesToFetch = REGIONS['pk']
     else if (category === 'business') sourcesToFetch = CATEGORIES['business']
     else if (category === 'tech') sourcesToFetch = CATEGORIES['tech']
+    else if (category === 'launch') sourcesToFetch = CATEGORIES['launch']
+
+    // Source Specific Filter
+    if (sourceFilter && sourceFilter !== 'all') {
+        sourcesToFetch = sourcesToFetch.filter(s => s.name === sourceFilter)
+    }
 
     try {
         const feedPromises = sourcesToFetch.map(async (source: any) => {
