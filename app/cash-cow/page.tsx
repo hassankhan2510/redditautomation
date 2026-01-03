@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DollarSign, Search, Clock, Hash, FileText, Video, ArrowRight, Loader2, Copy } from "lucide-react"
+import { DollarSign, Search, Clock, Hash, FileText, Video, ArrowRight, Loader2, Copy, Volume2, Lock } from "lucide-react"
 import { VideoPlayer } from "@/components/video/VideoPlayer"
 
 export default function CashCowPage() {
@@ -15,6 +15,7 @@ export default function CashCowPage() {
     // VIDEO STATE
     const [generatingVideo, setGeneratingVideo] = useState(false)
     const [videoData, setVideoData] = useState<any>(null)
+    const [bgUrl, setBgUrl] = useState("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
 
     useEffect(() => {
         fetchStories()
@@ -56,7 +57,7 @@ export default function CashCowPage() {
                 })
             })
             const data = await res.json()
-            if (data.videoData) setVideoData({ ...data.videoData, mode: 'story' })
+            if (data.videoData) setVideoData({ ...data.videoData, mode: 'story', backgroundUrl: bgUrl })
         } catch (e) { alert("Video Failed") }
         setGeneratingVideo(false)
     }
@@ -107,6 +108,48 @@ export default function CashCowPage() {
                                 <VideoPlayer data={videoData} />
                             </div>
                         )}
+
+                        {/* VISUAL & AUDIO STRATEGY */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
+                                <h3 className="text-xs font-bold text-zinc-500 uppercase mb-3 flex items-center gap-2">
+                                    <Video size={14} /> Background Vault
+                                </h3>
+                                <div className="grid grid-cols-3 gap-2 mb-3">
+                                    {[
+                                        { name: 'Minecraft', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' },
+                                        { name: 'GTA V', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
+                                        { name: 'Satisfying', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' }
+                                    ].map((bg) => (
+                                        <button
+                                            key={bg.name}
+                                            onClick={() => setBgUrl(bg.url)}
+                                            className={`text-[10px] font-bold py-2 rounded border ${bgUrl === bg.url ? 'bg-green-500 text-black border-green-500' : 'bg-black text-zinc-400 border-zinc-800 hover:border-zinc-700'}`}
+                                        >
+                                            {bg.name}
+                                        </button>
+                                    ))}
+                                </div>
+                                <input
+                                    placeholder="Or paste Custom Video URL..."
+                                    className="w-full bg-black border border-white/10 rounded px-2 py-1 text-xs text-white"
+                                    onChange={(e) => setBgUrl(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="bg-zinc-900 border border-white/10 rounded-xl p-4">
+                                <h3 className="text-xs font-bold text-zinc-500 uppercase mb-3 flex items-center gap-2">
+                                    <Volume2 size={14} /> Neural Voice (TTS)
+                                </h3>
+                                <select className="w-full bg-black border border-white/10 rounded px-2 py-2 text-xs text-white mb-2" disabled>
+                                    <option>Adam (Deep Male) - Coming Soon</option>
+                                    <option>Bella (Viral TikTok)</option>
+                                </select>
+                                <div className="flex items-center gap-2 text-[10px] text-yellow-500 bg-yellow-500/10 p-2 rounded">
+                                    <Lock size={10} /> Voice Engine requires API Key
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <button

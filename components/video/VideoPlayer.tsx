@@ -15,7 +15,7 @@ export const VideoPlayer = ({ data }: { data: any }) => {
         <div className="rounded-xl overflow-hidden shadow-2xl border aspect-video bg-black">
             <Player
                 component={KineticText}
-                inputProps={{ scenes, mode: data.mode }}
+                inputProps={{ scenes, mode: data.mode, backgroundUrl: data.backgroundUrl }}
                 durationInFrames={finalDuration}
                 compositionWidth={1920}
                 compositionHeight={1080}

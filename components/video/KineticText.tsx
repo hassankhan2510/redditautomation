@@ -101,7 +101,7 @@ const DefaultScene = ({ text, subtext, color }: any) => {
 
 // --- MAIN ENGINE ---
 
-export const KineticText = ({ scenes, mode = 'default' }: { scenes: any[], mode?: string }) => {
+export const KineticText = ({ scenes, mode = 'default', backgroundUrl }: { scenes: any[], mode?: string, backgroundUrl?: string }) => {
 
     // STORY MODE (Cash Cow / Kids Story)
     if (mode === 'story') {
@@ -110,7 +110,7 @@ export const KineticText = ({ scenes, mode = 'default' }: { scenes: any[], mode?
                 {/* BOTTOM: GAMEPLAY LOOP (Retention Hook) */}
                 <AbsoluteFill style={{ top: '50%', height: '50%', overflow: 'hidden' }}>
                     <Video
-                        src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Placeholder for Gameplay
+                        src={backgroundUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         muted
                         loop
