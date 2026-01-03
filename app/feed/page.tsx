@@ -1,4 +1,3 @@
-```javascript
 "use client"
 
 import { useState, useEffect } from "react"
@@ -84,7 +83,7 @@ export default function FeedPage() {
                 // Build URL based on Filters
                 if (filter === 'science') {
                     const cat = subFilter === 'all' ? 'cs.AI' : subFilter
-                    url = `/ api / research / arxiv ? category = ${ cat } `
+                    url = `/api/research/arxiv?category=${cat}`
                 } else {
                     if (filter === 'pk') url += '?region=pk'
                     if (filter === 'business') url += '?category=business'
@@ -98,7 +97,7 @@ export default function FeedPage() {
 
                     // Specific Source Filter
                     if (subFilter !== 'all') {
-                        url += `& source=${ encodeURIComponent(subFilter) } `
+                        url += `&source=${encodeURIComponent(subFilter)}`
                     }
                 }
 
@@ -124,7 +123,7 @@ export default function FeedPage() {
         if (filter === 'saved') {
             // Delete Mode
             if (!window.confirm("Remove from saved?")) return
-            await fetch(`/ api / save ? id = ${ item.id } `, { method: 'DELETE' })
+            await fetch(`/api/save?id=${item.id}`, { method: 'DELETE' })
             // Re-trigger fetch or clean up state locally
             setFeedItems(prev => prev.filter(i => i.id !== item.id))
         } else {
@@ -163,7 +162,7 @@ export default function FeedPage() {
         <div className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)] overflow-hidden pt-24 md:pt-0">
 
             {/* SIDEBAR LIST */}
-            <div className={`w - full md: w - [30 %] lg: w - [25 %] border - r bg - muted / 10 overflow - y - auto p - 4 ${ selectedItem ? 'hidden md:block' : 'block' } `}>
+            <div className={`w-full md:w-[30%] lg:w-[25%] border-r bg-muted/10 overflow-y-auto p-4 ${selectedItem ? 'hidden md:block' : 'block'}`}>
                 <h2 className="font-bold mb-4 flex items-center justify-between text-muted-foreground uppercase text-xs tracking-wider">
                     <span className="flex items-center gap-2"><BookOpen size={14} /> Knowledge Feed</span>
                     {filter === 'saved' && <span className="text-primary">{feedItems.length} Saved</span>}
@@ -173,16 +172,16 @@ export default function FeedPage() {
                 <div className="space-y-4 mb-6">
                     {/* Main Tabs */}
                     <div className="flex gap-1 flex-wrap">
-                        <button onClick={() => setFilter('global')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted' } `}>Global</button>
-                        <button onClick={() => setFilter('saved')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'saved' ? 'bg-teal-500 text-white border-teal-500' : 'bg-background hover:bg-muted' } `}>Saved 💾</button>
-                        <button onClick={() => setFilter('tech')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'tech' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-background hover:bg-muted' } `}>Tech 💻</button>
-                        <button onClick={() => setFilter('newsletter')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'newsletter' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-background hover:bg-muted' } `}>Newsletters 📧</button>
-                        <button onClick={() => setFilter('viral')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'viral' ? 'bg-red-500 text-white border-red-500' : 'bg-background hover:bg-muted' } `}>Viral 🔥</button>
-                        <button onClick={() => setFilter('blog')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'blog' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-background hover:bg-muted' } `}>Blogs ✍️</button>
-                        <button onClick={() => setFilter('philosophy')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'philosophy' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-background hover:bg-muted' } `}>Deep 🧠</button>
-                        <button onClick={() => setFilter('launch')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted' } `}>Launch 🚀</button>
-                        <button onClick={() => setFilter('business')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted' } `}>Biz</button>
-                        <button onClick={() => setFilter('science')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted' } `}>Papers 🔬</button>
+                        <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
+                        <button onClick={() => setFilter('saved')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'saved' ? 'bg-teal-500 text-white border-teal-500' : 'bg-background hover:bg-muted'}`}>Saved 💾</button>
+                        <button onClick={() => setFilter('tech')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'tech' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-background hover:bg-muted'}`}>Tech 💻</button>
+                        <button onClick={() => setFilter('newsletter')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'newsletter' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-background hover:bg-muted'}`}>Newsletters 📧</button>
+                        <button onClick={() => setFilter('viral')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'viral' ? 'bg-red-500 text-white border-red-500' : 'bg-background hover:bg-muted'}`}>Viral 🔥</button>
+                        <button onClick={() => setFilter('blog')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'blog' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-background hover:bg-muted'}`}>Blogs ✍️</button>
+                        <button onClick={() => setFilter('philosophy')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'philosophy' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-background hover:bg-muted'}`}>Deep 🧠</button>
+                        <button onClick={() => setFilter('launch')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted'}`}>Launch 🚀</button>
+                        <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Biz</button>
+                        <button onClick={() => setFilter('science')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'}`}>Papers 🔬</button>
                     </div>
 
                     {/* Sub Filter Dropdown */}
@@ -210,10 +209,10 @@ export default function FeedPage() {
                             <div
                                 key={i}
                                 onClick={() => { setSelectedItem(item); setExplanation(""); }}
-                                className={`p - 4 rounded - xl cursor - pointer border transition - all ${ selectedItem?.link === item.link ? 'bg-background border-primary shadow-sm' : 'bg-background hover:bg-muted border-transparent' } `}
+                                className={`p-4 rounded-xl cursor-pointer border transition-all ${selectedItem?.link === item.link ? 'bg-background border-primary shadow-sm' : 'bg-background hover:bg-muted border-transparent'}`}
                             >
                                 <div className="flex justify-between items-start mb-2">
-                                    <div className={`text - [10px] font - bold uppercase w - fit px - 2 py - 0.5 rounded - full ${ item.source === 'ArXiv' ? 'bg-purple-500/10 text-purple-500' : 'bg-primary/10 text-primary' } `}>
+                                    <div className={`text-[10px] font-bold uppercase w-fit px-2 py-0.5 rounded-full ${item.source === 'ArXiv' ? 'bg-purple-500/10 text-purple-500' : 'bg-primary/10 text-primary'}`}>
                                         {item.source || item.category}
                                     </div>
                                     <button
@@ -232,7 +231,7 @@ export default function FeedPage() {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className={`flex - 1 overflow - y - auto bg - background p - 4 md: p - 12 ${ !selectedItem ? 'hidden md:block' : 'block' } `}>
+            <div className={`flex-1 overflow-y-auto bg-background p-4 md:p-12 ${!selectedItem ? 'hidden md:block' : 'block'}`}>
                 {/* Mobile Back Button */}
                 {selectedItem && (
                     <button
@@ -266,7 +265,7 @@ export default function FeedPage() {
                                     {loadingExp ? "Analyzing..." : "Deep Explain (Feynman)"}
                                 </button>
 
-                                <a href={`/ studio ? source = ${ encodeURIComponent(selectedItem.link) } `} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
+                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
                                     <Share2 size={18} /> Send to Studio
                                 </a>
                             </div>
