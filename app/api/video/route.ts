@@ -18,7 +18,7 @@ Structure:
     { "type": "problem", "text": "The Pain Point", "icon": "alert", "color": "red" },
     { "type": "solution", "text": "The Fix", "list": ["Step 1", "Step 2"], "color": "green" },
     { "type": "quote", "text": "Inspirational Quote", "author": "Author Name", "color": "purple" },
-    { "type": "outro", "text": "Call To Action", "subtext": "Follow for more", "color": "black" }
+    "type": "outro", "text": "Call To Action", "subtext": "Follow for more", "color": "black" }
   ]
 }
 
@@ -29,9 +29,33 @@ Rules:
 - Be kinetic and exciting.
 `
 
+        let finalSystemPrompt = systemPrompt
+
+        // STORY MODE OVERRIDE
+        if (mode === 'story') {
+            finalSystemPrompt = `You are a Viral Storyteller for YouTube Shorts.
+Your goal is to split a long story into engaging 3-4 second subtitles.
+Output valid JSON only.
+
+Structure:
+{
+  "scenes": [
+    { "type": "story_chunk", "text": "First sentence of the story...", "duration": 90 },
+    { "type": "story_chunk", "text": "Then this happened...", "duration": 60 }
+  ]
+}
+
+Rules:
+- Split the user's script into natural speaking chunks.
+- "text" should be 1-2 sentences max (readable in 3s).
+- If the user asks for Urdu/Hindi, TRANSLATE the text into Roman Urdu (English characters) or Urdu Script as requested.
+- Maintain the suspense.
+`
+        }
+
         const userPrompt = `Convert this text into a video script:\n"${script}"`
 
-        const completion = await generateCompletion(systemPrompt, userPrompt)
+        const completion = await generateCompletion(finalSystemPrompt, userPrompt)
 
         // Parse JSON safely
         let videoData

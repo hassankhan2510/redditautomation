@@ -1,4 +1,4 @@
-import { AbsoluteFill, Sequence, useCurrentFrame, interpolate, useVideoConfig, Audio, Series, spring } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame, interpolate, useVideoConfig, Audio, Series, spring, Video } from 'remotion';
 import { AnimatedGrid } from './AnimatedGrid'; // Assuming AnimatedGrid is moved to its own file
 
 // --- VISUAL ASSETS ---
@@ -101,10 +101,54 @@ const DefaultScene = ({ text, subtext, color }: any) => {
 
 // --- MAIN ENGINE ---
 
-export const KineticText = ({ scenes }: { scenes: any[] }) => {
+export const KineticText = ({ scenes, mode = 'default' }: { scenes: any[], mode?: string }) => {
+
+    // STORY MODE (Cash Cow / Kids Story)
+    if (mode === 'story') {
+        return (
+            <AbsoluteFill className="bg-black text-white">
+                {/* BOTTOM: GAMEPLAY LOOP (Retention Hook) */}
+                <AbsoluteFill style={{ top: '50%', height: '50%', overflow: 'hidden' }}>
+                    <Video
+                        src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Placeholder for Gameplay
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        muted
+                        loop
+                    />
+                </AbsoluteFill>
+
+                {/* TOP: TEXT (The Hook) */}
+                <AbsoluteFill style={{ height: '50%', background: '#18181b', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }}>
+                    <Series>
+                        {scenes.map((scene: any, i: number) => {
+                            // Dynamic Duration or Default 3s
+                            const duration = scene.duration || getDuration(scene)
+                            return (
+                                <Series.Sequence key={i} durationInFrames={duration}>
+                                    <div className="text-center font-black text-white drop-shadow-xl flex flex-col items-center justify-center h-full w-full">
+                                        <h1 style={{ fontSize: 60, lineHeight: 1.2, textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
+                                            {scene.text}
+                                        </h1>
+                                        {scene.subtext && (
+                                            <h2 className="text-yellow-400 mt-4 text-3xl uppercase tracking-widest">{scene.subtext}</h2>
+                                        )}
+                                    </div>
+                                </Series.Sequence>
+                            )
+                        })}
+                    </Series>
+                </AbsoluteFill>
+
+                {/* Background Music */}
+                <Audio src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" volume={0.1} loop />
+            </AbsoluteFill>
+        )
+    }
+
+    // DEFAULT MODE (Motion Graphics)
     return (
         <AbsoluteFill style={{ backgroundColor: 'black' }}>
-            {/* BACKGROUND AUDIO (Royalty Free Placeholders) */}
+            {/* BACKGROUND AUDIO */}
             <Audio src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" volume={0.1} loop />
 
             <Series>

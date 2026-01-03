@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ModeToggle } from "@/components/mode-toggle"
-import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign } from "lucide-react"
+import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign, Lightbulb } from "lucide-react"
 
 export function Navbar() {
     return (
@@ -23,6 +23,7 @@ export function Navbar() {
                     <NavLink href="/radar" icon={<BarChart size={14} />} label="Radar" />
                     <NavLink href="/feed" icon={<Search size={14} />} label="Research" />
                     <NavLink href="/cash-cow" icon={<DollarSign size={14} />} label="Cash Cow" />
+                    <NavLink href="/ideas" icon={<Lightbulb size={14} />} label="Ideas" />
                     <NavLink href="/subreddits" icon={<Settings size={14} />} label="Manage" />
                 </div>
 
