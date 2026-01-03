@@ -173,6 +173,7 @@ export default function FeedPage() {
                     {/* Main Tabs */}
                     <div className="flex gap-1 flex-wrap">
                         <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
+                        <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan 🇵🇰</button>
                         <button onClick={() => setFilter('saved')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'saved' ? 'bg-teal-500 text-white border-teal-500' : 'bg-background hover:bg-muted'}`}>Saved 💾</button>
                         <button onClick={() => setFilter('tech')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'tech' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-background hover:bg-muted'}`}>Tech 💻</button>
                         <button onClick={() => setFilter('newsletter')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'newsletter' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-background hover:bg-muted'}`}>Newsletters 📧</button>
