@@ -1,10 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { LayoutTemplate, Video, MessageSquare, Twitter, Sparkles, Loader2, ArrowRight } from "lucide-react"
 
 export default function StudioPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="animate-spin" /></div>}>
+            <StudioContent />
+        </Suspense>
+    )
+}
+
+function StudioContent() {
     const searchParams = useSearchParams()
 
     // Core State
