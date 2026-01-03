@@ -41,89 +41,51 @@ export default function Home() {
             <p className="text-muted-foreground max-w-[500px] mx-auto">Do the work of a 5-person marketing team, by yourself.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            {/* CARD 1: REPURPOSE */}
-            <Link href="/repurpose" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Repeat size={100} />
+            {/* CARD 1: STUDIO */}
+            <Link href="/studio" className="group relative overflow-hidden rounded-2xl border bg-card p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <LayoutTemplate size={120} />
               </div>
-              <div className="mb-4 p-3 bg-violet-100 dark:bg-violet-900/20 w-fit rounded-lg text-violet-600 dark:text-violet-400">
-                <Repeat size={24} />
+              <div className="mb-6 p-4 bg-gradient-to-br from-blue-500/10 to-violet-500/10 w-fit rounded-xl text-blue-500">
+                <LayoutTemplate size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Content Repurposer</h3>
-              <p className="text-muted-foreground text-sm">Turn one idea into a LinkedIn post, Tweet, and Reddit thread instantly.</p>
+              <h3 className="text-2xl font-bold mb-3">Universal Studio</h3>
+              <p className="text-muted-foreground mb-4">The single command center for content. Generate Videos, Carousels, Threads, and Posts from one idea.</p>
+              <span className="text-sm font-bold text-blue-500 flex items-center gap-1 group-hover:gap-2 transition-all">
+                Enter Studio <ArrowRight size={14} />
+              </span>
             </Link>
 
-            {/* CARD 2: SCOUT */}
-            <Link href="/scout" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Search size={100} />
+            {/* CARD 2: RADAR */}
+            <Link href="/radar" className="group relative overflow-hidden rounded-2xl border bg-card p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <BarChart3 size={120} />
               </div>
-              <div className="mb-4 p-3 bg-teal-100 dark:bg-teal-900/20 w-fit rounded-lg text-teal-600 dark:text-teal-400">
-                <Search size={24} />
+              <div className="mb-6 p-4 bg-gradient-to-br from-green-500/10 to-teal-500/10 w-fit rounded-xl text-green-500">
+                <BarChart3 size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Lead Scout</h3>
-              <p className="text-muted-foreground text-sm">Find customers asking for help in your niche on Reddit in real-time.</p>
+              <h3 className="text-2xl font-bold mb-3">Opportunity Radar</h3>
+              <p className="text-muted-foreground mb-4">A split-screen intelligence dashboard. See high-value Contracts and viral Leads in real-time.</p>
+              <span className="text-sm font-bold text-green-500 flex items-center gap-1 group-hover:gap-2 transition-all">
+                Scan Market <ArrowRight size={14} />
+              </span>
             </Link>
 
-            {/* CARD 3: REMIX */}
-            <Link href="/remix" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Zap size={100} />
+            {/* CARD 3: BRAIN */}
+            <Link href="/feed" className="group relative overflow-hidden rounded-2xl border bg-card p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Search size={120} />
               </div>
-              <div className="mb-4 p-3 bg-pink-100 dark:bg-pink-900/20 w-fit rounded-lg text-pink-600 dark:text-pink-400">
-                <Sparkles size={24} />
+              <div className="mb-6 p-4 bg-gradient-to-br from-amber-500/10 to-orange-500/10 w-fit rounded-xl text-amber-500">
+                <Search size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Remix Vault</h3>
-              <p className="text-muted-foreground text-sm">Steal the structure of viral hits and rewrite them for your industry.</p>
-            </Link>
-
-            {/* CARD 4: CHARTS */}
-            <Link href="/chart" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <BarChart3 size={100} />
-              </div>
-              <div className="mb-4 p-3 bg-indigo-100 dark:bg-indigo-900/20 w-fit rounded-lg text-indigo-600 dark:text-indigo-400">
-                <BarChart3 size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Chart Studio</h3>
-              <p className="text-muted-foreground text-sm">Turn boring text statistics into viral-ready visuals.</p>
-            </Link>
-
-            {/* CARD 5: CAROUSEL */}
-            <Link href="/carousel" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <LayoutTemplate size={100} />
-              </div>
-              <div className="mb-4 p-3 bg-orange-100 dark:bg-orange-900/20 w-fit rounded-lg text-orange-600 dark:text-orange-400">
-                <LayoutTemplate size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Carousel Maker</h3>
-              <p className="text-muted-foreground text-sm">Generate PDF carousels for LinkedIn interaction.</p>
-            </Link>
-
-            {/* CARD 6: REPLY */}
-            <Link href="/reply" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <MessageSquare size={100} />
-              </div>
-              <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/20 w-fit rounded-lg text-green-600 dark:text-green-400">
-                <MessageSquare size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Reply Engine</h3>
-              <p className="text-muted-foreground text-sm">Hijack viral conversations on X with high-status replies.</p>
-            </Link>
-            {/* CARD 7: VIDEO GHOST */}
-            <Link href="/video" className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg transition-all">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <LayoutTemplate size={100} />
-              </div>
-              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 w-fit rounded-lg text-red-600 dark:text-red-400">
-                <LayoutTemplate size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Video Ghost</h3>
-              <p className="text-muted-foreground text-sm">Turn text into professional kinetic motion graphics instantly.</p>
+              <h3 className="text-2xl font-bold mb-3">Deep Intelligence</h3>
+              <p className="text-muted-foreground mb-4">Research engine powered by the Neutral Explainer. Turn complex papers into simple mental models.</p>
+              <span className="text-sm font-bold text-amber-500 flex items-center gap-1 group-hover:gap-2 transition-all">
+                Start Research <ArrowRight size={14} />
+              </span>
             </Link>
 
           </div>

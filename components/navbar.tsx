@@ -25,15 +25,10 @@ export function Navbar() {
                         </button>
                         <div className="absolute top-full left-0 w-56 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
                             <DropdownLink href="/studio" label="Universal Studio" />
+                            <div className="h-px bg-border my-1" />
+                            <span className="text-[10px] text-muted-foreground px-3 uppercase tracking-wider font-bold">Tools</span>
                             <DropdownLink href="/ideas" label="Post Ideas" />
-                            <DropdownLink href="/x" label="X Content" />
-                            <DropdownLink href="/reply" label="Reply Engine" />
-                            <DropdownLink href="/carousel" label="Carousel Maker" />
-                            <DropdownLink href="/chart" label="Chart Studio" />
-                            <DropdownLink href="/video" label="Video Ghost" />
                             <DropdownLink href="/remix" label="Remix Vault" />
-                            <DropdownLink href="/repurpose" label="Repurposer" />
-                            <DropdownLink href="/convert" label="Blog Converter" />
                         </div>
                     </div>
 
@@ -44,9 +39,8 @@ export function Navbar() {
                         </button>
                         <div className="absolute top-full left-0 w-48 bg-card border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-2 z-50">
                             <DropdownLink href="/radar" label="Opportunity Radar" />
-                            <DropdownLink href="/feed" label="Deep Feed (Research)" />
-                            <DropdownLink href="/hunter" label="Freelance Hunter" />
-                            <DropdownLink href="/scout" label="Lead Scout" />
+                            <DropdownLink href="/feed" label="Deep Feed (Intel)" />
+                            <div className="h-px bg-border my-1" />
                             <DropdownLink href="/history" label="Post History" />
                             <DropdownLink href="/timeline" label="Timeline" />
                         </div>
