@@ -193,7 +193,7 @@ export default function ChartPage() {
                                                 outerRadius={150}
                                                 fill="#8884d8"
                                                 dataKey="value"
-                                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                                label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
                                             >
                                                 {chartData.data.map((entry: any, index: number) => (
                                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
