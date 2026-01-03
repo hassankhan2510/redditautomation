@@ -46,7 +46,7 @@ export default function FeedPage() {
         'blog': ['Paul Graham', 'Sam Altman', 'Seth Godin', 'Vitalik Buterin', 'Naval Ravikant'],
         'ai-engineering': ['Hugging Face', 'LangChain', 'DeepMind', 'AWS Machine Learning', 'Microsoft Research', 'Google AI'],
         'indie-makers': ['The Bootstrapped Founder', 'Levels.io', 'Swyx', 'MicroConf', 'Indie Hackers'],
-        'design': ['Smashing Magazine', 'UX Collective', 'A List Apart', 'CSS-Tricks'],
+        'crypto': ['Cointelegraph', 'CoinDesk', 'The Defiant', 'Bankless'],
         'science': [
             { label: 'Artificial Intelligence (cs.AI)', value: 'cs.AI' },
             { label: 'Machine Learning (cs.LG)', value: 'cs.LG' },
@@ -97,6 +97,9 @@ export default function FeedPage() {
                     if (filter === 'viral') url += '?category=viral'
                     if (filter === 'philosophy') url += '?category=philosophy'
                     if (filter === 'blog') url += '?category=blog'
+                    if (filter === 'ai-engineering') url += '?category=ai-engineering'
+                    if (filter === 'indie-makers') url += '?category=indie-makers'
+                    if (filter === 'crypto') url += '?category=crypto'
 
                     // Specific Source Filter
                     if (subFilter !== 'all') {
@@ -184,7 +187,7 @@ export default function FeedPage() {
                         <button onClick={() => setFilter('blog')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'blog' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-background hover:bg-muted'}`}>Blogs ✍️</button>
                         <button onClick={() => setFilter('ai-engineering')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'ai-engineering' ? 'bg-violet-600 text-white border-violet-600' : 'bg-background hover:bg-muted'}`}>AI Eng 🤖</button>
                         <button onClick={() => setFilter('indie-makers')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'indie-makers' ? 'bg-pink-600 text-white border-pink-600' : 'bg-background hover:bg-muted'}`}>Makers 🛠️</button>
-                        <button onClick={() => setFilter('design')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'design' ? 'bg-rose-500 text-white border-rose-500' : 'bg-background hover:bg-muted'}`}>Design 🎨</button>
+                        <button onClick={() => setFilter('crypto')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'crypto' ? 'bg-orange-500 text-white border-orange-500' : 'bg-background hover:bg-muted'}`}>Crypto 🪙</button>
                         <button onClick={() => setFilter('philosophy')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'philosophy' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-background hover:bg-muted'}`}>Deep 🧠</button>
                         <button onClick={() => setFilter('launch')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted'}`}>Launch 🚀</button>
                         <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Biz</button>
