@@ -1,11 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { Video, Sparkles, Loader2, Download } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { VideoPlayer } from "@/components/video/VideoPlayer"
 
 export default function VideoPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-red-500" /></div>}>
+            <VideoContent />
+        </Suspense>
+    )
+}
+
+function VideoContent() {
     const searchParams = useSearchParams()
     const [script, setScript] = useState(searchParams.get('script') || "")
     const [videoData, setVideoData] = useState<any>(null)
