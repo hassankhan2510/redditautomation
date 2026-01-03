@@ -87,10 +87,10 @@ export default function FeedPage() {
     }
 
     return (
-        <div className="flex h-[calc(100vh-64px)] overflow-hidden">
+        <div className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)] overflow-hidden pt-24 md:pt-0">
 
             {/* SIDEBAR LIST */}
-            <div className="w-[30%] lg:w-[25%] border-r bg-muted/10 overflow-y-auto p-4">
+            <div className={`w-full md:w-[30%] lg:w-[25%] border-r bg-muted/10 overflow-y-auto p-4 ${selectedItem ? 'hidden md:block' : 'block'}`}>
                 <h2 className="font-bold mb-4 flex items-center justify-between text-muted-foreground uppercase text-xs tracking-wider">
                     <span className="flex items-center gap-2"><BookOpen size={14} /> Knowledge Feed</span>
                 </h2>
@@ -127,7 +127,7 @@ export default function FeedPage() {
                 {loadingFeed ? (
                     <div className="flex justify-center p-8"><Loader2 className="animate-spin text-muted-foreground" /></div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-3 pb-20">
                         {feedItems.map((item, i) => (
                             <div
                                 key={i}
@@ -135,7 +135,7 @@ export default function FeedPage() {
                                 className={`p-4 rounded-xl cursor-pointer border transition-all ${selectedItem?.link === item.link ? 'bg-background border-primary shadow-sm' : 'bg-background hover:bg-muted border-transparent'}`}
                             >
                                 <div className="flex justify-between items-center mb-1">
-                                    <div className={`text-[10px] font-bold uppercase w-fit px-2 py-0.5 rounded-full ${item.source === 'ArXiv' ? 'bg-purple-500/10 text-purple-500' : 'bg-primary/10 text-primary'}`}>
+                                    <div className={`text-[10px] font-bold uppercase w-fit px-2 py-0.5 rounded-full ${item.source === 'ArXiv' ? 'bg-purple-500/10 text-purple-500' : (item.category === 'Video' ? 'bg-red-500/10 text-red-500' : 'bg-primary/10 text-primary')}`}>
                                         {item.source}
                                     </div>
                                     {item.author && <span className="text-[10px] text-muted-foreground">{item.author}</span>}
@@ -149,9 +149,19 @@ export default function FeedPage() {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className="flex-1 overflow-y-auto bg-background p-8 md:p-12">
+            <div className={`flex-1 overflow-y-auto bg-background p-4 md:p-12 ${!selectedItem ? 'hidden md:block' : 'block'}`}>
+                {/* Mobile Back Button */}
+                {selectedItem && (
+                    <button
+                        onClick={() => setSelectedItem(null)}
+                        className="md:hidden mb-4 flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-white"
+                    >
+                        ← Back to List
+                    </button>
+                )}
+
                 {selectedItem ? (
-                    <div className="max-w-3xl mx-auto">
+                    <div className="max-w-3xl mx-auto pb-20">
                         {/* HEADER */}
                         <div className="mb-8 border-b pb-8">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
@@ -161,19 +171,19 @@ export default function FeedPage() {
                                     Read Source <ExternalLink size={12} />
                                 </a>
                             </div>
-                            <h1 className="text-4xl font-black mb-6 leading-tight">{selectedItem.title}</h1>
+                            <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight">{selectedItem.title}</h1>
 
-                            <div className="flex gap-4">
+                            <div className="flex flex-col md:flex-row gap-4">
                                 <button
                                     onClick={handleExplain}
                                     disabled={loadingExp}
-                                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-bold flex items-center gap-2 transition disabled:opacity-50"
+                                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 w-full md:w-auto"
                                 >
                                     {loadingExp ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
                                     {loadingExp ? "Analyzing..." : "Deep Explain (Feynman)"}
                                 </button>
 
-                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition">
+                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
                                     <Share2 size={18} /> Send to Studio
                                 </a>
                             </div>
@@ -200,7 +210,6 @@ export default function FeedPage() {
                                         <p className="text-sm text-muted-foreground">Generated using the Feynman Technique. Purpose, Logic, and Mental Models extracted.</p>
                                     </div>
                                 </div>
-                                {/* Simple Markdown Renderer (using pre-wrap for now, ideally user has a markdown component) */}
                                 <div className="whitespace-pre-wrap leading-relaxed">
                                     {explanation}
                                 </div>
@@ -208,9 +217,14 @@ export default function FeedPage() {
                         )}
 
                         {!explanation && !loadingExp && (
-                            <div className="text-center py-20 opacity-30">
+                            <div className="text-center py-20 opacity-30 hidden md:block">
                                 <FileText size={48} className="mx-auto mb-4" />
                                 <p className="text-lg">Click "Deep Explain" to unlock this paper.</p>
+                            </div>
+                        )}
+                        {!explanation && !loadingExp && (
+                            <div className="text-center py-10 opacity-30 md:hidden">
+                                <p className="text-sm">Tap "Deep Explain" above to analyze.</p>
                             </div>
                         )}
                     </div>
