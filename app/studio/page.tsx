@@ -122,15 +122,20 @@ function StudioContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
 
                 {/* 1. VIDEO GHOST */}
+                {/* 1. VIDEO GHOST */}
                 <div className={`p-6 rounded-xl border transition-all ${videoData ? 'bg-red-500/5 border-red-500/20' : 'bg-card'}`}>
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="font-bold flex items-center gap-2 text-lg"><Video className="text-red-500" /> Video Ghost</h3>
                         {!videoData && (
                             <button
-                                onClick={generateVideo} disabled={!seed || !!loading}
+                                onClick={() => {
+                                    if (seed) generateVideo();
+                                    else window.location.href = '/video';
+                                }}
+                                disabled={!!loading}
                                 className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-600 transition disabled:opacity-50"
                             >
-                                {loading === 'video' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                                {loading === 'video' ? <Loader2 className="animate-spin" /> : seed ? 'Generate' : 'Open Editor'}
                             </button>
                         )}
                     </div>
@@ -152,10 +157,14 @@ function StudioContent() {
                         <h3 className="font-bold flex items-center gap-2 text-lg"><LayoutTemplate className="text-blue-500" /> Carousel Maker</h3>
                         {!carouselData && (
                             <button
-                                onClick={generateCarousel} disabled={!seed || !!loading}
+                                onClick={() => {
+                                    if (seed) generateCarousel();
+                                    else window.location.href = '/carousel';
+                                }}
+                                disabled={!!loading}
                                 className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition disabled:opacity-50"
                             >
-                                {loading === 'carousel' ? <Loader2 className="animate-spin" /> : 'Generate'}
+                                {loading === 'carousel' ? <Loader2 className="animate-spin" /> : seed ? 'Generate' : 'Open Editor'}
                             </button>
                         )}
                     </div>
@@ -177,7 +186,11 @@ function StudioContent() {
                         <h3 className="font-bold flex items-center gap-2 text-lg"><Twitter className="text-black dark:text-white" /> X Thread</h3>
                         {!threadData && (
                             <button
-                                onClick={generateThread} disabled={!seed || !!loading}
+                                onClick={() => {
+                                    if (!seed) setSeed("Personal Branding used to be optional. Now it is mandatory.");
+                                    generateThread();
+                                }}
+                                disabled={!!loading}
                                 className="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-zinc-800 transition disabled:opacity-50"
                             >
                                 {loading === 'thread' ? <Loader2 className="animate-spin" /> : 'Generate'}
@@ -200,7 +213,11 @@ function StudioContent() {
                         <h3 className="font-bold flex items-center gap-2 text-lg"><MessageSquare className="text-blue-700" /> LinkedIn Post</h3>
                         {!linkedinData && (
                             <button
-                                onClick={generateLinkedIn} disabled={!seed || !!loading}
+                                onClick={() => {
+                                    if (!seed) setSeed("Personal Branding used to be optional. Now it is mandatory.");
+                                    generateLinkedIn();
+                                }}
+                                disabled={!!loading}
                                 className="bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition disabled:opacity-50"
                             >
                                 {loading === 'linkedin' ? <Loader2 className="animate-spin" /> : 'Generate'}
