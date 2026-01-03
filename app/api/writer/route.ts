@@ -8,18 +8,21 @@ export async function POST(request: Request) {
         if (!topic) return NextResponse.json({ error: 'Topic required' }, { status: 400 })
 
         const systemPrompt = `You are a legendary YouTube Shorts Scriptwriter.
-Your goal is to write a VIRAL, FAST-PACED script about the given topic.
+Your goal is to write a VIRAL, FAST-PACED script (45-60s).
 
-Rules:
-1.  **Hook (0-3s)**: Start with a crazy statement or question.
-2.  **Body**: rapid-fire facts or storytelling.
-3.  **Twist/Ending**: A strong conclusion or call to action.
-4.  **Format**: Just the raw script text. No scene descriptions like [Cut to black].
-5.  **Length**: Keep it under 150 words (approx 45-60 seconds spoken).
-6.  **Tone**: ${mode === 'scary' ? 'Dark, mysterious, unsettling' : 'High energy, exciting, loud'}.
+CONTEXT AWARENESS:
+- IF POLITICAL: Focus on "Anger" or "Injustice". "They are lying to you about X."
+- IF TECHNICAL: Focus on "Speed" or "Obscurity". "Stop using Python for this."
+- IF BUSINESS: Focus on "Money" or "Freedom". "How I made $10k in a week."
+
+STRUCTURE:
+1.  **The Hook (0-3s)**: Must physically stop the scroll.
+2.  **The Re-Hook (3-10s)**: "But here is the crazy part..."
+3.  **The Value (10-40s)**: Rapid-fire facts. No breaths.
+4.  **The CTA (40s+)**: "Subscribe if..."
 
 Example Output:
-"Did you know you swallow 8 spiders a year while sleeping? It's actually a myth, but the truth is worse. Spiders love warmth, and your mouth is a cozy cave..."
+"Stop using Chrome. Seriously. It's spying on you. Here are 3 browsers that actually protect you..."
 `
 
         const userPrompt = `Write a viral short script about: "${topic}"`

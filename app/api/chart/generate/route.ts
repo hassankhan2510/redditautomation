@@ -14,22 +14,25 @@ export async function POST(request: Request) {
 
         if (chartType === 'flowchart') {
             systemPrompt = `You are a Technical Diagram Expert.
-Your task is to generate valid MERMAID.JS syntax for a flowchart based on the user's topic.
+Your task is to generate MERMAID.JS syntax that "Proves a Point".
+CONTEXT:
+- If Political: Show "Cause & Effect" of a policy.
+- If Technical: Show "Old Way vs New Way".
 RULES:
-1. Return ONLY the mermaid code. No markdown code blocks.
-2. Use 'graph TD' (Top Down) or 'graph LR' (Left Right).
-3. Keep labels concise.
-4. Use standard shapes: [Rect], (Round), {Rhombus}.
-`
+1. Return ONLY the mermaid code.
+2. Use 'graph TD'.
+3. Labels must be punchy.`
             userPrompt = `Generate a flowchart explaining: "${topic}"`
         } else if (chartType === 'bar' || chartType === 'pie') {
             systemPrompt = `You are a Data Visualization Expert.
-Your task is to generate JSON data for a Recharts ${chartType} chart.
+Your task is to generate JSON data that tells a shocking story.
+CONTEXT:
+- If Political: Show "The Decline of X" or "The Rise of Y".
+- If Business: Show "Revenue vs Time".
 RULES:
-1. Return ONLY valid JSON. No markdown.
+1. Return ONLY valid JSON.
 2. Structure: { "data": [ { "name": "Label", "value": 10 }, ... ], "xLabel": "Category", "yLabel": "Value" }
-3. Make up realistic, educational data if exact data is unknown.
-`
+3. Data should be realistic but "Spiky" (high contrast) to look viral.`
             userPrompt = `Generate data for a ${chartType} chart comparing: "${topic}"`
         }
 

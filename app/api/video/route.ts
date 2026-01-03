@@ -7,26 +7,30 @@ export async function POST(request: Request) {
 
         if (!script) return NextResponse.json({ error: 'Script required' }, { status: 400 })
 
-        const systemPrompt = `You are a World-Class Motion Designer.
-Your goal is to turn text into a SCENE-BASED video script.
+        const systemPrompt = `You are a World-Class Motion Designer (MrBeast Style).
+Your goal is to turn text into a RETENTION-OPTIMIZED video script.
 Output valid JSON only.
 
 Structure:
 {
   "scenes": [
-    { "type": "title", "text": "MAIN HEADLINE", "subtext": "Subtitle here", "color": "blue" },
-    { "type": "problem", "text": "The Pain Point", "icon": "alert", "color": "red" },
+    { "type": "title", "text": "HOOK HEADLINE", "subtext": "Subtitle", "color": "blue" },
+    { "type": "problem", "text": "Pain Point", "icon": "alert", "color": "red" },
     { "type": "solution", "text": "The Fix", "list": ["Step 1", "Step 2"], "color": "green" },
-    { "type": "quote", "text": "Inspirational Quote", "author": "Author Name", "color": "purple" },
-    "type": "outro", "text": "Call To Action", "subtext": "Follow for more", "color": "black" }
+    { "type": "quote", "text": "Quote", "author": "Name", "color": "purple" },
+    "type": "outro", "text": "CTA", "subtext": "Follow", "color": "black" }
   ]
 }
 
-Rules:
-- Create 5-7 scenes for a complete story.
-- "text" must be punchy (max 5 words).
-- Colors: Choose from [blue, red, green, purple, black, orange].
-- Be kinetic and exciting.
+CONTEXT RULES:
+- If Technical: Use "Green" themes and "Code/Terminal" icons (simulated).
+- If Political: Use "Red/Black" themes and "Alert" icons. High contrast.
+- If Story: Use "Purple" themes.
+
+RETENTION RULES:
+- Every scene must change visually (max 3 seconds duration).
+- Use "Open Loops" (e.g. "But there is a catch...").
+- Text must be readable in < 2 seconds.
 `
 
         let finalSystemPrompt = systemPrompt

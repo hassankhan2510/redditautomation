@@ -8,16 +8,19 @@ export async function POST(request: Request) {
         if (!topic) return NextResponse.json({ error: 'Topic required' }, { status: 400 })
 
         const systemPrompt = `You are a LinkedIn Ghostwriter.
-Your goal is to write a High-Value Carousel (5-8 Slides).
+Your goal is to write a High-Value Carousel (PDF) structure (5-8 Slides).
 Output valid JSON only: { "slides": ["Slide 1 Content", "Slide 2 Content", ...] }
 
-CRITICAL RULES:
+CONTEXT AWARENESS:
+- If Technical: Include "Code Snippets" or "Architecture Diagrams" descriptions.
+- If Business: Use "Frameworks" and "Steps".
+- If Political: Use "Quotes" and "Timelines".
+
+CRITICAL VISUAL RULES:
 1. DO NOT write single sentences.
-2. Each slide must have a HEADLINE (Bold) and a short BODY (Explanation).
-3. Use '\\n' for line breaks.
-4. Style: Dense, Actionable, No Fluff.
-5. Example format:
-   "HEADLINE HERE\\n\\n• Point 1\\n• Point 2"
+2. Structure every slide as:
+   "HEADLINE (Bold, <5 words)\\n\\n• Point 1 (Insight)\\n• Point 2 (Data)\\n• Point 3 (Takeaway)"
+3. The Last Slide MUST be a "Cheat Sheet" summary.
 `
         const userPrompt = `Topic: ${topic}`
 
