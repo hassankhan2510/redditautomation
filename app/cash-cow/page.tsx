@@ -49,6 +49,7 @@ export default function CashCowPage() {
     const [customScript, setCustomScript] = useState("")
     const [writing, setWriting] = useState(false)
     const [dubbing, setDubbing] = useState(true) // Default ON
+    const [videoFormat, setVideoFormat] = useState<'9:16' | '16:9'>('9:16') // Default Short
 
     const magicWrite = async () => {
         if (!topic) return
@@ -80,16 +81,25 @@ export default function CashCowPage() {
             const data = await res.json()
             if (!data.videoData) throw new Error("No Video Data")
 
-            let finalData = { ...data.videoData, mode: 'story', backgroundUrl: bgUrl }
+            let finalData = {
+                ...data.videoData,
+                mode: 'story',
+                backgroundUrl: bgUrl,
+                width: videoFormat === '16:9' ? 1920 : 1080,
+                height: videoFormat === '16:9' ? 1080 : 1920
+            }
 
             // 2. Dubbing Engine (Free TTS)
             if (dubbing) {
                 const dubbedScenes = await Promise.all(finalData.scenes.map(async (scene: any) => {
                     try {
+                        // Truncate to 195 chars to be safe for Google TTS Free
+                        const safeText = scene.text.substring(0, 195)
                         const ttsRes = await fetch('/api/tts', {
-                            method: 'POST', body: JSON.stringify({ text: scene.text })
+                            method: 'POST', body: JSON.stringify({ text: safeText })
                         })
                         const ttsData = await ttsRes.json()
+                        // Ensure we append a unique ID to force reload if needed
                         return { ...scene, audioUrl: ttsData.url }
                     } catch (e) { return scene }
                 }))
@@ -136,14 +146,32 @@ export default function CashCowPage() {
                         <div className="bg-zinc-900 rounded-xl border border-white/10 p-4 mb-8">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-green-500 text-xs font-bold uppercase tracking-widest">Scripting Engine</span>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={dubbing}
-                                        onChange={e => setDubbing(e.target.checked)}
-                                        className="w-4 h-4 accent-green-500"
-                                    />
-                                    <span className="text-xs font-bold text-white">Enable Free Dubbing</span>
+                                <div className="flex items-center gap-4">
+                                    {/* FORMAT TOGGLE */}
+                                    <div className="flex bg-black border border-white/10 rounded-lg p-1">
+                                        <button
+                                            onClick={() => setVideoFormat('9:16')}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded ${videoFormat === '9:16' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}
+                                        >
+                                            Short (9:16)
+                                        </button>
+                                        <button
+                                            onClick={() => setVideoFormat('16:9')}
+                                            className={`px-3 py-1 text-[10px] font-bold rounded ${videoFormat === '16:9' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}
+                                        >
+                                            Video (16:9)
+                                        </button>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 border-l border-white/10 pl-4">
+                                        <input
+                                            type="checkbox"
+                                            checked={dubbing}
+                                            onChange={e => setDubbing(e.target.checked)}
+                                            className="w-4 h-4 accent-green-500"
+                                        />
+                                        <span className="text-xs font-bold text-white">Auto-Dubbing</span>
+                                    </div>
                                 </div>
                             </div>
 

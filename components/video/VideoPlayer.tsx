@@ -12,13 +12,14 @@ export const VideoPlayer = ({ data }: { data: any }) => {
     const finalDuration = durationInFrames > 0 ? durationInFrames : 150;
 
     return (
-        <div className="rounded-xl overflow-hidden shadow-2xl border aspect-video bg-black">
+        <div className={`rounded-xl overflow-hidden shadow-2xl border bg-black mx-auto transition-all ${data.width === 1080 ? 'aspect-[9/16] max-w-sm' : 'aspect-video w-full'}`}>
             <Player
                 component={KineticText}
                 inputProps={{ scenes, mode: data.mode, backgroundUrl: data.backgroundUrl }}
                 durationInFrames={finalDuration}
-                compositionWidth={1920}
-                compositionHeight={1080}
+                durationInFrames={finalDuration}
+                compositionWidth={data.width || 1920}
+                compositionHeight={data.height || 1080}
                 fps={30}
                 style={{
                     width: '100%',
