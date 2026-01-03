@@ -125,6 +125,9 @@ export const KineticText = ({ scenes, mode = 'default', backgroundUrl }: { scene
                             const duration = scene.duration || getDuration(scene)
                             return (
                                 <Series.Sequence key={i} durationInFrames={duration}>
+                                    {scene.audioUrl && (
+                                        <Audio src={scene.audioUrl} />
+                                    )}
                                     <div className="text-center font-black text-white drop-shadow-xl flex flex-col items-center justify-center h-full w-full">
                                         <h1 style={{ fontSize: 60, lineHeight: 1.2, textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
                                             {scene.text}
