@@ -97,7 +97,11 @@ function StudioContent() {
             {/* INPUT SECTION */}
             <div className="bg-card border rounded-xl p-6 shadow-sm mb-12">
                 <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block tracking-wider">Seed Content / Keyword / URL</label>
-                className="w-full bg-background border rounded-lg p-4 text-sm min-h-[100px] mb-4 focus:ring-2 focus:ring-primary outline-none"
+                <textarea
+                    value={seed}
+                    onChange={e => setSeed(e.target.value)}
+                    placeholder="Paste a URL, an idea, or a rough draft here..."
+                    className="w-full bg-background border rounded-lg p-4 text-sm min-h-[100px] mb-4 focus:ring-2 focus:ring-primary outline-none"
                 />
 
                 {/* STYLE SELECTOR (Restored) */}
