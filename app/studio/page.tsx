@@ -219,6 +219,18 @@ function StudioContent() {
                         Open Reddit Studio
                     </a>
                 </div>
+
+                {/* 6. THE CHARTIST (New) */}
+                <div className="p-6 rounded-xl border bg-card transition-all lg:col-span-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold flex items-center gap-2 text-lg"><span className="bg-indigo-500 text-white rounded-full p-1"><BarChart size={12} /></span> The Chartist</h3>
+                        <span className="text-[10px] font-bold bg-indigo-500/10 text-indigo-500 px-2 py-1 rounded">Visuals</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">Turn complex technical concepts into viral flowcharts and data visualizations instantly.</p>
+                    <a href="/chart" className="block w-full text-center bg-indigo-600 text-white py-2 rounded font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-500/20">
+                        Generate Visuals
+                    </a>
+                </div>
             </div>
         </div>
     )

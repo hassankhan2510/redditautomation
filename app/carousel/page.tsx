@@ -215,3 +215,36 @@ export default function CarouselPage() {
         </div>
     )
 }
+
+function SlideCard({ text, idx, total, theme, author }: any) {
+    return (
+        <div
+            className={`w-[1080px] h-[1350px] relative flex flex-col p-16 ${theme.bg} ${theme.text} shadow-2xl overflow-hidden`}
+        >
+            {/* Header */}
+            <div className="flex justify-between items-center mb-16">
+                <div className="opacity-80 text-3xl font-bold">{author}</div>
+                <div className="opacity-50 text-3xl font-mono">{idx + 1}/{total}</div>
+            </div>
+
+            {/* Content (Auto-centered) */}
+            <div className="flex-1 flex items-center justify-center">
+                <p className={`text-[80px] leading-tight text-center whitespace-pre-wrap ${theme.font}`}>
+                    {text}
+                </p>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-16 flex justify-center opacity-40">
+                <div className="h-2 w-32 bg-current rounded-full" />
+            </div>
+
+            {/* Swipe Arrow */}
+            {idx < total - 1 && (
+                <div className="absolute bottom-12 right-12 text-4xl animate-pulse">
+                    →
+                </div>
+            )}
+        </div>
+    )
+}

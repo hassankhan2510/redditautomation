@@ -17,7 +17,7 @@ export const VideoPlayer = ({ data }: { data: any }) => {
                 component={KineticText}
                 inputProps={{ scenes, mode: data.mode, backgroundUrl: data.backgroundUrl }}
                 durationInFrames={finalDuration}
-                durationInFrames={finalDuration}
+
                 compositionWidth={data.width || 1920}
                 compositionHeight={data.height || 1080}
                 fps={30}
