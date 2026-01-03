@@ -9,14 +9,20 @@ export default function FeedPage() {
     const [explanation, setExplanation] = useState("")
     const [loadingExp, setLoadingExp] = useState(false)
     const [loadingFeed, setLoadingFeed] = useState(true)
+    const [filter, setFilter] = useState('global') // global, pk, business
 
     useEffect(() => {
         fetchFeed()
-    }, [])
+    }, [filter])
 
     const fetchFeed = async () => {
+        setLoadingFeed(true)
         try {
-            const res = await fetch('/api/feed')
+            let url = '/api/feed'
+            if (filter === 'pk') url += '?region=pk'
+            if (filter === 'business') url += '?category=business'
+
+            const res = await fetch(url)
             const data = await res.json()
             if (data.items) setFeedItems(data.items)
         } catch (e) {
@@ -50,9 +56,17 @@ export default function FeedPage() {
 
             {/* SIDEBAR LIST */}
             <div className="w-[30%] lg:w-[25%] border-r bg-muted/10 overflow-y-auto p-4">
-                <h2 className="font-bold mb-4 flex items-center gap-2 text-muted-foreground uppercase text-xs tracking-wider">
-                    <BookOpen size={14} /> Knowledge Feed
+                <h2 className="font-bold mb-4 flex items-center justify-between text-muted-foreground uppercase text-xs tracking-wider">
+                    <span className="flex items-center gap-2"><BookOpen size={14} /> Knowledge Feed</span>
                 </h2>
+
+                {/* FILTERS */}
+                <div className="flex gap-1 mb-4">
+                    <button onClick={() => setFilter('global')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'global' ? 'bg-primary text-white border-primary' : 'bg-background hover:bg-muted'}`}>Global</button>
+                    <button onClick={() => setFilter('pk')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'pk' ? 'bg-green-600 text-white border-green-600' : 'bg-background hover:bg-muted'}`}>Pakistan</button>
+                    <button onClick={() => setFilter('business')} className={`px-2 py-1 text-[10px] rounded border ${filter === 'business' ? 'bg-blue-600 text-white border-blue-600' : 'bg-background hover:bg-muted'}`}>Business</button>
+                </div>
+
                 {loadingFeed ? (
                     <div className="flex justify-center p-8"><Loader2 className="animate-spin text-muted-foreground" /></div>
                 ) : (
