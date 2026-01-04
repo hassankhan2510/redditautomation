@@ -3,12 +3,51 @@
 
 import { useState, useEffect } from "react"
 import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic } from "lucide-react"
+import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
 
-// ... (existing imports)
+// Simple Markdown Renderer
+function SimpleMarkdown({ text }: { text: string }) {
+    if (!text) return null
+
+    // Split by lines
+    const lines = text.split('\n')
+
+    return (
+        <div className="space-y-3 leading-relaxed text-sm">
+            {lines.map((line, i) => {
+                // Headers
+                if (line.startsWith('## ')) return <h2 key={i} className="text-lg font-bold text-white mt-4">{line.replace('## ', '')}</h2>
+                if (line.startsWith('### ')) return <h3 key={i} className="text-base font-bold text-zinc-200 mt-2">{line.replace('### ', '')}</h3>
+                if (line.startsWith('- ')) return <div key={i} className="flex gap-2 ml-2"><span className="text-zinc-500">•</span> <span>{formatBold(line.replace('- ', ''))}</span></div>
+                if (line.trim() === '') return <div key={i} className="h-2"></div>
+                return <p key={i} className="text-zinc-300">{formatBold(line)}</p>
+            })}
+        </div>
+    )
+}
+
+// Helper to bold text
+function formatBold(text: string) {
+    const parts = text.split(/(\*\*.*?\*\*)/g)
+    return parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>
+        }
+        return part
+    })
+}
 
 export default function FeedPage() {
-    // ... (state)
+    const [feedItems, setFeedItems] = useState<any[]>([])
+    const [savedItems, setSavedItems] = useState<any[]>([])
+    const [selectedItem, setSelectedItem] = useState<any>(null)
+    const [explanation, setExplanation] = useState("")
+    const [loadingExp, setLoadingExp] = useState(false)
+    const [loadingFeed, setLoadingFeed] = useState(true)
+    const [filter, setFilter] = useState('global') // global, pk, business, launch, science, engineering, growth, crypto, custom
+    const [subFilter, setSubFilter] = useState('all')
+    const [viewMode, setViewMode] = useState<'feed' | 'saved'>('feed')
 
     // Configuration for Dropdowns
     const FILTERS: any = {
@@ -43,7 +82,7 @@ export default function FeedPage() {
 
             if (filter === 'science') {
                 const cat = subFilter === 'all' ? 'cs.AI' : subFilter
-                url = `/ api / research / arxiv ? category = ${cat} `
+                url = `/api/research/arxiv?category=${cat}`
             } else {
                 if (filter === 'pk') url += '?region=pk'
                 if (filter === 'business') url += '?category=business'
@@ -52,9 +91,13 @@ export default function FeedPage() {
                 if (filter === 'engineering') url += '?category=engineering'
                 if (filter === 'growth') url += '?category=growth'
                 if (filter === 'crypto') url += '?category=crypto'
+                if (filter === 'philosophy') url += '?category=philosophy'
+                if (filter === 'history') url += '?category=history'
+                if (filter === 'politics') url += '?category=politics'
+                if (filter === 'stocks') url += '?category=stocks'
 
                 if (subFilter !== 'all') {
-                    url += `& source=${encodeURIComponent(subFilter)} `
+                    url += `&source=${encodeURIComponent(subFilter)}`
                 }
             }
 
@@ -279,7 +322,7 @@ export default function FeedPage() {
                                     {loadingExp ? "Analyzing..." : "Deep Explain (Mechanisms)"}
                                 </button>
 
-                                <a href={`/ studio ? source = ${encodeURIComponent(selectedItem.link)} `} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
+                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
                                     <Share2 size={18} /> Send to Studio
                                 </a>
 
