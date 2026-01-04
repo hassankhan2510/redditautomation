@@ -312,15 +312,14 @@ export default function FeedPage() {
 
             {/* MAIN CONTENT */}
             <div className={`flex - 1 overflow - y - auto bg - background p - 4 md: p - 12 ${!selectedItem ? 'hidden md:block' : 'block'} `}>
+                {/* Simple Inline Back Button (Mobile) */}
                 {selectedItem && (
-                    <div className="md:hidden sticky top-0 bg-background/95 backdrop-blur z-10 py-2 mb-4 border-b -mx-4 px-4 flex items-center">
-                        <button
-                            onClick={() => setSelectedItem(null)}
-                            className="flex items-center gap-2 text-sm font-medium bg-muted/50 hover:bg-muted px-3 py-1.5 rounded-full transition"
-                        >
-                            <ArrowLeft size={16} /> Back
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setSelectedItem(null)}
+                        className="md:hidden mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        <ArrowLeft size={18} /> Back to Feed
+                    </button>
                 )}
 
                 {selectedItem ? (
@@ -390,36 +389,35 @@ export default function FeedPage() {
                                     </div>
                                 </div>
 
-                                <div className="bg-muted/30 p-6 rounded-xl border mb-8 flex items-start gap-4">
-                                    <div className="bg-blue-500/10 p-2 rounded-lg text-blue-500 mt-1 shrink-0">
-                                        <FileText size={24} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <h3 className="font-bold text-lg mb-1">Deep Dive Analysis</h3>
-                                                <p className="text-sm text-muted-foreground">Technical Breakdown & Step-by-Step Procedure.</p>
-                                            </div>
-
-                                            <div className="hidden md:flex items-center gap-2">
-                                                <button
-                                                    onClick={handleDownloadPDF}
-                                                    disabled={downloading}
-                                                    className="flex items-center gap-2 text-sm font-medium bg-background border px-3 py-1.5 rounded-md hover:bg-muted transition"
-                                                >
-                                                    {downloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-                                                    PDF
-                                                </button>
-                                                {/* Desktop Close Button */}
-                                                <button onClick={() => setExplanation("")} className="text-muted-foreground hover:text-primary transition">
-                                                    <X size={20} />
-                                                </button>
-                                            </div>
+                                {/* Desktop Header - Clean & Minimal */}
+                                <div className="hidden md:flex items-center justify-between mb-8 border-b pb-4 mt-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-primary/10 p-2 rounded-lg text-primary">
+                                            <Sparkles size={24} />
                                         </div>
+                                        <div>
+                                            <h3 className="font-black text-2xl tracking-tight">Deep Dive Analysis</h3>
+                                            <p className="text-sm text-muted-foreground font-medium">Technical Breakdown & Mechanisms</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={handleDownloadPDF}
+                                            disabled={downloading}
+                                            className="flex items-center gap-2 text-sm font-bold bg-muted/50 hover:bg-muted border px-4 py-2 rounded-lg transition"
+                                        >
+                                            {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+                                            PDF
+                                        </button>
+                                        <button onClick={() => setExplanation("")} className="p-2 text-muted-foreground hover:text-red-500 transition rounded-lg hover:bg-red-500/10">
+                                            <X size={24} />
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div id="deep-dive-content" className="bg-background md:bg-background/50 p-6 rounded-xl border md:max-h-[70vh] md:overflow-y-auto custom-scrollbar break-words text-lg md:text-base leading-relaxed">
+                                {/* Content - Native Article Feel on Desktop */}
+                                <div id="deep-dive-content" className="bg-background md:bg-transparent p-6 md:p-0 rounded-xl md:border-none md:max-h-none md:overflow-visible custom-scrollbar break-words text-lg leading-loose text-foreground/90 md:mt-8">
                                     <SimpleMarkdown text={explanation} />
                                 </div>
 
