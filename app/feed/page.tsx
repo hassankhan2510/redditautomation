@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react"
 import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic } from "lucide-react"
+import { toast } from "sonner"
 
 // Simple Markdown Renderer
 function SimpleMarkdown({ text }: { text: string }) {
@@ -154,6 +155,12 @@ export default function FeedPage() {
         } catch (e) { alert("Delete failed") }
     }
 
+
+
+    // ... (rest of imports)
+
+    // ... (inside component)
+
     const handleExplain = async () => {
         if (!selectedItem) return
         setLoadingExp(true)
@@ -169,9 +176,12 @@ export default function FeedPage() {
                 })
             })
             const data = await res.json()
-            if (data.explanation) setExplanation(data.explanation)
+            if (data.explanation) {
+                setExplanation(data.explanation)
+                toast.success("Analysis Complete")
+            }
         } catch (e) {
-            alert("Failed to analyze")
+            toast.error("Failed to analyze article")
         } finally {
             setLoadingExp(false)
         }

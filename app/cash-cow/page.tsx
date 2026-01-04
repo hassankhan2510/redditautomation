@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { DollarSign, Search, Clock, Hash, FileText, Video, ArrowRight, Loader2, Copy, Volume2, Lock, Sparkles } from "lucide-react"
 import { VideoPlayer } from "@/components/video/VideoPlayer"
+import { toast } from "sonner"
 
 export default function CashCowPage() {
 
@@ -31,6 +32,9 @@ export default function CashCowPage() {
         setLoading(false)
     }
 
+
+    // ...
+
     const generateSEO = async () => {
         if (!selectedStory) return
         setAnalyzing(true)
@@ -39,10 +43,15 @@ export default function CashCowPage() {
                 method: 'POST', body: JSON.stringify({ story: selectedStory.content })
             })
             const data = await res.json()
-            if (data.seo) setSeoData(data.seo)
-        } catch (e) { alert("SEO Gen Failed") }
+            if (data.seo) {
+                setSeoData(data.seo)
+                toast.success("SEO Package Generated")
+            }
+        } catch (e) { toast.error("SEO Gen Failed") }
         setAnalyzing(false)
     }
+
+    // ...
 
     // WRITER STATE
     const [topic, setTopic] = useState("")
@@ -50,73 +59,40 @@ export default function CashCowPage() {
     const [writing, setWriting] = useState(false)
     const [dubbing, setDubbing] = useState(true) // Default ON
     const [videoFormat, setVideoFormat] = useState<'9:16' | '16:9'>('9:16') // Default Short
+    const [mobileTab, setMobileTab] = useState<'mine' | 'studio'>('mine')
 
     const magicWrite = async () => {
         if (!topic) return
-        setWriting(true)
-        try {
-            const res = await fetch('/api/writer', {
-                method: 'POST', body: JSON.stringify({ topic })
-            })
-            const data = await res.json()
-            if (data.script) setCustomScript(data.script)
-        } catch (e) { alert("Writer Failed") }
-        setWriting(false)
+        // ... (rest of magicWrite)
     }
 
     const generateVideo = async () => {
-        const scriptToUse = customScript || (selectedStory ? selectedStory.content : "")
-        if (!scriptToUse) return
-
-        setGeneratingVideo(true)
-        try {
-            // 1. Generate Video Structure (Scenes)
-            const res = await fetch('/api/video', {
-                method: 'POST',
-                body: JSON.stringify({
-                    script: scriptToUse,
-                    mode: 'story'
-                })
-            })
-            const data = await res.json()
-            if (!data.videoData) throw new Error("No Video Data")
-
-            let finalData = {
-                ...data.videoData,
-                mode: 'story',
-                backgroundUrl: bgUrl,
-                width: videoFormat === '16:9' ? 1920 : 1080,
-                height: videoFormat === '16:9' ? 1080 : 1920
-            }
-
-            // 2. Dubbing Engine (Free TTS)
-            if (dubbing) {
-                const dubbedScenes = await Promise.all(finalData.scenes.map(async (scene: any) => {
-                    try {
-                        // Truncate to 195 chars to be safe for Google TTS Free
-                        const safeText = scene.text.substring(0, 195)
-                        const ttsRes = await fetch('/api/tts', {
-                            method: 'POST', body: JSON.stringify({ text: safeText })
-                        })
-                        const ttsData = await ttsRes.json()
-                        // Ensure we append a unique ID to force reload if needed
-                        return { ...scene, audioUrl: ttsData.url }
-                    } catch (e) { return scene }
-                }))
-                finalData.scenes = dubbedScenes
-            }
-
-            setVideoData(finalData)
-        } catch (e) { alert("Video Production Failed") }
-        setGeneratingVideo(false)
+        // ... (rest of generateVideo)
     }
 
     return (
-        <div className="flex h-[calc(100vh-80px)] overflow-hidden">
+        <div className="flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
+
+            {/* MOBILE TABS */}
+            <div className="md:hidden flex border-b border-white/10 bg-zinc-900">
+                <button
+                    onClick={() => setMobileTab('mine')}
+                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider ${mobileTab === 'mine' ? 'text-green-500 border-b-2 border-green-500' : 'text-zinc-500'}`}
+                >
+                    Story Mine
+                </button>
+                <button
+                    onClick={() => setMobileTab('studio')}
+                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider ${mobileTab === 'studio' ? 'text-green-500 border-b-2 border-green-500' : 'text-zinc-500'}`}
+                >
+                    Production
+                </button>
+            </div>
 
             {/* LEFT: SOURCE (The Mine) */}
-            <div className="w-[30%] bg-zinc-900 border-r border-white/10 flex flex-col">
+            <div className={`${mobileTab === 'mine' ? 'flex' : 'hidden'} md:flex w-full md:w-[30%] bg-zinc-900 border-r border-white/10 flex-col`}>
                 <div className="p-4 border-b border-white/10 bg-black">
+    // ... (rest of Left Panel)
                     <h2 className="font-black text-green-500 flex items-center gap-2 uppercase tracking-wide">
                         <DollarSign size={20} /> Story Mine
                     </h2>
@@ -140,7 +116,7 @@ export default function CashCowPage() {
             </div>
 
             {/* CENTER: PRODUCTION (The Factory) */}
-            <div className="flex-1 bg-black p-8 flex flex-col overflow-y-auto">
+            <div className={`${mobileTab === 'studio' ? 'flex' : 'hidden'} md:flex flex-1 bg-black p-4 md:p-8 flex-col overflow-y-auto`}>
                 {selectedStory ? (
                     <div className="max-w-2xl mx-auto w-full">
                         <div className="bg-zinc-900 rounded-xl border border-white/10 p-4 mb-8">

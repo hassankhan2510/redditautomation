@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Send, Trash2, Plus, Lightbulb } from "lucide-react"
+import { toast } from "sonner"
 
 export default function IdeasPage() {
     const [ideas, setIdeas] = useState<any[]>([])
@@ -113,8 +114,10 @@ function IdeaGenerator({ idea }: any) {
             .catch(e => console.error(e))
     }, [])
 
+    // ...
+
     const generate = async () => {
-        if (!subreddit) return alert("Select a subreddit")
+        if (!subreddit) return toast.error("Please select a subreddit")
         setLoading(true)
         try {
             const res = await fetch('/api/repurpose', {
@@ -126,8 +129,11 @@ function IdeaGenerator({ idea }: any) {
                 })
             })
             const data = await res.json()
-            if (data.drafts) setPost(data.drafts[0])
-        } catch (e) { alert("Failed") }
+            if (data.drafts) {
+                setPost(data.drafts[0])
+                toast.success("Idea Expanded")
+            }
+        } catch (e) { toast.error("Failed to generate") }
         setLoading(false)
     }
 

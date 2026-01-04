@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { MessageCircle, Zap, RefreshCw, Copy, ExternalLink, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export default function ReplyGuyPage() {
     const [topic, setTopic] = useState("SaaS")
@@ -9,6 +10,9 @@ export default function ReplyGuyPage() {
     const [loading, setLoading] = useState(false)
     const [generating, setGenerating] = useState<string | null>(null)
     const [replies, setReplies] = useState<Record<string, string>>({})
+
+
+    // ... inside component
 
     const scan = async () => {
         setLoading(true)
@@ -19,9 +23,12 @@ export default function ReplyGuyPage() {
                 body: JSON.stringify({ keyword: topic })
             })
             const data = await res.json()
-            if (data.leads) setThreads(data.leads.slice(0, 5)) // Top 5 only
+            if (data.leads) {
+                setThreads(data.leads.slice(0, 5)) // Top 5 only
+                toast.success("Found 5 relevant threads")
+            }
         } catch (e) {
-            alert("Scan failed")
+            toast.error("Scan failed. Try a different topic.")
         }
         setLoading(false)
     }
@@ -40,9 +47,10 @@ export default function ReplyGuyPage() {
             const data = await res.json()
             if (data.drafts) {
                 setReplies(prev => ({ ...prev, [threadId]: data.drafts[0] }))
+                toast.success("Draft Generated")
             }
         } catch (e) {
-            alert("Generation failed")
+            toast.error("Generation failed")
         }
         setGenerating(null)
     }

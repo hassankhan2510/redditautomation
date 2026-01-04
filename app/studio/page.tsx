@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { LayoutTemplate, Video, MessageSquare, Twitter, Sparkles, Loader2, ArrowRight, BarChart } from "lucide-react"
+import { toast } from "sonner"
 
 export default function StudioPage() {
     return (
@@ -34,6 +35,8 @@ function StudioContent() {
 
     // --- GENERATORS ---
 
+    // ...
+
     const generateVideo = async () => {
         if (!seed) return
         setLoading('video')
@@ -42,8 +45,11 @@ function StudioContent() {
                 method: 'POST', body: JSON.stringify({ script: seed, mode: activeStyle }) // Pass style
             })
             const data = await res.json()
-            if (data.videoData) setVideoData(data.videoData)
-        } catch (e) { alert("Video Gen Failed") }
+            if (data.videoData) {
+                setVideoData(data.videoData)
+                toast.success("Video Generated")
+            }
+        } catch (e) { toast.error("Video Gen Failed") }
         setLoading(null)
     }
 
@@ -55,8 +61,11 @@ function StudioContent() {
                 method: 'POST', body: JSON.stringify({ topic: seed })
             })
             const data = await res.json()
-            if (data.slides) setCarouselData(data.slides)
-        } catch (e) { alert("Carousel Gen Failed") }
+            if (data.slides) {
+                setCarouselData(data.slides)
+                toast.success("Carousel Created")
+            }
+        } catch (e) { toast.error("Carousel Gen Failed") }
         setLoading(null)
     }
 
@@ -69,8 +78,11 @@ function StudioContent() {
                 body: JSON.stringify({ originalContent: seed, targetPlatform: 'x', tone: activeStyle })
             })
             const data = await res.json()
-            if (data.drafts) setThreadData(data.drafts.join('\n\n---\n\n')) // Handle multiple drafts
-        } catch (e) { alert("Thread Gen Failed") }
+            if (data.drafts) {
+                setThreadData(data.drafts.join('\n\n---\n\n')) // Handle multiple drafts
+                toast.success("Thread Drafted")
+            }
+        } catch (e) { toast.error("Thread Gen Failed") }
         setLoading(null)
     }
 
@@ -83,8 +95,11 @@ function StudioContent() {
                 body: JSON.stringify({ originalContent: seed, targetPlatform: 'linkedin', tone: activeStyle })
             })
             const data = await res.json()
-            if (data.drafts) setLinkedinData(data.drafts[0]) // Just take first draft
-        } catch (e) { alert("LinkedIn Gen Failed") }
+            if (data.drafts) {
+                setLinkedinData(data.drafts[0]) // Just take first draft
+                toast.success("Post Drafted")
+            }
+        } catch (e) { toast.error("LinkedIn Gen Failed") }
         setLoading(null)
     }
 
