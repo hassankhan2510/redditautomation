@@ -311,14 +311,14 @@ export default function FeedPage() {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className={`flex - 1 overflow - y - auto bg - background p - 4 md: p - 12 ${!selectedItem ? 'hidden md:block' : 'block'} `}>
-                {/* Simple Inline Back Button (Mobile) */}
+            <div className={`flex-1 overflow-y-auto bg-background p-4 md:p-12 ${!selectedItem ? 'hidden md:block' : 'block'}`}>
+                {/* Simple Back Button (Mobile) */}
                 {selectedItem && (
                     <button
                         onClick={() => setSelectedItem(null)}
                         className="md:hidden mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        <ArrowLeft size={18} /> Back to Feed
+                        <ArrowLeft size={16} /> Back to Feed
                     </button>
                 )}
 
@@ -326,33 +326,33 @@ export default function FeedPage() {
                     <div className="max-w-3xl mx-auto pb-20 pt-2 md:pt-0">
                         <div className="mb-8 border-b pb-8">
                             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
-                                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-bold uppercase">{selectedItem.source}</span>
+                                <span className="bg-muted text-foreground px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide border">{selectedItem.source}</span>
                                 <span>{new Date(selectedItem.pubDate || selectedItem.published_at || new Date()).toLocaleDateString()}</span>
                                 <a href={selectedItem.link} target="_blank" className="ml-auto flex items-center gap-1 text-xs border px-2 py-1 rounded hover:bg-muted transition">
                                     Source <ExternalLink size={10} />
                                 </a>
                             </div>
-                            <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight tracking-tight">{selectedItem.title}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold mb-6 leading-tight text-foreground">{selectedItem.title}</h1>
 
                             <div className="space-y-3">
                                 <button
                                     onClick={handleExplain}
                                     disabled={loadingExp}
-                                    className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition disabled:opacity-50 text-lg"
+                                    className="w-full bg-foreground text-background hover:opacity-90 px-6 py-4 rounded-lg font-bold flex items-center justify-center gap-3 transition disabled:opacity-50 text-base"
                                 >
-                                    {loadingExp ? <Loader2 className="animate-spin" /> : <Sparkles size={20} className="text-yellow-300" />}
+                                    {loadingExp ? <Loader2 className="animate-spin" /> : <BookOpen size={20} />}
                                     {loadingExp ? "Analyzing..." : "Deep Explain"}
                                 </button>
 
                                 <div className="grid grid-cols-2 gap-3">
-                                    <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-card hover:bg-muted px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition text-sm">
+                                    <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition text-sm">
                                         <Share2 size={16} /> Studio
                                     </a>
 
                                     {viewMode === 'feed' && (
                                         <button
                                             onClick={(e) => handleSave(e, selectedItem)}
-                                            className="border bg-card hover:bg-muted px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition text-sm"
+                                            className="border bg-background hover:bg-muted px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition text-sm"
                                         >
                                             <Bookmark size={16} /> Save
                                         </button>
@@ -373,11 +373,11 @@ export default function FeedPage() {
                         )}
 
                         {explanation && (
-                            <div className="fixed inset-0 z-[200] bg-background/95 backdrop-blur-3xl md:backdrop-blur-none p-6 overflow-y-auto md:static md:z-auto md:bg-transparent md:p-0 md:overflow-visible animate-in fade-in slide-in-from-bottom-10 md:animate-none flex flex-col">
+                            <div className="fixed inset-0 z-[200] bg-background p-6 overflow-y-auto md:static md:z-auto md:bg-transparent md:p-0 md:overflow-visible animate-in fade-in slide-in-from-bottom-10 md:animate-none flex flex-col">
                                 {/* Mobile Header with Close Button */}
-                                <div className="flex items-center justify-between mb-6 md:hidden sticky top-0 bg-background/95 backdrop-blur z-10 py-4 border-b">
+                                <div className="flex items-center justify-between mb-6 md:hidden sticky top-0 bg-background z-10 py-4 border-b">
                                     <h2 className="font-bold text-lg flex items-center gap-2">
-                                        <Sparkles size={18} className="text-primary" /> Deep Dive
+                                        <BookOpen size={18} /> Deep Dive
                                     </h2>
                                     <div className="flex gap-2">
                                         <button onClick={handleDownloadPDF} disabled={downloading} className="p-2 bg-muted rounded-full hover:bg-muted/80">
@@ -392,11 +392,11 @@ export default function FeedPage() {
                                 {/* Desktop Header - Clean & Minimal */}
                                 <div className="hidden md:flex items-center justify-between mb-8 border-b pb-4 mt-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                                            <Sparkles size={24} />
+                                        <div className="bg-muted p-2 rounded-lg text-foreground">
+                                            <BookOpen size={24} />
                                         </div>
                                         <div>
-                                            <h3 className="font-black text-2xl tracking-tight">Deep Dive Analysis</h3>
+                                            <h3 className="font-bold text-2xl tracking-tight">Deep Dive Analysis</h3>
                                             <p className="text-sm text-muted-foreground font-medium">Technical Breakdown & Mechanisms</p>
                                         </div>
                                     </div>
@@ -405,7 +405,7 @@ export default function FeedPage() {
                                         <button
                                             onClick={handleDownloadPDF}
                                             disabled={downloading}
-                                            className="flex items-center gap-2 text-sm font-bold bg-muted/50 hover:bg-muted border px-4 py-2 rounded-lg transition"
+                                            className="flex items-center gap-2 text-sm font-bold bg-background border hover:bg-muted px-4 py-2 rounded-lg transition"
                                         >
                                             {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                                             PDF
