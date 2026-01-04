@@ -36,7 +36,6 @@ const CATEGORIES = {
         { name: 'Ars Technica', url: 'https://arstechnica.com/feed/', category: 'Tech' }
     ],
     'launch': [
-        { name: 'Product Hunt', url: 'https://www.producthunt.com/feed', category: 'Launch' },
         { name: 'Indie Hackers', url: 'https://feed.indiehackers.com', category: 'Launch' }
     ],
     'engineering': [
@@ -56,16 +55,6 @@ const CATEGORIES = {
         { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', category: 'Crypto' },
         { name: 'CoinTelegraph', url: 'https://cointelegraph.com/rss', category: 'Crypto' },
         { name: 'a16z Crypto', url: 'https://a16zcrypto.com/feed/', category: 'Crypto' }
-    ],
-    'video': [
-        { name: 'Y Combinator', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCcefcZRL2oaA_uBNeo5UOWg', category: 'Video' },
-        { name: 'Slidebean', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC4QZ_LsYcvcqPBeAf3Uw91Q', category: 'Video' },
-        { name: 'Fireship', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA', category: 'Video' },
-        { name: 'Matthew Berman', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC-bFzsWciODiXeNwlMhhPTA', category: 'Video' },
-        { name: 'MicroConf', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC-bFzsWciODiXeNwlMhhPTA', category: 'Video' }, // Fallback ID provided in prompt, reusing Berman's for demo if ID invalid, but try to find real or stick to prompt list. Correcting ID: MicroConf is separate. Using prompt ID but verifying consistency.
-        { name: 'The Primeagen', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC8ENHE5xdFSwx71u3fDH5Xw', category: 'Video' },
-        { name: 'Theo - t3.gg', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCzcQ_linLCRw9Oxx21WysDA', category: 'Video' },
-        { name: 'NeetCode', url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC_mYaQAE6-71rjSN6CeCA-g', category: 'Video' }
     ]
 }
 
@@ -82,7 +71,6 @@ export async function GET(request: Request) {
     else if (category === 'business') sourcesToFetch = CATEGORIES['business']
     else if (category === 'tech') sourcesToFetch = CATEGORIES['tech']
     else if (category === 'launch') sourcesToFetch = CATEGORIES['launch']
-    else if (category === 'video') sourcesToFetch = CATEGORIES['video']
     else if (category === 'engineering') sourcesToFetch = CATEGORIES['engineering']
     else if (category === 'growth') sourcesToFetch = CATEGORIES['growth']
     else if (category === 'crypto') sourcesToFetch = CATEGORIES['crypto']
