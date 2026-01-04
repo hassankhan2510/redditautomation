@@ -51,6 +51,7 @@ export default function FeedPage() {
     const [subFilter, setSubFilter] = useState('all')
     const [viewMode, setViewMode] = useState<'feed' | 'saved'>('feed')
     const [downloading, setDownloading] = useState(false)
+    const [showExplanation, setShowExplanation] = useState(false)
 
     // Configuration for Dropdowns
     const FILTERS: any = {
@@ -182,7 +183,15 @@ export default function FeedPage() {
 
     const handleExplain = async () => {
         if (!selectedItem) return
+        
+        // Return cached if available
+        if (explanation) {
+            setShowExplanation(true)
+            return
+        }
+
         setLoadingExp(true)
+        setShowExplanation(true) // Show modal immediately with loading state
         setExplanation("")
         try {
             const res = await fetch('/api/explain', {
@@ -315,7 +324,11 @@ export default function FeedPage() {
                 {/* Simple Back Button (Mobile) */}
                 {selectedItem && (
                     <button
-                        onClick={() => setSelectedItem(null)}
+                        onClick={() => {
+                            setSelectedItem(null)
+                            setExplanation("")
+                            setShowExplanation(false)
+                        }}
                         className="md:hidden mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <ArrowLeft size={16} /> Back to Feed
@@ -362,17 +375,17 @@ export default function FeedPage() {
                         </div>
 
                         {loadingExp && (
-                            <div className="space-y-4 animate-pulse max-w-2xl mt-8">
-                                <div className="h-4 bg-muted rounded w-3/4"></div>
-                                <div className="h-4 bg-muted rounded w-full"></div>
-                                <div className="h-4 bg-muted rounded w-5/6"></div>
-                                <div className="flex items-center gap-2 justify-center py-8 text-muted-foreground animate-pulse">
-                                    <Loader2 className="animate-spin" /> Analyzing 10,000+ tokens...
-                                </div>
-                            </div>
+                             <div className="space-y-4 animate-pulse max-w-2xl mt-8 md:hidden">
+                                 <div className="h-4 bg-muted rounded w-3/4"></div>
+                                 <div className="h-4 bg-muted rounded w-full"></div>
+                                 <div className="h-4 bg-muted rounded w-5/6"></div>
+                                 <div className="flex items-center gap-2 justify-center py-8 text-muted-foreground animate-pulse">
+                                     <Loader2 className="animate-spin" /> Analyzing 10,000+ tokens...
+                                 </div>
+                             </div>
                         )}
 
-                        {explanation && (
+                        {(showExplanation || loadingExp) && (
                             <div className="fixed inset-0 z-[200] bg-background p-6 overflow-y-auto md:static md:z-auto md:bg-transparent md:p-0 md:overflow-visible animate-in fade-in slide-in-from-bottom-10 md:animate-none flex flex-col">
                                 {/* Mobile Header with Close Button */}
                                 <div className="flex items-center justify-between mb-6 md:hidden sticky top-0 bg-background z-10 py-4 border-b">
@@ -383,7 +396,7 @@ export default function FeedPage() {
                                         <button onClick={handleDownloadPDF} disabled={downloading} className="p-2 bg-muted rounded-full hover:bg-muted/80">
                                             {downloading ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
                                         </button>
-                                        <button onClick={() => setExplanation("")} className="p-2 bg-muted rounded-full hover:bg-muted/80">
+                                        <button onClick={() => setShowExplanation(false)} className="p-2 bg-muted rounded-full hover:bg-muted/80">
                                             <X size={20} />
                                         </button>
                                     </div>
@@ -410,7 +423,7 @@ export default function FeedPage() {
                                             {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                                             PDF
                                         </button>
-                                        <button onClick={() => setExplanation("")} className="p-2 text-muted-foreground hover:text-red-500 transition rounded-lg hover:bg-red-500/10">
+                                        <button onClick={() => setShowExplanation(false)} className="p-2 text-muted-foreground hover:text-red-500 transition rounded-lg hover:bg-red-500/10">
                                             <X size={24} />
                                         </button>
                                     </div>
@@ -418,24 +431,32 @@ export default function FeedPage() {
 
                                 {/* Content - Native Article Feel on Desktop */}
                                 <div id="deep-dive-content" className="bg-background md:bg-transparent p-6 md:p-0 rounded-xl md:border-none md:max-h-none md:overflow-visible custom-scrollbar break-words text-lg leading-loose text-foreground/90 md:mt-8">
-                                    <SimpleMarkdown text={explanation} />
+                                    {loadingExp ? (
+                                        <div className="space-y-4 animate-pulse pt-4">
+                                            <div className="h-4 bg-muted rounded w-3/4"></div>
+                                            <div className="h-4 bg-muted rounded w-full"></div>
+                                            <div className="h-4 bg-muted rounded w-5/6"></div>
+                                        </div>
+                                    ) : (
+                                        <SimpleMarkdown text={explanation} />
+                                    )}
                                 </div>
 
                                 <div className="md:hidden mt-8 pb-10">
-                                    <button onClick={() => setExplanation("")} className="w-full py-4 bg-muted font-bold rounded-xl">
+                                    <button onClick={() => setShowExplanation(false)} className="w-full py-4 bg-muted font-bold rounded-xl">
                                         Close Analysis
                                     </button>
                                 </div>
                             </div>
                         )}
 
-                        {!explanation && !loadingExp && (
+                        {!showExplanation && !loadingExp && (
                             <div className="text-center py-20 opacity-30 hidden md:block">
                                 <FileText size={48} className="mx-auto mb-4" />
                                 <p className="text-lg">Click "Deep Explain" to unlock this paper.</p>
                             </div>
                         )}
-                        {!explanation && !loadingExp && (
+                        {!showExplanation && !loadingExp && (
                             <div className="text-center py-10 opacity-30 md:hidden">
                                 <p className="text-sm">Tap "Deep Explain" above to analyze.</p>
                             </div>
