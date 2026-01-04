@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic } from "lucide-react"
+import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic, X } from "lucide-react"
 import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
 
@@ -347,18 +347,44 @@ export default function FeedPage() {
                         )}
 
                         {explanation && (
-                            <div className="animate-in fade-in slide-in-from-bottom-8">
+                            <div className="fixed inset-0 z-[200] bg-background/95 backdrop-blur-3xl md:backdrop-blur-none p-6 overflow-y-auto md:static md:z-auto md:bg-transparent md:p-0 md:overflow-visible animate-in fade-in slide-in-from-bottom-10 md:animate-none flex flex-col">
+                                {/* Mobile Header with Close Button */}
+                                <div className="flex items-center justify-between mb-6 md:hidden sticky top-0 bg-background/95 backdrop-blur z-10 py-4 border-b">
+                                    <h2 className="font-bold text-lg flex items-center gap-2">
+                                        <Sparkles size={18} className="text-primary" /> Deep Dive
+                                    </h2>
+                                    <button onClick={() => setExplanation("")} className="p-2 bg-muted rounded-full hover:bg-muted/80">
+                                        <X size={20} />
+                                    </button>
+                                </div>
+
                                 <div className="bg-muted/30 p-6 rounded-xl border mb-8 flex items-start gap-4">
-                                    <div className="bg-blue-500/10 p-2 rounded-lg text-blue-500 mt-1">
+                                    <div className="bg-blue-500/10 p-2 rounded-lg text-blue-500 mt-1 shrink-0">
                                         <FileText size={24} />
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg mb-1">Deep Dive Analysis</h3>
-                                        <p className="text-sm text-muted-foreground">Technical Breakdown & Step-by-Step Procedure.</p>
+                                    <div className="flex-1">
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <h3 className="font-bold text-lg mb-1">Deep Dive Analysis</h3>
+                                                <p className="text-sm text-muted-foreground">Technical Breakdown & Step-by-Step Procedure.</p>
+                                            </div>
+                                            {/* Desktop Close Button */}
+                                            <button onClick={() => setExplanation("")} className="hidden md:block text-muted-foreground hover:text-primary transition">
+                                                <X size={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="bg-background/50 p-6 rounded-xl border max-h-[70vh] overflow-y-auto custom-scrollbar break-words">
+
+                                <div className="bg-background md:bg-background/50 p-6 rounded-xl border md:max-h-[70vh] md:overflow-y-auto custom-scrollbar break-words text-lg md:text-base leading-relaxed">
                                     <SimpleMarkdown text={explanation} />
+                                </div>
+
+                                {/* Mobile Bottom Close Action */}
+                                <div className="md:hidden mt-8 pb-10">
+                                    <button onClick={() => setExplanation("")} className="w-full py-4 bg-muted font-bold rounded-xl">
+                                        Close Analysis
+                                    </button>
                                 </div>
                             </div>
                         )}
