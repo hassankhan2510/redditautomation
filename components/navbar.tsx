@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from 'next/link'
 import { ModeToggle } from "@/components/mode-toggle"
-import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign, Lightbulb, Menu, MessageCircle } from "lucide-react"
+import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign, Lightbulb, Menu } from "lucide-react"
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -24,7 +24,6 @@ export function Navbar() {
                 <div className="hidden md:flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
                     <NavLink href="/studio" icon={<PenTool size={14} />} label="Studio" />
                     <NavLink href="/radar" icon={<BarChart size={14} />} label="Radar" />
-                    <NavLink href="/reply" icon={<MessageCircle size={14} />} label="Replies" />
                     <NavLink href="/feed" icon={<Search size={14} />} label="Research" />
                     <NavLink href="/cash-cow" icon={<DollarSign size={14} />} label="Cash Cow" />
                     <NavLink href="/ideas" icon={<Lightbulb size={14} />} label="Ideas" />
@@ -49,7 +48,6 @@ export function Navbar() {
                     <div className="absolute top-16 left-0 right-0 bg-black/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl flex flex-col gap-2 md:hidden animate-in slide-in-from-top-4">
                         <MobileNavLink href="/studio" icon={<PenTool size={16} />} label="Studio" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/radar" icon={<BarChart size={16} />} label="Radar" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/reply" icon={<MessageCircle size={16} />} label="Replies" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/feed" icon={<Search size={16} />} label="Research" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/cash-cow" icon={<DollarSign size={16} />} label="Cash Cow" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/ideas" icon={<Lightbulb size={16} />} label="Ideas" onClick={() => setMobileMenuOpen(false)} />
