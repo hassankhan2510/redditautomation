@@ -50,6 +50,7 @@ export function Navbar() {
                         <MobileNavLink href="/studio" icon={<PenTool size={16} />} label="Studio" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/radar" icon={<BarChart size={16} />} label="Radar" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/feed" icon={<Search size={16} />} label="Research" onClick={() => setMobileMenuOpen(false)} />
+                        <MobileNavLink href="/reply" icon={<Sparkles size={16} />} label="Reply Guy" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/cash-cow" icon={<DollarSign size={16} />} label="Cash Cow" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/ideas" icon={<Lightbulb size={16} />} label="Ideas" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/subreddits" icon={<Settings size={16} />} label="Manage" onClick={() => setMobileMenuOpen(false)} />

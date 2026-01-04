@@ -3,73 +3,28 @@
 
 import { useState, useEffect } from "react"
 import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic } from "lucide-react"
-import { toast } from "sonner"
+import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
 
-// Simple Markdown Renderer
-function SimpleMarkdown({ text }: { text: string }) {
-    if (!text) return null
-
-    // Split by lines
-    const lines = text.split('\n')
-
-    return (
-        <div className="space-y-3 leading-relaxed text-sm">
-            {lines.map((line, i) => {
-                // Headers
-                if (line.startsWith('## ')) return <h2 key={i} className="text-lg font-bold text-white mt-4">{line.replace('## ', '')}</h2>
-                if (line.startsWith('### ')) return <h3 key={i} className="text-base font-bold text-zinc-200 mt-2">{line.replace('### ', '')}</h3>
-                if (line.startsWith('- ')) return <div key={i} className="flex gap-2 ml-2"><span className="text-zinc-500">•</span> <span>{formatBold(line.replace('- ', ''))}</span></div>
-                if (line.trim() === '') return <div key={i} className="h-2"></div>
-                return <p key={i} className="text-zinc-300">{formatBold(line)}</p>
-            })}
-        </div>
-    )
-}
-
-// Helper to bold text
-function formatBold(text: string) {
-    const parts = text.split(/(\*\*.*?\*\*)/g)
-    return parts.map((part, i) => {
-        if (part.startsWith('**') && part.endsWith('**')) {
-            return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>
-        }
-        return part
-    })
-}
+// ... (existing imports)
 
 export default function FeedPage() {
-    const [feedItems, setFeedItems] = useState<any[]>([])
-    const [savedItems, setSavedItems] = useState<any[]>([])
-    const [selectedItem, setSelectedItem] = useState<any>(null)
-    const [explanation, setExplanation] = useState("")
-    const [loadingExp, setLoadingExp] = useState(false)
-    const [loadingFeed, setLoadingFeed] = useState(true)
-    const [filter, setFilter] = useState('global') // global, pk, business, launch, science, engineering, growth, crypto, custom
-    const [subFilter, setSubFilter] = useState('all')
-    const [viewMode, setViewMode] = useState<'feed' | 'saved'>('feed')
+    // ... (state)
 
     // Configuration for Dropdowns
     const FILTERS: any = {
-        'global': ['Hacker News', 'OpenAI Blog', 'MIT Tech Review', 'The Verge'],
-        'pk': ['Dawn News', 'The News PK', 'ARY News', 'Profit PK'],
-        'business': ['CNBC', 'Yahoo Finance', 'Entrepreneur'],
-        'tech': ['TechCrunch', 'Wired', 'Ars Technica'],
-        'launch': ['Indie Hackers'],
-        'engineering': ['Netflix Tech', 'Uber Eng', 'Pinterest Eng', 'Stripe Eng', 'Discord Eng'],
-        'growth': ['Moz SEO', 'Search Engine Land', 'Backlinko', 'Seth Godin'],
-        'crypto': ['CoinDesk', 'CoinTelegraph', 'a16z Crypto'],
-        'science': [
-            { label: 'Artificial Intelligence (cs.AI)', value: 'cs.AI' },
-            { label: 'Computation & Language (cs.CL)', value: 'cs.CL' },
-            { label: 'Computer Vision (cs.CV)', value: 'cs.CV' },
-            { label: 'Robotics (cs.RO)', value: 'cs.RO' },
-            { label: 'Social Networks (cs.SI)', value: 'cs.SI' },
-            { label: 'Software Engineering (cs.SE)', value: 'cs.SE' },
-        ],
-        'philosophy': ['Daily Nous', 'Philosophy Now'],
-        'history': ['History Today', 'History Extra'],
-        'politics': ['BBC Politics', 'The Guardian', 'Politico'],
-        'stocks': ['MarketWatch', 'Investing.com']
+        'global': ['Hacker News', 'OpenAI Blog', 'MIT Tech Review', 'The Verge', 'CNN', 'BBC News', 'Al Jazeera'],
+        'pk': ['Dawn News', 'The News PK', 'ARY News', 'Profit PK', 'Geo News', 'Express Tribune'],
+        'business': ['CNBC', 'Yahoo Finance', 'Entrepreneur', 'Forbes', 'Bloomberg', 'Business Insider'],
+        'tech': ['TechCrunch', 'Wired', 'Ars Technica', 'The Next Web', 'Engadget'],
+        'launch': ['Indie Hackers', 'Product Hunt'],
+        'engineering': ['Netflix Tech', 'Uber Eng', 'Pinterest Eng', 'Stripe Eng', 'Discord Eng', 'Spotify Eng', 'Airbnb Eng'],
+        'growth': ['Moz SEO', 'Search Engine Land', 'Backlinko', 'Seth Godin', 'HubSpot', 'Ahrefs'],
+        'crypto': ['CoinDesk', 'CoinTelegraph', 'a16z Crypto', 'Decrypt', 'The Block'],
+        'science': ARXIV_CATEGORIES,
+        'philosophy': ['Daily Nous', 'Philosophy Now', 'Aeon', 'Stanford Encyclopedia'],
+        'history': ['History Today', 'History Extra', 'Smithsonian', 'History Net'],
+        'politics': ['BBC Politics', 'The Guardian', 'Politico', 'FiveThirtyEight'],
+        'stocks': ['MarketWatch', 'Investing.com', 'Seeking Alpha', 'Motley Fool']
     }
 
     useEffect(() => {
