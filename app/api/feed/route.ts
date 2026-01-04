@@ -24,7 +24,7 @@ const REGIONS = {
     ]
 }
 
-const CATEGORIES = {
+export const CATEGORIES: any = {
     'business': [
         { name: 'CNBC', url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147', category: 'Business' },
         { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/news/rssindex', category: 'Business' },
@@ -55,6 +55,23 @@ const CATEGORIES = {
         { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', category: 'Crypto' },
         { name: 'CoinTelegraph', url: 'https://cointelegraph.com/rss', category: 'Crypto' },
         { name: 'a16z Crypto', url: 'https://a16zcrypto.com/feed/', category: 'Crypto' }
+    ],
+    'philosophy': [
+        { name: 'Daily Nous', url: 'https://dailynous.com/feed/', category: 'Philosophy' },
+        { name: 'Philosophy Now', url: 'https://philosophynow.org/feed', category: 'Philosophy' }
+    ],
+    'history': [
+        { name: 'History Today', url: 'https://www.historytoday.com/feed/rss.xml', category: 'History' },
+        { name: 'History Extra', url: 'https://www.historyextra.com/feed/', category: 'History' }
+    ],
+    'politics': [
+        { name: 'BBC Politics', url: 'https://feeds.bbci.co.uk/news/politics/rss.xml', category: 'Politics' },
+        { name: 'The Guardian', url: 'https://www.theguardian.com/politics/rss', category: 'Politics' },
+        { name: 'Politico', url: 'https://www.politico.com/rss/politicopicks.xml', category: 'Politics' }
+    ],
+    'stocks': [
+        { name: 'MarketWatch', url: 'https://www.marketwatch.com/rss/topstories', category: 'Stocks' },
+        { name: 'Investing.com', url: 'https://www.investing.com/rss/news.rss', category: 'Stocks' }
     ]
 }
 
@@ -74,6 +91,10 @@ export async function GET(request: Request) {
     else if (category === 'engineering') sourcesToFetch = CATEGORIES['engineering']
     else if (category === 'growth') sourcesToFetch = CATEGORIES['growth']
     else if (category === 'crypto') sourcesToFetch = CATEGORIES['crypto']
+    else if (category === 'philosophy') sourcesToFetch = CATEGORIES['philosophy']
+    else if (category === 'history') sourcesToFetch = CATEGORIES['history']
+    else if (category === 'politics') sourcesToFetch = CATEGORIES['politics']
+    else if (category === 'stocks') sourcesToFetch = CATEGORIES['stocks']
 
     // Source Specific Filter
     if (sourceFilter && sourceFilter !== 'all') {

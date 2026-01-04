@@ -64,7 +64,11 @@ export default function FeedPage() {
             { label: 'Robotics (cs.RO)', value: 'cs.RO' },
             { label: 'Social Networks (cs.SI)', value: 'cs.SI' },
             { label: 'Software Engineering (cs.SE)', value: 'cs.SE' },
-        ]
+        ],
+        'philosophy': ['Daily Nous', 'Philosophy Now'],
+        'history': ['History Today', 'History Extra'],
+        'politics': ['BBC Politics', 'The Guardian', 'Politico'],
+        'stocks': ['MarketWatch', 'Investing.com']
     }
 
     useEffect(() => {
@@ -158,7 +162,11 @@ export default function FeedPage() {
             const res = await fetch('/api/explain', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: selectedItem.link }) // We scrape the URL
+                body: JSON.stringify({
+                    url: selectedItem.link,
+                    category: selectedItem.category || filter, // Fallback to current filter
+                    source: selectedItem.source
+                })
             })
             const data = await res.json()
             if (data.explanation) setExplanation(data.explanation)
@@ -206,7 +214,10 @@ export default function FeedPage() {
                             <button onClick={() => setFilter('growth')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'growth' ? 'bg-pink-600 text-white border-pink-600' : 'bg-background hover:bg-muted'} `}>Growth 📈</button>
                             <button onClick={() => setFilter('crypto')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'crypto' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-background hover:bg-muted'} `}>Crypto 💰</button>
                             <button onClick={() => setFilter('launch')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'launch' ? 'bg-orange-600 text-white border-orange-600' : 'bg-background hover:bg-muted'} `}>Launch 🚀</button>
-                            {/* <button onClick={() => setFilter('video')} className={`px - 2 py - 1 text - [10px] rounded border ${ filter === 'video' ? 'bg-red-600 text-white border-red-600' : 'bg-background hover:bg-muted' } `}>Video 📺</button> */}
+                            <button onClick={() => setFilter('stocks')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'stocks' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-background hover:bg-muted'} `}>Stocks 📈</button>
+                            <button onClick={() => setFilter('politics')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'politics' ? 'bg-red-700 text-white border-red-700' : 'bg-background hover:bg-muted'} `}>Politics ⚖️</button>
+                            <button onClick={() => setFilter('history')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'history' ? 'bg-amber-700 text-white border-amber-700' : 'bg-background hover:bg-muted'} `}>History 🏛️</button>
+                            <button onClick={() => setFilter('philosophy')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'philosophy' ? 'bg-stone-500 text-white border-stone-500' : 'bg-background hover:bg-muted'} `}>Philosophy 🦉</button>
                             <button onClick={() => setFilter('science')} className={`px - 2 py - 1 text - [10px] rounded border ${filter === 'science' ? 'bg-purple-600 text-white border-purple-600' : 'bg-background hover:bg-muted'} `}>Papers 🔬</button>
                         </div>
 

@@ -25,6 +25,7 @@ export function Navbar() {
                     <NavLink href="/studio" icon={<PenTool size={14} />} label="Studio" />
                     <NavLink href="/radar" icon={<BarChart size={14} />} label="Radar" />
                     <NavLink href="/feed" icon={<Search size={14} />} label="Research" />
+                    <NavLink href="/reply" icon={<Sparkles size={14} />} label="Reply Guy" />
                     <NavLink href="/cash-cow" icon={<DollarSign size={14} />} label="Cash Cow" />
                     <NavLink href="/ideas" icon={<Lightbulb size={14} />} label="Ideas" />
                     <NavLink href="/subreddits" icon={<Settings size={14} />} label="Manage" />
