@@ -5,15 +5,32 @@ import { generateCompletion } from '@/lib/llm'
 import { scrapeContent } from '@/lib/scraper' // 1. Import scrapeContent
 
 // === SYSTEM PROMPTS ===
-import { SCIENCE_PROMPT, NEWS_PROMPT, PHILOSOPHY_PROMPT, BUSINESS_PROMPT } from '@/lib/prompts'
+import {
+    SCIENCE_PROMPT,
+    NEWS_PROMPT,
+    PHILOSOPHY_PROMPT,
+    BUSINESS_PROMPT,
+    HISTORY_PROMPT,
+    ENGINEERING_PROMPT,
+    STOCKS_PROMPT
+} from '@/lib/prompts'
 
 function getPrompt(category: string) {
     const cat = category?.toLowerCase() || ''
-    if (cat.includes('scien') || cat.includes('tech') || cat.includes('eng') || cat.includes('ai') || cat.includes('code')) return SCIENCE_PROMPT
-    if (cat.includes('news') || cat.includes('poli') || cat.includes('pk')) return NEWS_PROMPT
-    if (cat.includes('phil') || cat.includes('hist')) return PHILOSOPHY_PROMPT
-    if (cat.includes('bus') || cat.includes('grow') || cat.includes('stock') || cat.includes('launch') || cat.includes('cryp')) return BUSINESS_PROMPT
-    return SCIENCE_PROMPT // Default
+
+    // 1. Specific High-Value Categories
+    if (cat.includes('hist')) return HISTORY_PROMPT
+    if (cat.includes('stock') || cat.includes('cryp') || cat.includes('fin') || cat.includes('invest')) return STOCKS_PROMPT
+    if (cat.includes('eng') || cat.includes('launch') || cat.includes('code') || cat.includes('dev') || cat.includes('tech')) return ENGINEERING_PROMPT
+
+    // 2. Core Categories
+    if (cat.includes('scien') || cat.includes('ai') || cat.includes('bio') || cat.includes('phys') || cat.includes('math')) return SCIENCE_PROMPT
+    if (cat.includes('news') || cat.includes('poli') || cat.includes('pk') || cat.includes('glob')) return NEWS_PROMPT
+    if (cat.includes('phil') || cat.includes('idea')) return PHILOSOPHY_PROMPT
+    if (cat.includes('bus') || cat.includes('grow') || cat.includes('startup')) return BUSINESS_PROMPT
+
+    // 3. Fallback
+    return SCIENCE_PROMPT
 }
 
 export async function POST(request: Request) {
