@@ -183,7 +183,7 @@ export default function FeedPage() {
 
     const handleExplain = async () => {
         if (!selectedItem) return
-        
+
         // Return cached if available
         if (explanation) {
             setShowExplanation(true)
@@ -221,7 +221,7 @@ export default function FeedPage() {
         <div className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)] overflow-hidden pt-24 md:pt-0">
 
             {/* SIDEBAR LIST */}
-            <div className={`w - full md: w - [30 %] lg: w - [25 %] border - r bg - muted / 10 overflow - y - auto p - 4 ${selectedItem ? 'hidden md:block' : 'block'} `}>
+            <div className={`w-full md:w-[30%] lg:w-[25%] border-r bg-muted/10 overflow-y-auto h-full p-4 ${selectedItem ? 'hidden md:block' : 'block'}`}>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="font-bold text-muted-foreground uppercase text-xs tracking-wider flex items-center gap-2">
                         <BookOpen size={14} /> Knowledge Feed
@@ -375,14 +375,14 @@ export default function FeedPage() {
                         </div>
 
                         {loadingExp && (
-                             <div className="space-y-4 animate-pulse max-w-2xl mt-8 md:hidden">
-                                 <div className="h-4 bg-muted rounded w-3/4"></div>
-                                 <div className="h-4 bg-muted rounded w-full"></div>
-                                 <div className="h-4 bg-muted rounded w-5/6"></div>
-                                 <div className="flex items-center gap-2 justify-center py-8 text-muted-foreground animate-pulse">
-                                     <Loader2 className="animate-spin" /> Analyzing 10,000+ tokens...
-                                 </div>
-                             </div>
+                            <div className="space-y-4 animate-pulse max-w-2xl mt-8 md:hidden">
+                                <div className="h-4 bg-muted rounded w-3/4"></div>
+                                <div className="h-4 bg-muted rounded w-full"></div>
+                                <div className="h-4 bg-muted rounded w-5/6"></div>
+                                <div className="flex items-center gap-2 justify-center py-8 text-muted-foreground animate-pulse">
+                                    <Loader2 className="animate-spin" /> Analyzing 10,000+ tokens...
+                                </div>
+                            </div>
                         )}
 
                         {(showExplanation || loadingExp) && (
