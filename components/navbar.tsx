@@ -9,8 +9,8 @@ export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
-        <div className="fixed top-6 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
-            <nav className="pointer-events-auto glass-panel rounded-full px-6 py-3 flex items-center justify-between gap-8 max-w-4xl w-full shadow-2xl bg-black/80 backdrop-blur-xl border border-white/20 relative">
+        <div className="fixed top-0 md:top-6 left-0 right-0 z-[100] flex justify-center md:px-4 pointer-events-none">
+            <nav className="pointer-events-auto glass-panel rounded-none md:rounded-full px-6 py-4 md:py-3 flex items-center justify-between gap-8 max-w-4xl w-full shadow-2xl bg-black/90 md:bg-black/80 backdrop-blur-xl border-b md:border border-white/10 md:border-white/20 relative">
 
                 {/* BRAND */}
                 <Link href="/" className="font-black text-xl flex items-center gap-2 tracking-tight text-white">

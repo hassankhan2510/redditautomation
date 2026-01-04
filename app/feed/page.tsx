@@ -357,7 +357,7 @@ export default function FeedPage() {
                                         <p className="text-sm text-muted-foreground">Technical Breakdown & Step-by-Step Procedure.</p>
                                     </div>
                                 </div>
-                                <div className="bg-background/50 p-6 rounded-xl border">
+                                <div className="bg-background/50 p-6 rounded-xl border max-h-[70vh] overflow-y-auto custom-scrollbar break-words">
                                     <SimpleMarkdown text={explanation} />
                                 </div>
                             </div>

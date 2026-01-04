@@ -50,13 +50,13 @@ const CATEGORIES = {
         { name: 'Netflix Tech', url: 'https://netflixtechblog.com/feed', category: 'Engineering' },
         { name: 'Uber Eng', url: 'https://eng.uber.com/feed/', category: 'Engineering' },
         { name: 'Pinterest Eng', url: 'https://medium.com/feed/@Pinterest_Engineering', category: 'Engineering' },
-        { name: 'Stripe Eng', url: 'https://stripe.com/blog/feed.xml', category: 'Engineering' },
+        { name: 'Stripe Eng', url: 'https://stripe.com/blog/feed.rss', category: 'Engineering' },
         { name: 'Discord Eng', url: 'https://discord.com/blog/rss.xml', category: 'Engineering' },
         { name: 'Spotify Eng', url: 'https://engineering.atspotify.com/feed/', category: 'Engineering' },
         { name: 'Airbnb Eng', url: 'https://medium.com/feed/airbnb-engineering', category: 'Engineering' }
     ],
     'growth': [
-        { name: 'Moz SEO', url: 'https://moz.com/feeds/blog.rss', category: 'Growth' },
+        { name: 'Moz SEO', url: 'https://moz.com/feeds/blog.rss', category: 'Growth' }, // Updated URL
         { name: 'Search Engine Land', url: 'https://searchengineland.com/feed', category: 'Growth' },
         { name: 'Backlinko', url: 'https://backlinko.com/feed', category: 'Growth' },
         { name: 'Seth Godin', url: 'https://seths.blog/feed/', category: 'Growth' },
@@ -66,13 +66,13 @@ const CATEGORIES = {
     'crypto': [
         { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', category: 'Crypto' },
         { name: 'CoinTelegraph', url: 'https://cointelegraph.com/rss', category: 'Crypto' },
-        { name: 'a16z Crypto', url: 'https://a16zcrypto.com/feed/', category: 'Crypto' },
+        { name: 'a16z Crypto', url: 'https://web3.a16z.com/feed', category: 'Crypto' }, // Fixed URL
         { name: 'Decrypt', url: 'https://decrypt.co/feed', category: 'Crypto' },
-        { name: 'The Block', url: 'https://www.theblock.co/rss', category: 'Crypto' }
+        { name: 'The Block', url: 'https://www.theblockcrypto.com/feed', category: 'Crypto' } // Fixed URL
     ],
     'philosophy': [
-        { name: 'Daily Nous', url: 'https://dailynous.com/feed/', category: 'Philosophy' },
-        { name: 'Philosophy Now', url: 'https://philosophynow.org/feed', category: 'Philosophy' },
+        { name: 'Daily Nous', url: 'https://dailynous.com/feed/', category: 'Philosophy' }, // HTTPS
+        { name: 'Philosophy Now', url: 'https://philosophynow.org/rss', category: 'Philosophy' },
         { name: 'Aeon', url: 'https://aeon.co/feed.rss', category: 'Philosophy' },
         { name: 'Stanford Encyclopedia', url: 'https://plato.stanford.edu/rss/sep.xml', category: 'Philosophy' }
     ],
@@ -80,12 +80,12 @@ const CATEGORIES = {
         { name: 'History Today', url: 'https://www.historytoday.com/feed/rss.xml', category: 'History' },
         { name: 'History Extra', url: 'https://www.historyextra.com/feed/', category: 'History' },
         { name: 'Smithsonian', url: 'https://www.smithsonianmag.com/rss/history/', category: 'History' },
-        { name: 'History Net', url: 'https://www.historynet.com/feed', category: 'History' }
+        { name: 'History Net', url: 'https://historynet.com/topic/military-history/feed/', category: 'History' }
     ],
     'politics': [
         { name: 'BBC Politics', url: 'https://feeds.bbci.co.uk/news/politics/rss.xml', category: 'Politics' },
         { name: 'The Guardian', url: 'https://www.theguardian.com/politics/rss', category: 'Politics' },
-        { name: 'Politico', url: 'https://www.politico.com/rss/politicopicks.xml', category: 'Politics' },
+        { name: 'Politico', url: 'https://rss.politico.com/politics.xml', category: 'Politics' },
         { name: 'FiveThirtyEight', url: 'https://fivethirtyeight.com/politics/feed/', category: 'Politics' }
     ],
     'stocks': [

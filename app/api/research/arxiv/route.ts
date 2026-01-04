@@ -5,7 +5,19 @@ export async function GET(request: Request) {
     const category = searchParams.get('category') || 'cs.AI' // Default to AI
     const max = searchParams.get('max') || '10'
 
-    const ARI_URL = `http://export.arxiv.org/api/query?search_query=cat:${category}&start=0&max_results=${max}&sortBy=submittedDate&sortOrder=descending`
+    let ARI_URL = `http://export.arxiv.org/api/query?search_query=cat:${category}&start=0&max_results=${max}&sortBy=submittedDate&sortOrder=descending`
+
+    // Support for BioRxiv and MedRxiv (Simple Proxy)
+    if (category === 'biorxiv' || category === 'medrxiv') {
+        // These APIs are different (usually require date ranges), but we can try the RSS or specific endpoints.
+        // For now, let's keep it simple and just map to a known RSS feed or API if possible.
+        // Actually, BioRxiv/MedRxiv use a different API format than ArXiv.
+        // Let's stick to ArXiv for now but with expanded categories.
+        // Wait, the user ASKED for others.
+        // I'll add a simple switch to fetch their RSS.
+        const server = category === 'biorxiv' ? 'biorxiv' : 'medrxiv'
+        ARI_URL = `https://connect.${server}.org/${server}_xml.php?subject=all`
+    }
 
     try {
         const response = await fetch(ARI_URL)
