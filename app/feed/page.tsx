@@ -2,11 +2,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic, X } from "lucide-react"
+import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic, X, Download } from "lucide-react"
 import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
-// Simple Markdown Renderer
+// Helper Component for Markdown
 function SimpleMarkdown({ text }: { text: string }) {
     if (!text) return null
 
@@ -48,6 +50,7 @@ export default function FeedPage() {
     const [filter, setFilter] = useState('global') // global, pk, business, launch, science, engineering, growth, crypto, custom
     const [subFilter, setSubFilter] = useState('all')
     const [viewMode, setViewMode] = useState<'feed' | 'saved'>('feed')
+    const [downloading, setDownloading] = useState(false)
 
     // Configuration for Dropdowns
     const FILTERS: any = {
@@ -153,11 +156,29 @@ export default function FeedPage() {
         } catch (e) { alert("Delete failed") }
     }
 
+    const handleDownloadPDF = async () => {
+        setDownloading(true)
+        const element = document.getElementById('deep-dive-content')
+        if (!element) return
 
+        try {
+            const canvas = await html2canvas(element, { scale: 2 })
+            const imgData = canvas.toDataURL('image/png')
+            const pdf = new jsPDF('p', 'mm', 'a4')
+            const pdfWidth = pdf.internal.pageSize.getWidth()
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width
 
-    // ... (rest of imports)
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+            pdf.save(`${selectedItem?.title.slice(0, 30)} - Analysis.pdf`)
+            toast.success("PDF Downloaded")
+        } catch (e) {
+            console.error(e)
+            toast.error("Failed to generate PDF")
+        } finally {
+            setDownloading(false)
+        }
+    }
 
-    // ... (inside component)
 
     const handleExplain = async () => {
         if (!selectedItem) return
@@ -353,9 +374,14 @@ export default function FeedPage() {
                                     <h2 className="font-bold text-lg flex items-center gap-2">
                                         <Sparkles size={18} className="text-primary" /> Deep Dive
                                     </h2>
-                                    <button onClick={() => setExplanation("")} className="p-2 bg-muted rounded-full hover:bg-muted/80">
-                                        <X size={20} />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button onClick={handleDownloadPDF} disabled={downloading} className="p-2 bg-muted rounded-full hover:bg-muted/80">
+                                            {downloading ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
+                                        </button>
+                                        <button onClick={() => setExplanation("")} className="p-2 bg-muted rounded-full hover:bg-muted/80">
+                                            <X size={20} />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="bg-muted/30 p-6 rounded-xl border mb-8 flex items-start gap-4">
@@ -368,19 +394,29 @@ export default function FeedPage() {
                                                 <h3 className="font-bold text-lg mb-1">Deep Dive Analysis</h3>
                                                 <p className="text-sm text-muted-foreground">Technical Breakdown & Step-by-Step Procedure.</p>
                                             </div>
-                                            {/* Desktop Close Button */}
-                                            <button onClick={() => setExplanation("")} className="hidden md:block text-muted-foreground hover:text-primary transition">
-                                                <X size={20} />
-                                            </button>
+
+                                            <div className="hidden md:flex items-center gap-2">
+                                                <button
+                                                    onClick={handleDownloadPDF}
+                                                    disabled={downloading}
+                                                    className="flex items-center gap-2 text-sm font-medium bg-background border px-3 py-1.5 rounded-md hover:bg-muted transition"
+                                                >
+                                                    {downloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                                                    PDF
+                                                </button>
+                                                {/* Desktop Close Button */}
+                                                <button onClick={() => setExplanation("")} className="text-muted-foreground hover:text-primary transition">
+                                                    <X size={20} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="bg-background md:bg-background/50 p-6 rounded-xl border md:max-h-[70vh] md:overflow-y-auto custom-scrollbar break-words text-lg md:text-base leading-relaxed">
+                                <div id="deep-dive-content" className="bg-background md:bg-background/50 p-6 rounded-xl border md:max-h-[70vh] md:overflow-y-auto custom-scrollbar break-words text-lg md:text-base leading-relaxed">
                                     <SimpleMarkdown text={explanation} />
                                 </div>
 
-                                {/* Mobile Bottom Close Action */}
                                 <div className="md:hidden mt-8 pb-10">
                                     <button onClick={() => setExplanation("")} className="w-full py-4 bg-muted font-bold rounded-xl">
                                         Close Analysis
