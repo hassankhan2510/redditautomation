@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic, X, Download } from "lucide-react"
+import { BookOpen, Sparkles, Share2, ExternalLink, Loader2, FileText, Bookmark, Trash2, Code, Mic, X, Download, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
 import html2canvas from "html2canvas"
@@ -313,57 +313,63 @@ export default function FeedPage() {
             {/* MAIN CONTENT */}
             <div className={`flex - 1 overflow - y - auto bg - background p - 4 md: p - 12 ${!selectedItem ? 'hidden md:block' : 'block'} `}>
                 {selectedItem && (
-                    <button
-                        onClick={() => setSelectedItem(null)}
-                        className="md:hidden mb-4 flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-white"
-                    >
-                        ← Back to List
-                    </button>
+                    <div className="md:hidden sticky top-0 bg-background/95 backdrop-blur z-10 py-2 mb-4 border-b -mx-4 px-4 flex items-center">
+                        <button
+                            onClick={() => setSelectedItem(null)}
+                            className="flex items-center gap-2 text-sm font-medium bg-muted/50 hover:bg-muted px-3 py-1.5 rounded-full transition"
+                        >
+                            <ArrowLeft size={16} /> Back
+                        </button>
+                    </div>
                 )}
 
                 {selectedItem ? (
-                    <div className="max-w-3xl mx-auto pb-20">
+                    <div className="max-w-3xl mx-auto pb-20 pt-2 md:pt-0">
                         <div className="mb-8 border-b pb-8">
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
+                                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-bold uppercase">{selectedItem.source}</span>
                                 <span>{new Date(selectedItem.pubDate || selectedItem.published_at || new Date()).toLocaleDateString()}</span>
-                                <span>•</span>
-                                <a href={selectedItem.link} target="_blank" className="flex items-center gap-1 hover:text-primary">
-                                    Read Source <ExternalLink size={12} />
+                                <a href={selectedItem.link} target="_blank" className="ml-auto flex items-center gap-1 text-xs border px-2 py-1 rounded hover:bg-muted transition">
+                                    Source <ExternalLink size={10} />
                                 </a>
                             </div>
-                            <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight">{selectedItem.title}</h1>
+                            <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight tracking-tight">{selectedItem.title}</h1>
 
-                            <div className="flex flex-col md:flex-row gap-4">
+                            <div className="space-y-3">
                                 <button
                                     onClick={handleExplain}
                                     disabled={loadingExp}
-                                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 w-full md:w-auto"
+                                    className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition disabled:opacity-50 text-lg"
                                 >
-                                    {loadingExp ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
-                                    {loadingExp ? "Analyzing..." : "Deep Explain (Mechanisms)"}
+                                    {loadingExp ? <Loader2 className="animate-spin" /> : <Sparkles size={20} className="text-yellow-300" />}
+                                    {loadingExp ? "Analyzing..." : "Deep Explain"}
                                 </button>
 
-                                <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto">
-                                    <Share2 size={18} /> Send to Studio
-                                </a>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <a href={`/studio?source=${encodeURIComponent(selectedItem.link)}`} className="border bg-card hover:bg-muted px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition text-sm">
+                                        <Share2 size={16} /> Studio
+                                    </a>
 
-                                {viewMode === 'feed' && (
-                                    <button
-                                        onClick={(e) => handleSave(e, selectedItem)}
-                                        className="border bg-background hover:bg-muted px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition w-full md:w-auto"
-                                    >
-                                        <Bookmark size={18} /> Save
-                                    </button>
-                                )}
+                                    {viewMode === 'feed' && (
+                                        <button
+                                            onClick={(e) => handleSave(e, selectedItem)}
+                                            className="border bg-card hover:bg-muted px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition text-sm"
+                                        >
+                                            <Bookmark size={16} /> Save
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         {loadingExp && (
-                            <div className="space-y-4 animate-pulse max-w-2xl">
+                            <div className="space-y-4 animate-pulse max-w-2xl mt-8">
                                 <div className="h-4 bg-muted rounded w-3/4"></div>
                                 <div className="h-4 bg-muted rounded w-full"></div>
                                 <div className="h-4 bg-muted rounded w-5/6"></div>
-                                <p className="text-sm text-muted-foreground pt-4">Extracting technical mechanism...</p>
+                                <div className="flex items-center gap-2 justify-center py-8 text-muted-foreground animate-pulse">
+                                    <Loader2 className="animate-spin" /> Analyzing 10,000+ tokens...
+                                </div>
                             </div>
                         )}
 
