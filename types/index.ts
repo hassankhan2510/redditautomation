@@ -1,43 +1,94 @@
-export interface Subreddit {
-    id: string
-    name: string
-    audience_type: string
-    tone: string
-    links_allowed: boolean
-    self_promo_level: 'low' | 'medium' | 'high'
-    preferred_length: string
-    required_flair: string
-    banned_phrases: string[]
-    ending_style: string
-    created_at: string
-}
+// types/index.ts - TypeScript interfaces for DeepResearch
 
-export interface PostIdea {
-    id: string
+export interface FeedItem {
     title: string
-    core_idea: string
-    technical_depth: number
-    goal: string
+    link: string
+    snippet: string
+    source: string
+    category: string
+    pubDate?: string
+    author?: string
+}
+
+export interface SavedItem extends FeedItem {
+    id: string
+    published_at?: string
     created_at: string
 }
 
-export interface PostDraft {
+export interface QueueItem extends FeedItem {
     id: string
-    post_idea_id: string
-    subreddit_id: string
+    added_at: string
+}
+
+export interface ChatMessage {
+    role: 'user' | 'assistant'
     content: string
-    similarity_score: number
-    status: 'draft' | 'approved' | 'posted'
-    scheduled_for?: string
-    created_at: string
-    subreddit?: Subreddit // Joined
+    timestamp?: string
 }
 
-export interface PostHistory {
+export interface ChatSession {
+    articleUrl: string
+    articleTitle: string
+    explanation: string
+    messages: ChatMessage[]
+}
+
+export interface ExplanationCache {
     id: string
-    subreddit: string
-    reddit_post_id: string
-    posted_at: string
-    upvotes: number
-    comments: number
+    url_hash: string
+    url: string
+    category: string
+    explanation: string
+    created_at: string
+}
+
+export interface ApiResponse<T> {
+    data?: T
+    error?: string
+    success: boolean
+}
+
+// Filter types
+export type FilterCategory =
+    | 'global'
+    | 'pk'
+    | 'business'
+    | 'tech'
+    | 'launch'
+    | 'engineering'
+    | 'growth'
+    | 'crypto'
+    | 'science'
+    | 'philosophy'
+    | 'history'
+    | 'politics'
+    | 'stocks'
+
+export type ViewMode = 'feed' | 'saved' | 'queue'
+
+// Component Props
+export interface ArticleCardProps {
+    item: FeedItem | SavedItem | QueueItem
+    isSelected: boolean
+    onSelect: () => void
+    onSave?: () => void
+    onDelete?: () => void
+    onQueue?: () => void
+    viewMode: ViewMode
+}
+
+export interface DeepExplainProps {
+    item: FeedItem
+    explanation: string
+    isLoading: boolean
+    onClose: () => void
+    onDownloadPdf: () => void
+    onStartChat: () => void
+}
+
+export interface ChatPanelProps {
+    session: ChatSession
+    onSendMessage: (message: string) => void
+    isLoading: boolean
 }

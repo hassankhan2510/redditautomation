@@ -1,46 +1,51 @@
--- Subreddits Configuration
-create table subreddits (
-  id uuid default gen_random_uuid() primary key,
-  name text not null,
-  audience_type text,
-  tone text,
-  links_allowed boolean default false,
-  self_promo_level text, -- low, medium, high
-  preferred_length text,
-  required_flair text,
-  banned_phrases text[],
-  ending_style text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
+-- DeepResearch Database Schema
+-- Run this in Supabase SQL Editor
 
--- Post Ideas
-create table post_ideas (
+-- Saved Research Items (Library)
+create table if not exists saved_research (
   id uuid default gen_random_uuid() primary key,
   title text not null,
-  core_idea text not null,
-  technical_depth int, -- 1-5
-  goal text, -- discussion, feedback, help
+  link text not null,
+  snippet text,
+  source text,
+  category text,
+  published_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Generated Drafts
-create table post_drafts (
+-- Read Later Queue (Temporary)
+create table if not exists read_later (
   id uuid default gen_random_uuid() primary key,
-  post_idea_id uuid references post_ideas(id),
-  subreddit_id uuid references subreddits(id),
-  content text,
-  similarity_score float,
-  status text default 'draft', -- draft, approved, posted
-  scheduled_for timestamp with time zone, -- NEW: For timeline
+  title text not null,
+  link text not null unique,
+  snippet text,
+  source text,
+  category text,
+  published_at timestamp with time zone,
+  added_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Explanation Cache (Avoid re-analyzing same articles)
+create table if not exists explanation_cache (
+  id uuid default gen_random_uuid() primary key,
+  url_hash text not null unique, -- MD5 hash of URL
+  url text not null,
+  category text,
+  explanation text not null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Posting History
-create table post_history (
+-- Chat History (For Chat with Article feature)
+create table if not exists chat_history (
   id uuid default gen_random_uuid() primary key,
-  subreddit text,
-  reddit_post_id text,
-  posted_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  upvotes int default 0,
-  comments int default 0
+  article_url text not null,
+  messages jsonb not null default '[]',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+-- Indexes for performance
+create index if not exists idx_saved_research_created_at on saved_research(created_at desc);
+create index if not exists idx_read_later_added_at on read_later(added_at desc);
+create index if not exists idx_explanation_cache_url_hash on explanation_cache(url_hash);
+create index if not exists idx_chat_history_article_url on chat_history(article_url);

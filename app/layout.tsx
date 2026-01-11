@@ -9,8 +9,10 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SoloScale | The Growth OS for Solopreneurs",
-  description: "Scale your personal brand with AI.",
+  title: "DeepResearch | AI-Powered Knowledge Assistant",
+  description: "Turn complex articles, papers, and news into clear, actionable insights with AI-powered analysis.",
+  keywords: ["research", "AI", "analysis", "papers", "news", "knowledge"],
+  authors: [{ name: "DeepResearch" }],
 };
 
 export default function RootLayout({
@@ -23,7 +25,7 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
@@ -31,6 +33,7 @@ export default function RootLayout({
           <main className="flex-1 pt-24">
             {children}
           </main>
+          <Toaster richColors position="bottom-right" />
           <Footer />
         </ThemeProvider>
       </body>
