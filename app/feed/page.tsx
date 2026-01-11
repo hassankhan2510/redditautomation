@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import {
     BookOpen, Sparkles, ExternalLink, Loader2, FileText, Bookmark, Trash2,
     X, Download, ArrowLeft, Clock, MessageSquare, Send, ChevronDown,
-    Copy, Check, RefreshCw
+    Copy, Check, RefreshCw, Search
 } from "lucide-react"
 import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
@@ -103,6 +103,12 @@ export default function FeedPage() {
     // Copied state
     const [copied, setCopied] = useState(false)
 
+    // Search state
+    const [searchQuery, setSearchQuery] = useState("")
+    const [searchResults, setSearchResults] = useState<FeedItem[]>([])
+    const [isSearching, setIsSearching] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
+
     // Filter configuration
     const FILTERS: Record<string, (string | { value: string; label: string })[]> = {
         'global': ['Hacker News', 'OpenAI Blog', 'MIT Tech Review', 'The Verge', 'CNN', 'BBC News', 'Al Jazeera'],
@@ -196,6 +202,38 @@ export default function FeedPage() {
             toast.error("Failed to load queue")
         }
         setLoadingFeed(false)
+    }
+
+    // Search function
+    const handleSearch = async (e?: React.FormEvent) => {
+        e?.preventDefault()
+        if (!searchQuery.trim() || searchQuery.length < 2) {
+            toast.error("Enter at least 2 characters")
+            return
+        }
+
+        setIsSearching(true)
+        setShowSearch(true)
+        try {
+            const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
+            const data = await res.json()
+            if (data.items) {
+                setSearchResults(data.items)
+                toast.success(`Found ${data.items.length} results`)
+            } else if (data.error) {
+                toast.error(data.error)
+            }
+        } catch (e) {
+            toast.error("Search failed")
+        } finally {
+            setIsSearching(false)
+        }
+    }
+
+    const clearSearch = () => {
+        setShowSearch(false)
+        setSearchQuery("")
+        setSearchResults([])
     }
 
     // Actions
@@ -351,8 +389,14 @@ export default function FeedPage() {
         setTimeout(() => setCopied(false), 2000)
     }
 
-    // Get displayed items based on view mode
-    const displayedItems = viewMode === 'feed' ? feedItems : viewMode === 'saved' ? savedItems : queueItems
+    // Get displayed items based on view mode (search results take priority when active)
+    const displayedItems = showSearch
+        ? searchResults
+        : viewMode === 'feed'
+            ? feedItems
+            : viewMode === 'saved'
+                ? savedItems
+                : queueItems
 
     // ============================================================================
     // RENDER
@@ -379,24 +423,60 @@ export default function FeedPage() {
                     </div>
 
                     {/* View Mode Tabs */}
-                    <div className="flex bg-muted/50 p-1 rounded-xl gap-1">
+                    <div className="flex bg-muted/50 p-1 rounded-xl gap-1 mb-4">
                         {(['feed', 'saved', 'queue'] as ViewMode[]).map((mode) => (
                             <button
                                 key={mode}
-                                onClick={() => { setViewMode(mode); setSelectedItem(null); }}
+                                onClick={() => { setViewMode(mode); setSelectedItem(null); clearSearch(); }}
                                 className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${viewMode === mode
-                                        ? 'bg-primary text-primary-foreground shadow-lg'
-                                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                                     }`}
                             >
                                 {mode === 'feed' ? '📰 Feed' : mode === 'saved' ? '📚 Saved' : '📥 Queue'}
                             </button>
                         ))}
                     </div>
+
+                    {/* Search Bar */}
+                    <form onSubmit={handleSearch} className="relative">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search news, papers, topics..."
+                            className="w-full bg-muted/50 border border-border/50 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:ring-2 ring-primary outline-none placeholder:text-muted-foreground/50"
+                        />
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                onClick={clearSearch}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            >
+                                <X size={14} />
+                            </button>
+                        )}
+                        {isSearching && (
+                            <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-primary" />
+                        )}
+                    </form>
+
+                    {/* Search Results Indicator */}
+                    {showSearch && searchResults.length > 0 && (
+                        <div className="flex items-center justify-between mt-3 text-xs">
+                            <span className="text-muted-foreground">
+                                🔍 {searchResults.length} results for "<span className="text-foreground">{searchQuery}</span>"
+                            </span>
+                            <button onClick={clearSearch} className="text-primary hover:underline">
+                                Clear
+                            </button>
+                        </div>
+                    )}
                 </div>
 
-                {/* Filters (only for feed) */}
-                {viewMode === 'feed' && (
+                {/* Filters (only for feed and not showing search results) */}
+                {viewMode === 'feed' && !showSearch && (
                     <div className="p-4 space-y-3 border-b border-border/50">
                         {/* Category Pills */}
                         <div className="flex gap-1.5 flex-wrap">
@@ -416,8 +496,8 @@ export default function FeedPage() {
                                     key={cat.id}
                                     onClick={() => setFilter(cat.id)}
                                     className={`px-3 py-1.5 text-lg rounded-lg border transition-all ${filter === cat.id
-                                            ? `${cat.color} text-white border-transparent shadow-lg`
-                                            : 'bg-muted/50 border-border/50 hover:bg-muted'
+                                        ? `${cat.color} text-white border-transparent shadow-lg`
+                                        : 'bg-muted/50 border-border/50 hover:bg-muted'
                                         }`}
                                     title={cat.id.charAt(0).toUpperCase() + cat.id.slice(1)}
                                 >
