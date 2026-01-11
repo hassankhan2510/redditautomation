@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from 'next/link'
 import { ModeToggle } from "@/components/mode-toggle"
-import { Rocket, PenTool, BarChart, Search, Sparkles, Settings, DollarSign, Lightbulb, Menu } from "lucide-react"
+import { Rocket, Search, Menu } from "lucide-react"
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -17,25 +17,16 @@ export function Navbar() {
                     <div className="bg-primary/20 p-1.5 rounded-lg text-primary shadow-[0_0_15px_rgba(168,85,247,0.5)]">
                         <Rocket size={18} />
                     </div>
-                    SoloScale
+                    DeepResearch
                 </Link>
 
                 {/* CENTRAL NAV - DESKTOP */}
                 <div className="hidden md:flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
-                    <NavLink href="/studio" icon={<PenTool size={14} />} label="Studio" />
-                    <NavLink href="/radar" icon={<BarChart size={14} />} label="Radar" />
                     <NavLink href="/feed" icon={<Search size={14} />} label="Research" />
-                    <NavLink href="/reply" icon={<Sparkles size={14} />} label="Reply Guy" />
-                    <NavLink href="/cash-cow" icon={<DollarSign size={14} />} label="Cash Cow" />
-                    <NavLink href="/ideas" icon={<Lightbulb size={14} />} label="Ideas" />
-                    <NavLink href="/subreddits" icon={<Settings size={14} />} label="Manage" />
                 </div>
 
                 {/* RIGHT ACTIONS */}
                 <div className="flex items-center gap-4">
-                    <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors hidden sm:block">
-                        About
-                    </Link>
                     <ModeToggle />
 
                     {/* MOBILE TOGGLE */}
@@ -47,13 +38,7 @@ export function Navbar() {
                 {/* MOBILE MENU DROPDOWN */}
                 {mobileMenuOpen && (
                     <div className="absolute top-16 left-0 right-0 bg-black/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl flex flex-col gap-2 md:hidden animate-in slide-in-from-top-4">
-                        <MobileNavLink href="/studio" icon={<PenTool size={16} />} label="Studio" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/radar" icon={<BarChart size={16} />} label="Radar" onClick={() => setMobileMenuOpen(false)} />
                         <MobileNavLink href="/feed" icon={<Search size={16} />} label="Research" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/reply" icon={<Sparkles size={16} />} label="Reply Guy" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/cash-cow" icon={<DollarSign size={16} />} label="Cash Cow" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/ideas" icon={<Lightbulb size={16} />} label="Ideas" onClick={() => setMobileMenuOpen(false)} />
-                        <MobileNavLink href="/subreddits" icon={<Settings size={16} />} label="Manage" onClick={() => setMobileMenuOpen(false)} />
                     </div>
                 )}
             </nav>

@@ -1,8 +1,5 @@
-
-
 import { NextResponse } from 'next/server'
 import { generateCompletion } from '@/lib/llm'
-import { scrapeContent } from '@/lib/scraper' // 1. Import scrapeContent
 
 // === SYSTEM PROMPTS ===
 import {
@@ -33,47 +30,59 @@ function getPrompt(category: string) {
     return SCIENCE_PROMPT
 }
 
+// Simple HTML to text extraction (no Puppeteer)
+function extractTextFromHtml(html: string): string {
+    // Remove script and style tags with their content
+    let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+
+    // Remove HTML tags but keep text content
+    text = text.replace(/<[^>]+>/g, ' ')
+
+    // Decode common HTML entities
+    text = text.replace(/&nbsp;/g, ' ')
+    text = text.replace(/&amp;/g, '&')
+    text = text.replace(/&lt;/g, '<')
+    text = text.replace(/&gt;/g, '>')
+    text = text.replace(/&quot;/g, '"')
+    text = text.replace(/&#39;/g, "'")
+
+    // Clean up whitespace
+    text = text.replace(/\s+/g, ' ').trim()
+
+    return text.substring(0, 15000) // 15k char limit
+}
+
 export async function POST(request: Request) {
     try {
-        const { url, category } = await request.json() // Removed 'content', added 'source' (though 'source' isn't used in the provided snippet)
+        const { url, category } = await request.json()
 
         if (!url) {
             return NextResponse.json({ error: "URL is required" }, { status: 400 })
         }
 
-        // 1. Scrape Content (Browser-Based)
+        // Simple fetch - no Puppeteer (avoids CAPTCHA issues)
         const startTime = Date.now()
         console.log(`Analyzing: ${url} [${category}]`)
 
         let text = ""
-        let scrapedSuccessfully = false
 
         try {
-            const scraped = await scrapeContent(url)
-
-            if (scraped && scraped.content) {
-                text = scraped.content
-                scrapedSuccessfully = true
-                console.log(`Puppeteer Success: ${text.length} chars in ${Date.now() - startTime} ms`)
-            } else {
-                console.log("Puppeteer failed, falling back to simple fetch...")
-                // Simple Fallback
-                const res = await fetch(url)
-                text = await res.text() // Raw HTML is better than nothing for LLM
-                console.log(`Simple Fetch Fallback: ${text.length} chars in ${Date.now() - startTime} ms`)
-            }
+            const res = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                }
+            })
+            const html = await res.text()
+            text = extractTextFromHtml(html)
+            console.log(`Simple Fetch Success: ${text.length} chars in ${Date.now() - startTime} ms`)
         } catch (e) {
-            console.error("Error during scraping, falling back to simple fetch:", e)
-            try {
-                const res = await fetch(url)
-                text = await res.text()
-                console.log(`Simple Fetch Fallback after error: ${text.length} chars in ${Date.now() - startTime} ms`)
-            } catch (fetchError) {
-                return NextResponse.json({ error: "Failed to scrape URL even with fallback" }, { status: 400 })
-            }
+            console.error("Error during fetch:", e)
+            return NextResponse.json({ error: "Failed to fetch URL" }, { status: 400 })
         }
 
-        if (!text || text.length < 500) { // Updated content length check
+        if (!text || text.length < 500) {
             return NextResponse.json({ error: "Failed to read article content or content too short" }, { status: 400 })
         }
 
