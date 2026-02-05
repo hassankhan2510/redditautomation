@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import {
     BookOpen, Sparkles, ExternalLink, Loader2, FileText, Bookmark, Trash2,
     X, Download, ArrowLeft, Clock, MessageSquare, Send, ChevronDown,
-    Copy, Check, RefreshCw, Search
+    Copy, Check, RefreshCw, Search, Coffee
 } from "lucide-react"
 import { toast } from "sonner"
 import { ARXIV_CATEGORIES } from "@/lib/arxiv_categories"
@@ -421,6 +422,17 @@ export default function FeedPage() {
                             <RefreshCw size={14} className={loadingFeed ? 'animate-spin' : ''} />
                         </button>
                     </div>
+
+                    {/* Smart Briefing Link */}
+                    <Link href="/briefing" className="flex items-center gap-3 w-full p-3 mb-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 hover:border-blue-500/40 transition-all group">
+                        <div className="p-2 bg-blue-500/20 text-blue-500 rounded-lg group-hover:scale-110 transition-transform">
+                            <Coffee size={18} />
+                        </div>
+                        <div>
+                            <div className="font-bold text-sm">Daily Briefing</div>
+                            <div className="text-[10px] text-muted-foreground">Your morning digest</div>
+                        </div>
+                    </Link>
 
                     {/* View Mode Tabs */}
                     <div className="flex bg-muted/50 p-1 rounded-xl gap-1 mb-4">
