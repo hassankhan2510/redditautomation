@@ -32,6 +32,7 @@ export async function GET() {
             title: arxivEntry[1].match(/<title>([\s\S]*?)<\/title>/)?.[1].replace(/\n/g, ' ').trim(),
             link: arxivEntry[1].match(/<id>([\s\S]*?)<\/id>/)?.[1],
             snippet: arxivEntry[1].match(/<summary>([\s\S]*?)<\/summary>/)?.[1].replace(/\n/g, ' ').slice(0, 200),
+            pubDate: arxivEntry[1].match(/<published>([\s\S]*?)<\/published>/)?.[1],
             source: "ArXiv Research",
             type: "paper"
         } : null
@@ -40,6 +41,7 @@ export async function GET() {
             title: techFeed.items[0].title,
             link: techFeed.items[0].link,
             snippet: techFeed.items[0].contentSnippet?.slice(0, 200),
+            pubDate: techFeed.items[0].pubDate,
             source: "TechCrunch",
             type: "article"
         } : null

@@ -209,7 +209,7 @@ export default function BriefingPage() {
                                                 }`}>
                                                 {item.type === 'paper' ? 'Research Paper' : 'Tech Article'}
                                             </span>
-                                            <span className="text-xs text-muted-foreground">• {item.source}</span>
+                                            <span className="text-xs text-muted-foreground">• {item.source} • {item.pubDate ? new Date(item.pubDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown Date'}</span>
                                         </div>
 
                                         <a href={item.link} target="_blank" className="font-serif text-xl font-medium mb-3 block hover:text-primary transition-colors">
