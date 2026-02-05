@@ -58,14 +58,59 @@ export default function BriefingPage() {
     }
 
     // Markdown-ish renderer for the simple UI
-    const SimpleText = ({ text }: { text: string }) => {
+    const SimpleMarkdown = ({ text }: { text: string }) => {
         if (!text) return null
+
+        // Pre-process grouping for tables
+        const blocks: { type: string, content: string[] }[] = []
+        const lines = text.split('\n')
+        let currentTable: string[] = []
+
+        lines.forEach((line) => {
+            if (line.trim().startsWith('|')) {
+                currentTable.push(line)
+            } else {
+                if (currentTable.length > 0) {
+                    blocks.push({ type: 'table', content: currentTable })
+                    currentTable = []
+                }
+                blocks.push({ type: 'text', content: [line] })
+            }
+        })
+        if (currentTable.length > 0) blocks.push({ type: 'table', content: currentTable })
+
         return (
             <div className="prose prose-neutral dark:prose-invert max-w-none">
-                {text.split('\n').map((line, i) => {
-                    if (line.startsWith('##')) return <h3 key={i} className="font-bold text-lg mt-4 mb-2">{line.replace(/#/g, '')}</h3>
-                    if (line.startsWith('-')) return <li key={i} className="ml-4">{line.replace('-', '')}</li>
-                    if (line.trim()) return <p key={i} className="mb-2 text-foreground/80 leading-relaxed">{line}</p>
+                {blocks.map((block, i) => {
+                    if (block.type === 'table') {
+                        const header = block.content[0].split('|').filter(c => c.trim()).map(c => c.trim())
+                        const rows = block.content.slice(2).map(row =>
+                            row.split('|').filter(c => c.trim()).map(c => c.trim())
+                        )
+                        return (
+                            <div key={i} className="my-6 overflow-x-auto rounded-xl border border-border/50 bg-muted/20">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-muted/50 uppercase text-xs font-bold text-muted-foreground">
+                                        <tr>
+                                            {header.map((h, k) => <th key={k} className="px-4 py-3 whitespace-nowrap">{h}</th>)}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-border/50">
+                                        {rows.map((row, r) => (
+                                            <tr key={r} className="hover:bg-muted/30 transition-colors">
+                                                {row.map((cell, c) => <td key={c} className="px-4 py-3">{cell}</td>)}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )
+                    }
+
+                    const line = block.content[0]
+                    if (line.startsWith('##')) return <h3 key={i} className="font-bold text-xl mt-6 mb-3">{line.replace(/#/g, '')}</h3>
+                    if (line.startsWith('-')) return <li key={i} className="ml-4 marker:text-primary">{line.replace('-', '')}</li>
+                    if (line.trim()) return <p key={i} className="mb-3 text-foreground/80 leading-relaxed text-base">{line}</p>
                     return null
                 })}
             </div>
@@ -121,7 +166,7 @@ export default function BriefingPage() {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-xl">Hourly Update</h3>
-                                    <p className="text-sm text-muted-foreground">Latest from Pakistan • {new Date().getHours()}:00</p>
+                                    <p className="text-sm text-muted-foreground">Latest from Pakistan • {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                                 </div>
                             </div>
 
@@ -191,9 +236,6 @@ export default function BriefingPage() {
                                                 Read Original
                                             </a>
                                         </div>
-
-                                        {/* Inline Explanation Display */}
-                                        {explanation && explainingId === null && item.link === hourlyNews?.link /* Bug logic fix needed here in real app to track explanation per ID, simplified for now: only showing if we tracked it statefully. */}
                                     </div>
                                 ))}
                             </div>
@@ -213,7 +255,7 @@ export default function BriefingPage() {
                                 </button>
                             </div>
                             <div className="p-8 overflow-y-auto">
-                                <SimpleText text={explanation} />
+                                <SimpleMarkdown text={explanation} />
                             </div>
                         </div>
                     </div>

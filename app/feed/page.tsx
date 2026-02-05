@@ -16,14 +16,61 @@ import type { FeedItem, SavedItem, QueueItem, ChatMessage, ViewMode } from "@/ty
 // ============================================================================
 // MARKDOWN RENDERER
 // ============================================================================
+// ============================================================================
+// MARKDOWN RENDERER
+// ============================================================================
 function SimpleMarkdown({ text }: { text: string }) {
     if (!text) return null
 
+    // Pre-process grouping for tables
+    const blocks: { type: string, content: string[] }[] = []
     const lines = text.split('\n')
+    let currentTable: string[] = []
+
+    lines.forEach((line) => {
+        if (line.trim().startsWith('|')) {
+            currentTable.push(line)
+        } else {
+            if (currentTable.length > 0) {
+                blocks.push({ type: 'table', content: currentTable })
+                currentTable = []
+            }
+            blocks.push({ type: 'text', content: [line] })
+        }
+    })
+    if (currentTable.length > 0) blocks.push({ type: 'table', content: currentTable })
 
     return (
         <div className="space-y-3 leading-relaxed">
-            {lines.map((line, i) => {
+            {blocks.map((block, i) => {
+                if (block.type === 'table') {
+                    const header = block.content[0].split('|').filter(c => c.trim()).map(c => c.trim())
+                    const rows = block.content.slice(2).map(row =>
+                        row.split('|').filter(c => c.trim()).map(c => c.trim())
+                    )
+                    return (
+                        <div key={i} className="my-4 overflow-x-auto rounded-xl border border-border/50 bg-muted/20">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-muted/50 uppercase text-xs font-bold text-muted-foreground">
+                                    <tr>
+                                        {header.map((h, k) => <th key={k} className="px-4 py-3 whitespace-nowrap">{h}</th>)}
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border/50">
+                                    {rows.map((row, r) => (
+                                        <tr key={r} className="hover:bg-muted/30 transition-colors">
+                                            {row.map((cell, c) => <td key={c} className="px-4 py-3">{formatText(cell)}</td>)}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )
+                }
+
+                // Regular Text Processing
+                const line = block.content[0]
+
                 // Headers with emoji support
                 if (line.startsWith('## ')) return (
                     <h2 key={i} className="text-xl font-bold text-foreground mt-6 mb-3 flex items-center gap-2">
@@ -35,12 +82,6 @@ function SimpleMarkdown({ text }: { text: string }) {
                         {formatText(line.replace('### ', ''))}
                     </h3>
                 )
-                // Tables
-                if (line.startsWith('|')) return (
-                    <div key={i} className="font-mono text-sm bg-muted/30 px-3 py-1 rounded overflow-x-auto">
-                        {line}
-                    </div>
-                )
                 // Bullet points
                 if (line.startsWith('- ') || line.startsWith('* ')) return (
                     <div key={i} className="flex gap-3 ml-2">
@@ -51,12 +92,13 @@ function SimpleMarkdown({ text }: { text: string }) {
                 // Numbered lists
                 if (/^\d+\. /.test(line)) return (
                     <div key={i} className="flex gap-3 ml-2">
-                        <span className="text-primary font-bold min-w-[20px]">{line.match(/^\d+/)?.[0]}.</span>
+                        <span className="text-primary font-bold min-w-[20px]">{line.match(/^\d+/)?.[0]}</span>
                         <span className="text-foreground/80">{formatText(line.replace(/^\d+\. /, ''))}</span>
                     </div>
                 )
                 // Empty lines
                 if (line.trim() === '') return <div key={i} className="h-2" />
+
                 // Regular paragraphs
                 return <p key={i} className="text-foreground/80">{formatText(line)}</p>
             })}

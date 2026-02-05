@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, BookOpen, Search, Sparkles, Zap, Brain, Clock, MessageSquare, Star } from "lucide-react"
+import { ArrowRight, BookOpen, Search, Sparkles, Zap, Brain, Clock, MessageSquare, Star, Coffee } from "lucide-react"
 
 export default function Home() {
   return (
@@ -46,12 +46,14 @@ export default function Home() {
               Start Researching
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
-            <a
-              href="#features"
-              className="inline-flex h-14 items-center justify-center rounded-2xl border border-border bg-background/50 backdrop-blur-sm px-10 text-base font-medium transition-all hover:bg-muted hover:border-primary/30"
+
+            <Link
+              href="/briefing"
+              className="inline-flex h-14 items-center justify-center rounded-2xl bg-background/50 backdrop-blur-sm border border-border hover:border-blue-500/50 hover:bg-blue-500/10 px-8 text-base font-medium transition-all gap-2 group"
             >
-              See How It Works
-            </a>
+              <Coffee className="h-5 w-5 text-blue-500 group-hover:scale-110 transition-transform" />
+              Smart Briefing
+            </Link>
           </div>
 
           {/* Stats */}
