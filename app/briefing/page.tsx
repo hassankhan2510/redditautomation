@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Loader2, ArrowLeft, RefreshCw, Clock, Coffee, FileText, Newspaper } from "lucide-react"
+import { Loader2, ArrowLeft, RefreshCw, Clock, Coffee, FileText, Newspaper, Sparkles, Brain } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import type { FeedItem } from "@/types"
@@ -221,21 +221,39 @@ export default function BriefingPage() {
                                         </p>
 
                                         {/* Simplified Actions */}
-                                        <div className="flex items-center gap-4">
-                                            <button
-                                                onClick={() => handleQuickExplain(item)}
-                                                disabled={explainingId === item.link}
-                                                className="text-sm font-medium flex items-center gap-2 text-foreground hover:text-primary transition-colors disabled:opacity-50"
-                                            >
-                                                {explainingId === item.link ? <Loader2 size={16} className="animate-spin" /> : <FileText size={16} />}
-                                                {explainingId === item.link ? "Analyzing..." : "Read Explanation"}
-                                            </button>
+                                        <div className="flex items-center gap-4 mb-4">
+                                            {item.explanation ? (
+                                                <span className="text-xs font-bold text-primary flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
+                                                    <Sparkles size={12} />
+                                                    AI Analyzed
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleQuickExplain(item)}
+                                                    disabled={explainingId === item.link}
+                                                    className="text-sm font-medium flex items-center gap-2 text-foreground hover:text-primary transition-colors disabled:opacity-50"
+                                                >
+                                                    {explainingId === item.link ? <Loader2 size={16} className="animate-spin" /> : <FileText size={16} />}
+                                                    {explainingId === item.link ? "Analyzing..." : "Read Explanation"}
+                                                </button>
+                                            )}
 
                                             <a href={item.link} target="_blank" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors">
                                                 <Newspaper size={16} />
                                                 Read Original
                                             </a>
                                         </div>
+
+                                        {/* Pre-fetched Explanation Display */}
+                                        {item.explanation && (
+                                            <div className="mt-4 pt-4 border-t border-border/50 bg-muted/10 -mx-6 px-6 pb-2">
+                                                <div className="flex items-center gap-2 mb-3 text-muted-foreground">
+                                                    <Brain size={14} />
+                                                    <span className="text-xs font-semibold uppercase tracking-wider">AI Insight</span>
+                                                </div>
+                                                <SimpleMarkdown text={item.explanation} />
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -244,14 +262,14 @@ export default function BriefingPage() {
                     </div>
                 )}
 
-                {/* Simplified Explanation Modal/Drawer */}
+                {/* Simplified Explanation Modal (only for manual clicks on items that failed auto-explain) */}
                 {explanation && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
                         <div className="bg-background border border-border shadow-2xl w-full max-w-2xl max-h-[85vh] rounded-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
                             <div className="p-4 border-b border-border flex justify-between items-center bg-muted/20">
                                 <h3 className="font-semibold">Quick Analysis</h3>
                                 <button onClick={() => setExplanation("")} className="p-2 hover:bg-muted rounded-full">
-                                    <ArrowLeft size={18} className="rotate-180" /> {/* Close icon substitute */}
+                                    <ArrowLeft size={18} className="rotate-180" />
                                 </button>
                             </div>
                             <div className="p-8 overflow-y-auto">
@@ -265,3 +283,4 @@ export default function BriefingPage() {
         </div>
     )
 }
+
