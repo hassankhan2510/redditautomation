@@ -49,3 +49,20 @@ create index if not exists idx_saved_research_created_at on saved_research(creat
 create index if not exists idx_read_later_added_at on read_later(added_at desc);
 create index if not exists idx_explanation_cache_url_hash on explanation_cache(url_hash);
 create index if not exists idx_chat_history_article_url on chat_history(article_url);
+
+-- Pre-computed Briefings (Background Cron)
+create table if not exists briefings (
+  id uuid default gen_random_uuid() primary key,
+  type text not null,  -- 'hourly_news' or 'deep_dive'
+  title text not null,
+  link text not null,
+  snippet text,
+  source text,
+  pub_date text,
+  item_type text,      -- 'paper', 'article', etc.
+  explanation text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+create index if not exists idx_briefings_created_at on briefings(created_at desc);
+create index if not exists idx_briefings_type on briefings(type);

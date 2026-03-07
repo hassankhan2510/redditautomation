@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Telecom QA System - API Evaluation Architecture</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    padding: 40px;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.box {
+    background: white;
+    padding: 20px 30px;
+    margin: 12px 0;
+    border-radius: 8px;
+    width: 480px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-left: 6px solid #2563eb;
+}
+.privacy {
+    border-left: 6px solid #16a34a;
+}
+.external {
+    border-left: 6px solid #f59e0b;
+}
+.arrow {
+    font-size: 26px;
+    margin: 4px 0;
+}
+.footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+</style>
+</head>
+<body>
+
+<h1>Telecom QA System - External API Evaluation (Masked)</h1>
+
+<div class="flowchart">
+
+<div class="box">
+<strong>Telecom Recording Database</strong><br>
+Raw Audio Files (Internal Network)
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box privacy">
+<strong>Secure Audio Extraction</strong><br>
+Weekly Batch Pull<br>
+VPN / Firewall Restricted
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box">
+<strong>Local Transcription Engine</strong><br>
+Urdu Processing<br>
+No Public Exposure
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box privacy">
+<strong>PII Detection & Masking Layer</strong><br>
+Remove Phone, CNIC, Account, Names<br>
+Replace with Placeholders
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box external">
+<strong>External LLM API Evaluation</strong><br>
+Only Masked Transcript Sent<br>
+No Raw Audio Shared
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box">
+<strong>Evaluation & Feedback Output</strong><br>
+Conversation Quality Score<br>
+Agent Performance Rating<br>
+Customer Sentiment Review<br>
+Policy Compliance Check<br>
+Improvement Feedback Notes<br>
+Risk & Escalation Flags
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box privacy">
+<strong>Secure Database Storage</strong><br>
+Encrypted at Rest<br>
+Role-Based Access Control<br>
+Audit Logging Enabled
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="box">
+<strong>Reporting Dashboard</strong><br>
+Supervisor View<br>
+Manager Insights<br>
+Export Controls
+</div>
+
+</div>
+
+<div class="footer">
+Privacy Controls: Encryption • Access Logs • Masking Before API • Data Retention Policy
+</div>
+
+</body>
+</html>
