@@ -13,7 +13,10 @@ export function Navbar() {
                     DeepLearning
                 </Link>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
+                    <Link href="/library" className="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors font-sans text-sm font-medium">
+                        Library
+                    </Link>
                     <ModeToggle />
                 </div>
             </div>
