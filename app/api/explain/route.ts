@@ -3,6 +3,9 @@ import { generateCompletion } from '@/lib/llm';
 import { TOPIC_PROMPT, PAPER_PROMPT } from '@/lib/prompts';
 import { extractTextFromHtml } from '@/lib/research';
 
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
     try {
         const { input } = await request.json();

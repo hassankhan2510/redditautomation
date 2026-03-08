@@ -8,6 +8,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!; // use service_role key ideally to bypass RLS, but anon works if insert is public
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+export const maxDuration = 60; // Set to maximum allowed on Vercel Hobby tier
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
     // Optionally secure the cron route with an authorization header checking against a CRON_SECRET
     // const authHeader = request.headers.get('authorization');

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { generateCompletion } from '@/lib/llm';
 
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
     try {
         const { articleContent, previousExplanation, question, chatHistory = [] } = await request.json();
